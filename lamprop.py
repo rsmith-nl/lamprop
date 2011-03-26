@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # lamprop - main program.
-# Time-stamp: <2011-03-26 17:37:17 rsmith>
+# Time-stamp: <2011-03-27 00:05:39 rsmith>
 
 import argparse
 import sys
-import lamina
+import lptypes
 import lpfile
 
 # program version
@@ -70,4 +70,4 @@ if len(args.files) == 0:
 
 for f in args.files:
     fibers,resins,laminates = lpfile.parse(f)
-    
+

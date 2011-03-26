@@ -1,0 +1,11 @@
+Vezel definitie
+   E1     E2    v12   G12   alpha1   alpha2   rho  naam
+f: 238000 15000 0.20  15000 -0.1e-6  10e-6    1.77 STS5631
+
+Matrix definitie
+   Em   v    alpha   rho name
+r: 2900 0.36 41.4e-6 1.15 Epikote04908
+
+t: UD-HS
+m: 0.5 Epikote04908
+l: 1770   0 STS5631
