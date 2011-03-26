@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-26 14:19:00 rsmith>
+# Time-stamp: <2011-03-26 21:50:04 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,44 +33,32 @@ class Fiber:
     of the fiber, direction 2 is perpendicular to that."""
     def __init__(self, E1=0.0, E2=0.0, v12=0.0, G12=0.0, 
                  cte1=0.0, cte2=0.0, density=1.0):
-        self.E1=E1      # Young's Modulus [MPa]
-        self.E2=E2
-        self.v12=v12    # Poisson's constant
-        self.G12=G12    # Shear modulus [MPa]
-        self.cte1=cte1  # Coefficient of thermal expansion [K⁻¹]
-        self.cte2=cte2
-        self.density=density    # [g/cm³]
-    def fromline(self, line):
-        lst = line.split()
-        if lst[0] != 'f:':    # Ignore
-            return False
-        __init__(self, lst[1], lst[2], lst[3], lst[4], lst[5], lst[6], lst[7])
-        return True
+        self.E1 = float(E1)     # Young's Modulus [MPa]
+        self.E2 = float(E2)
+        self.v12 = float(v12)   # Poisson's constant
+        self.G12 = float(G12)   # Shear modulus [MPa]
+        self.cte1 = float(cte1) # Coefficient of thermal expansion [K⁻¹]
+        self.cte2 = float(cte2)
+        self.density = float(density)   # [g/cm³]
 
 class Resin:
     """A class for containing resin properties."""
     def __init__(self, E=0.0, v=0.0, cte=0.0, density=1.0):
-        self.E=E                # Young's Modulus [MPa]
-        self.v=v                # Poisson's constant
-        self.G=E/(2*(1+v))      # Shear modulus [MPa]
-        self.cte=cte            # Coefficient of thermal expansion [K⁻¹]
-        self.density = density  # [g/cm³]
-    def fromline(self, line):
-        lst = line.split()
-        if lst[0] != 'r:':    # Ignore
-            return False
-        __init__(self, lst[1], lst[2], lst[3], lst[4])
-        return True
+        self.E = float(E)       # Young's Modulus [MPa]
+        self.v = float(v)       # Poisson's constant
+        self.G = self.E/(2.0*(1.0+self.v))      # Shear modulus [MPa]
+        self.cte = float(cte)   # Coefficient of thermal expansion [K⁻¹]
+        self.density = float(density)   # [g/cm³]
 
 class Lamina:
     """A class for unidirectional layer properties."""
     def __init__(self, fiber, resin, weight=0.0, angle=0.0, vf=0.5):
         self.fiber = fiber      # Fiber properties
         self.resin = resin      # Resin properties
-        self.weight = weight    # Area weight if the fibers [g/m²]
-        self.angle = angle      # Angle of the fibers [degrees]
-        self.vf = vf            # Volume fraction of fibers in the lamina
-        vm = (1-vf)             # Volume fraction of resin material
+        self.weight = float(weight)     # Area weight if the fibers [g/m²]
+        self.angle = float(angle)       # Angle of the fibers [degrees]
+        self.vf = float(vf)             # Volume fraction of fibers in the lamina
+        vm = (1 - self.vf)      # Volume fraction of resin material
         self.thickness = weight/(fiber.density*1000.0)*(1+vm/vf)
         self.E1 = vf*fiber.E1+resin.E*vm
         self.E2 = 1/((vf/fiber.E2+0.5*vm/resin.E)/(vf+0.5*vm))
@@ -100,9 +88,8 @@ class Lamina:
         self.density = fiber.density*vf+resin.density*vm
 
 class Laminate:
-    def __init__(self, name):
+    def __init__(self):
         self.layers = []
-        self.name = name
         self.thickness=0.0
         self.vf = 0.0
         self.wf = 0.0
@@ -118,10 +105,10 @@ class Laminate:
     def num_layers(self):
         return len(self.layers)
     def finish(self):
-        for l in layers:
-            if l == layers[0]:
+        for l in self.layers:
+            if l == self.layers[0]:
                 l.z0 = -l.thickness/2
-                prev = layers[0]
+                prev = self.layers[0]
             else:
                 l.z0 = prev.z0 + prev.thickness
             zs = l.z0; ze = zs + l.thickness
@@ -130,7 +117,7 @@ class Laminate:
             prev=l
         ABD = numpy.zeros((6,6))
         self.density=.0
-        for l in layers:
+        for l in self.layers:
                 # first row
                 ABD[0,0] += l.Q_11*l.t;      # [1], p. 290
                 ABD[0,1] += l.Q_12*l.t;
@@ -186,5 +173,3 @@ class Laminate:
         self.abd = numpy.linalg.inv(ABD)
         # FINISHME
         self.finished = True
-
-
