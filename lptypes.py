@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 13:14:49 rsmith>
+# Time-stamp: <2011-03-27 18:16:17 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -58,7 +58,7 @@ class Lamina:
         self.weight = float(weight)     # Area weight of the fibers [g/m²]
         self.angle = float(angle)       # Angle of the fibers [degrees]
         self.vf = float(vf)             # Volume fraction of fibers in the lamina
-        vm = (1 - self.vf)      # Volume fraction of resin material
+        vm = (1.0 - self.vf)            # Volume fraction of resin material
         self.thickness = self.weight/(fiber.density*1000.0)*(1+vm/vf)
         self.rc = self.thickness*vm*resin.density*1000.0        # Resin [g/m²]
         self.E1 = vf*fiber.E1+resin.E*vm
@@ -70,12 +70,13 @@ class Lamina:
         # The powers of the sine and cosine of the angle are often used later.
         m2 = m*m; m3 = m2*m; m4 = m3*m
         n2 = n*n; n3 = n2*n; n4 = n3*n
-        cte1 = (fiber.cte1*fiber.E1+resin.cte*resin.E*vm)/self.E1
-        cte2 = ((resin.cte+(fiber.cte2-resin.cte)*vf+
-                 (fiber.E1*resin.v-resin.E*fiber.v12)/self.E1)*
-                (resin.cte-fiber.cte1)*vm*vf)
+        cte1 = (fiber.cte1*fiber.E1*self.vf+resin.cte*resin.E*vm)/self.E1
+        cte2 = (resin.cte+(fiber.cte2-resin.cte)*self.vf+
+                 ((fiber.E1*resin.v-resin.E*fiber.v12)/self.E1)*
+                (resin.cte-fiber.cte1)*vm*self.vf)
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2
+        self.cte_xy = 2*(cte1-cte2)*m*n
         S11 = 1/self.E1; S12 = -self.v12/self.E1
         S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12;
         Q11 = S22/denum; Q12 = -S12/denum; Q22 = S11/denum; Q66 = 1/S66
@@ -86,7 +87,7 @@ class Lamina:
         self.Q_22 = Q11*n4+2*(Q12+2*Q66)*n2*m2+Q22*m4
         self.Q_26 = foo*n3*m+bar*n*m3
         self.Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
-        self.density = fiber.density*vf+resin.density*vm
+        self.density = fiber.density*self.vf+resin.density*vm
 
 class Laminate:
     def __init__(self):
@@ -96,11 +97,6 @@ class Laminate:
         self.rc = 0.0           # Weight of the resin [g/m²]
         self.vf = 0.0
         self.wf = 0.0
-        self.Ex = 0.0
-        self.Ey = 0.0
-        self.Gxy = 0.0
-        self.Vxy = 0.0
-        self.Vyx = 0.0
         self.finished=False
     def append(self, lamina): # Add a layer to the laminate.
         self.layers.append(lamina)
@@ -118,12 +114,16 @@ class Laminate:
                 prev = self.layers[0]
             else:
                 l.z0 = prev.z0 + prev.thickness
-            zs = l.z0; ze = zs + l.thickness
+            zs = l.z0
+            ze = zs + l.thickness
             l.z2 = (ze*ze-zs*zs)/2
             l.z3 = (ze*ze*ze-zs*zs*zs)/3
             prev=l
+        Nt_x = 0.0
+        Nt_y = 0.0
+        Nt_xy = 0.0
         ABD = numpy.zeros((6,6))
-        self.density = .0
+        self.density = 0.0
         for l in self.layers:
                 # first row
                 ABD[0,0] += l.Q_11*l.thickness      # [1], p. 290
@@ -167,6 +167,13 @@ class Laminate:
                 ABD[5,3] += l.Q_16*l.z3;
                 ABD[5,4] += l.Q_26*l.z3;
                 ABD[5,5] += l.Q_66*l.z3;
+                # Calculate unit thermal stress resultants.
+                Nt_x += (l.Q_11*l.cte_x + l.Q_12*l.cte_y + 
+                         l.Q_16*l.cte_xy)*l.thickness  # [1], p. 445
+                Nt_y += (l.Q_12*l.cte_x + l.Q_22*l.cte_y + 
+                         l.Q_26*l.cte_xy)*l.thickness 
+                Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y + 
+                          l.Q_66*l.cte_xy)*l.thickness
                 # denisty calculation
                 self.thickness += l.thickness
                 self.density += l.density*l.thickness
@@ -174,7 +181,7 @@ class Laminate:
         # Finish the matrices.
         self.ABD = ABD
         self.abd = numpy.linalg.inv(ABD)
-        # Calculate the engineering properties
+        # Calculate the engineering properties.
         self.Ex = ((ABD[0,0]*ABD[1,1]-ABD[0,1]*ABD[0,1])/
                    (ABD[1,1]*self.thickness))  # [1], p. 326 
         self.Ey = ((ABD[0,0]*ABD[1,1]-ABD[0,1]*ABD[0,1])/
@@ -182,7 +189,12 @@ class Laminate:
         self.Gxy = ABD[2,2]/self.thickness
         self.Vxy = ABD[0,1]/ABD[1,1]
         self.Vyx = ABD[0,1]/ABD[0,0];
-        # Finish the density and vf calculations
+        # Calculate the coefficients of thermal expansion.
+        self.cte_x = (self.abd[0,0]*Nt_x + self.abd[0,1]*Nt_y + 
+                      self.abd[0,2]*Nt_xy)
+        self.cte_y = (self.abd[1,0]*Nt_x + self.abd[1,1]*Nt_y + 
+                      self.abd[1,2]*Nt_xy)
+        # Finish the density and vf calculations.
         self.density /= self.thickness
         self.vf /= self.thickness
         self.wf = self.weight/(self.weight+self.rc)

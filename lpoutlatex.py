@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Text output routines for lamprop.
+# LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 11:19:25 rsmith>
+# Time-stamp: <2011-03-27 16:46:47 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,9 +28,9 @@
 import lptypes
 import lpver
 
-def engprop(laminate):
+def engprop(l, nm):
     pass
 
-def matrices(laminate):
+def matrices(l, nm, printheader):
     pass
 
