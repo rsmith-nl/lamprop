@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 16:36:29 rsmith>
+# Time-stamp: <2011-03-27 22:28:41 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,6 +31,8 @@ import lptypes
 import lpfile
 import lpver
 import lpouttext
+import lpoutlatex
+#import lpouthtml
 
 class LicenseAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -67,23 +69,21 @@ elif args.eng == True:
     args.mat = False
 else:
     args.eng = False
-#print "debug:", args
 
 # No files given to process.
 if len(args.files) == 0:
     sys.exit(1)
 
 # Set the output method.
-engprop = lpouttext.engprop
-matrices = lpouttext.matrices
+out = lpouttext.out
+if args.latex == True:
+    out = lpoutlatex.out
+#elif args.html == True:
+#    out = lpouthtml.out
 for f in args.files:
     # Process the files.
     fibers,resins,laminates = lpfile.parse(f)
     # Print the results.
     for lname,lam in laminates.iteritems():
-        if args.eng == True:
-            engprop(lam, lname)
-        if args.mat == True:
-            matrices(lam, lname, not args.eng)
+        out(lam, lname, args.eng, args.mat)
 
-            
