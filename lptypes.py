@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 18:16:17 rsmith>
+# Time-stamp: <2011-03-27 19:11:05 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -61,10 +61,10 @@ class Lamina:
         vm = (1.0 - self.vf)            # Volume fraction of resin material
         self.thickness = self.weight/(fiber.density*1000.0)*(1+vm/vf)
         self.rc = self.thickness*vm*resin.density*1000.0        # Resin [g/m²]
-        self.E1 = vf*fiber.E1+resin.E*vm
-        self.E2 = 1/((vf/fiber.E2+0.5*vm/resin.E)/(vf+0.5*vm))
-        self.G12 = 1/((vf/fiber.G12+0.6*vm/resin.G)/(vf+0.6*vm))
-        self.v12 = fiber.v12*vf+resin.v*vm
+        self.E1 = self.vf*fiber.E1+resin.E*vm
+        self.E2 = 1/((self.vf/fiber.E2+0.5*vm/resin.E)/(self.vf+0.5*vm))
+        self.G12 = 1/((self.vf/fiber.G12+0.6*vm/resin.G)/(self.vf+0.6*vm))
+        self.v12 = fiber.v12*self.vf+resin.v*vm
         m = math.cos(math.radians(self.angle))
         n = math.sin(math.radians(self.angle))
         # The powers of the sine and cosine of the angle are often used later.
@@ -102,6 +102,7 @@ class Laminate:
         self.layers.append(lamina)
         self.weight += lamina.weight
         self.rc += lamina.rc
+        self.thickness += lamina.thickness
         self.finished = False
     def num_layers(self):
         return len(self.layers)
@@ -110,11 +111,10 @@ class Laminate:
             return
         for l in self.layers:
             if l == self.layers[0]:
-                l.z0 = -l.thickness/2
+                zs = -self.thickness/2
                 prev = self.layers[0]
             else:
-                l.z0 = prev.z0 + prev.thickness
-            zs = l.z0
+                zs += prev.thickness
             ze = zs + l.thickness
             l.z2 = (ze*ze-zs*zs)/2
             l.z3 = (ze*ze*ze-zs*zs*zs)/3
@@ -175,10 +175,13 @@ class Laminate:
                 Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y + 
                           l.Q_66*l.cte_xy)*l.thickness
                 # denisty calculation
-                self.thickness += l.thickness
                 self.density += l.density*l.thickness
                 self.vf += l.vf*l.thickness
         # Finish the matrices.
+        for i in range(0,6):
+            for j in range(0,6):
+                if math.fabs(ABD[i,j]) < 1e-7:
+                    ABD[i,j] = 0.0
         self.ABD = ABD
         self.abd = numpy.linalg.inv(ABD)
         # Calculate the engineering properties.
