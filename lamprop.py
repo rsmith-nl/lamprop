@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # lamprop - main program.
-# Time-stamp: <2011-03-27 00:05:39 rsmith>
+# Time-stamp: <2011-03-27 13:10:17 rsmith>
 
 import argparse
 import sys
 import lptypes
 import lpfile
-
-# program version
-progname = 'lamprop'
-progver = '2.0.0'
+import lpver
+import lpouttext
 
 lpl = '''{0} {1}
 Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
@@ -34,40 +32,58 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.'''.format(progname, progver)
+SUCH DAMAGE.'''.format(lpver.name, lpver.version)
 
 class LicenseAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         print lpl
         sys.exit()
 
-# Parse the command-line arguments
-opts = argparse.ArgumentParser(prog="lamprop",
+# Process the command-line arguments
+opts = argparse.ArgumentParser(prog=lpver.name,
  description='Calculate the elastic properties of a fibrous composite laminate. '
              'See lamprop(1) for the manual of this program and lamprop(5) '
              'for the manual of the data file format.')
 group = opts.add_mutually_exclusive_group()
 group.add_argument('-l', '--latex', action='store_true', help="LaTeX output")
 group.add_argument('-H', '--html', action='store_true', help="HTML output")
-group = opts.add_mutually_exclusive_group()
-group.add_argument('-e', '--eng', action='store_true', 
-                   help="produce only the layers and engineering properties")
-group.add_argument('-m', '--mat', action='store_true', 
-                   help="produce only the ABD and abd matrices")
+opts.add_argument('-e', '--eng', action='store_true', 
+                   help="produce the layers and engineering properties")
+opts.add_argument('-m', '--mat', action='store_true', 
+                   help="produce the ABD and abd matrices")
 group = opts.add_mutually_exclusive_group()
 group.add_argument('-L', '--license', action=LicenseAction, nargs=0,
                   help="print the license")
 group.add_argument('-v', '--version', action='version', 
-                   version='%(prog)s {0}'.format(progver))
+                   version='%(prog)s {0}'.format(lpver.version))
 opts.add_argument("files", metavar='file', nargs='*', 
                   help="one or more files to process")
 args = opts.parse_args()
+if args.mat == False and args.eng == False:
+    args.eng = True
+    args.mat = True
+elif args.mat == True and args.eng == True:
+    pass
+elif args.eng == True:
+    args.mat = False
+else:
+    args.eng = False
+#print "debug:", args
 
 # No files given to process.
 if len(args.files) == 0:
-    opts.print_help()
+    #opts.print_help()
     sys.exit()
 
+# Process the files
+engprop = lpouttext.engprop
+matrices = lpouttext.matrices
 for f in args.files:
     fibers,resins,laminates = lpfile.parse(f)
+    for lname,lam in laminates.iteritems():
+        if args.eng == True:
+            engprop(lam, lname)
+        if args.mat == True:
+            matrices(lam, lname)
 
+            

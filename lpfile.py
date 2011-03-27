@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 00:07:05 rsmith>
+# Time-stamp: <2011-03-27 13:13:33 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -44,41 +44,57 @@ def parse(fname):
         lst = line.split()
         #print "debug:", lst
         if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
-            print "debug: skipping line '{0}'".format(lst)
+            #print "debug: skipping line '{0}'".format(lst)
             continue # comment line
         if lst[0][0] == 'f':
             finame = ' '.join(lst[8:])
             f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
-                                                lst[5], lst[6], lst[7])
-            print "debug: Found fiber '{}'".format(finame)
+                                                lst[5], lst[6], lst[7], finame)
+            #print "debug: Found fiber '{}'".format(finame)
         elif lst[0][0] == 'r':
             rname = ' '.join(lst[5:])
             r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
-            print "debug: Found resin '{0}'".format(rname)
+            #print "debug: Found resin '{0}'".format(rname)
         elif lst[0][0] == 't':
             lname = ' '.join(lst[1:])
             if lname in l:
-                print "Lptypeste '{0}' already exists! Skipping.".format(lname)
+                print "Laminate '{0}' already exists! Skipping.".format(lname)
             else:
-                print "debug: Starting new lptypeste '{0}'".format(lname)
+                #print "debug: Starting new laminate '{0}'".format(lname)
                 if curlam != None:
                     curlam.finish()
                     curresin = None
                 curlam = l[lname] = lptypes.Laminate()
-        elif lst[0][0] == 'm' and curlam != None:
-            vf = float(lst[1])
+        elif lst[0][0] == 'm':
+            if curlam == None:
+                print "Found 'm:' line outside a laminate; Skipping."
+                continue
+            curvf = float(lst[1])
             mname = ' '.join(lst[2:])
-            print "debug: Setting laminate resin to '{0}'.".format(mname)
-            print "debug: with a fiber volume fraction of {0}.".format(vf)
             if mname in r:
                 curresin = r[mname]
+                #print "debug: Setting laminate resin to '{0}'.".format(mname)
+                #print "debug: with a fiber volume fraction of {0}.".format(curvf)
             else:
                 curlam = None
                 curresin = None
-        elif lst[0][0] == 'l' and curlam != None:
-            pass #FINISHME
-    print f
-    print r
-    print l
+                print "Resin '{0}' unknown. Skipping".format(mname)
+        elif lst[0][0] == 'l':
+            if curlam == None:
+                print "Found 'l:' line but no previous 't:' line! Skipping."
+                continue
+            if curresin == None:
+                print "Found 'l:' line but no previous 'm:' line! Skipping."
+                continue
+            finame = ' '.join(lst[3:])
+            if finame not in f:
+                print "Unknown fiber in 'l:' line. Skipping."
+                continue
+            curlam.append(lptypes.Lamina(f[finame], curresin, 
+                                                lst[1], lst[2]))
+    curlam.finish()
+    #print "debug: fibers", f
+    #print "debug: resins", r
+    #print "debug: laminates", l
     return f,r,l
 
