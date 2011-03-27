@@ -2,7 +2,7 @@
 # HTML output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 16:47:07 rsmith>
+# Time-stamp: <2011-03-28 00:15:14 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,9 +28,18 @@
 import lptypes
 import lpver
 
+def out(lam, name, eng, mat):
+    '''HTML main output function.'''
+    if eng == True:
+        engprop(lam, name)
+    if mat == True:
+        matrices(lam, name, not eng)
+
 def engprop(l, nm):
+    '''Prints the engineering properties as a HTML table.'''
     pass
 
 def matrices(l, nm, printheader):
+    '''Prints the ABD and abd matrices as HTML tables.'''
     pass
 

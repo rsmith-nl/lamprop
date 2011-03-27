@@ -2,7 +2,7 @@
 # LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 23:14:49 rsmith>
+# Time-stamp: <2011-03-28 00:13:36 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,22 @@
 import lptypes
 import lpver
 
+def out(lam, name, eng, mat):
+    '''LaTeX main output function.'''
+    print "\\begin{table}[!htbp]"
+    print "  \\renewcommand{\\arraystretch}{1.2}"
+    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(name)
+    print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
+    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}\n".format(lpver.name,
+                                                               lpver.version)
+    if eng == True:
+        engprop(lam, name)
+    if mat == True:
+        matrices(lam, name, not eng)
+    print "\\end{table}\n"
+
 def engprop(l, nm):
+    '''Prints the engineering properties as a LaTeX table.'''
     print "  \\parbox{\\textwidth}{\\centering"
     print "    \\begin{tabular}[t]{rcrl}"
     print "      \\multicolumn{4}{c}{\\small"\
@@ -68,6 +83,7 @@ def engprop(l, nm):
 
 
 def matrices(l, nm, printheader):
+    '''Prints the ABD and abd matrices as LaTeX arrays.'''
     print "  \\vbox{"
     print "    \\vbox{\\small\\textbf{Stiffness matrix}\\\\"
     print "      \\tiny\\[\\left\\{\\begin{array}{c}"
@@ -104,15 +120,3 @@ def matrices(l, nm, printheader):
     print "    }"
     print "  }"
 
-def out(lam, name, eng, mat):
-    print "\\begin{table}[!htbp]"
-    print "  \\renewcommand{\\arraystretch}{1.2}"
-    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(name)
-    print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
-    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}\n".format(lpver.name,
-                                                               lpver.version)
-    if eng == True:
-        engprop(lam, name)
-    if mat == True:
-        matrices(lam, name, not eng)
-    print "\\end{table}\n"

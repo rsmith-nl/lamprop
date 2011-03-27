@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 19:11:05 rsmith>
+# Time-stamp: <2011-03-28 00:24:54 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -90,6 +90,7 @@ class Lamina:
         self.density = fiber.density*self.vf+resin.density*vm
 
 class Laminate:
+    """A class for fibrous laminates."""
     def __init__(self):
         self.layers = []
         self.thickness = 0.0
@@ -98,15 +99,18 @@ class Laminate:
         self.vf = 0.0
         self.wf = 0.0
         self.finished=False
-    def append(self, lamina): # Add a layer to the laminate.
+    def append(self, lamina):
+        """Add a layer to the laminate."""
         self.layers.append(lamina)
         self.weight += lamina.weight
         self.rc += lamina.rc
         self.thickness += lamina.thickness
         self.finished = False
     def num_layers(self):
+        """Return the number of layers in the laminate."""
         return len(self.layers)
     def finish(self):
+        """Calculate the laminate properties."""
         if len(self.layers) == 0:
             return
         for l in self.layers:
@@ -174,10 +178,10 @@ class Laminate:
                          l.Q_26*l.cte_xy)*l.thickness 
                 Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y + 
                           l.Q_66*l.cte_xy)*l.thickness
-                # denisty calculation
+                # Overall density and fiber volume fraction calculation
                 self.density += l.density*l.thickness
                 self.vf += l.vf*l.thickness
-        # Finish the matrices.
+        # Finish the matrices, discarding very small numbers in ABD.
         for i in range(0,6):
             for j in range(0,6):
                 if math.fabs(ABD[i,j]) < 1e-7:
