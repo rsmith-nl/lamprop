@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-28 00:24:54 rsmith>
+# Time-stamp: <2011-03-29 00:22:36 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -72,7 +72,7 @@ class Lamina:
         n2 = n*n; n3 = n2*n; n4 = n3*n
         cte1 = (fiber.cte1*fiber.E1*self.vf+resin.cte*resin.E*vm)/self.E1
         cte2 = (resin.cte+(fiber.cte2-resin.cte)*self.vf+
-                 ((fiber.E1*resin.v-resin.E*fiber.v12)/self.E1)*
+                ((fiber.E1*resin.v-resin.E*fiber.v12)/self.E1)*
                 (resin.cte-fiber.cte1)*vm*self.vf)
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2

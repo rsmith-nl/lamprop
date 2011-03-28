@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 18:16:57 rsmith>
+# Time-stamp: <2011-03-29 00:23:17 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,7 +47,7 @@ def parse(fname):
         if lst[0][0] == 'f':
             finame = ' '.join(lst[8:])
             f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
-                                                lst[5], lst[6], lst[7], finame)
+                                      lst[5], lst[6], lst[7], finame)
         elif lst[0][0] == 'r':
             rname = ' '.join(lst[5:])
             r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
@@ -84,7 +84,7 @@ def parse(fname):
                 print "Unknown fiber in 'l:' line. Skipping."
                 continue
             curlam.append(lptypes.Lamina(f[finame], curresin, 
-                                                lst[1], lst[2]))
+                                         lst[1], lst[2]))
     curlam.finish()
     fl.close()
     return f,r,l
