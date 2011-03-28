@@ -2,7 +2,7 @@
 # LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-28 00:13:36 rsmith>
+# Time-stamp: <2011-03-28 21:46:39 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -67,7 +67,7 @@ def engprop(l, nm):
     print "      $w_f$ & {:4.2f} &-\\\\".format(l.wf)
     print "      thickness & {:.3g} & mm\\\\".format(l.thickness)
     print "      density & {:.3g} & gr/cm$^3$\\\\".format(l.density)
-    print "      weight & {:.0f} & gr/m$^2$\\\\".format(l.weight)
+    print "      weight & {:.0f} & gr/m$^2$\\\\".format(l.weight+l.rc)
     print "      resin & {:.0f} & gr/m$^2$\\\\".format(l.rc)
     print "      \\midrule"
     print "      $E_x$ & {:8.0f} & MPa\\\\".format(l.Ex)

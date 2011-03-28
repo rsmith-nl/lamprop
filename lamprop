@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-27 22:28:41 rsmith>
+# Time-stamp: <2011-03-28 22:26:08 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@ import lpfile
 import lpver
 import lpouttext
 import lpoutlatex
-#import lpouthtml
+import lpouthtml
 
 class LicenseAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -78,8 +78,8 @@ if len(args.files) == 0:
 out = lpouttext.out
 if args.latex == True:
     out = lpoutlatex.out
-#elif args.html == True:
-#    out = lpouthtml.out
+elif args.html == True:
+    out = lpouthtml.out
 for f in args.files:
     # Process the files.
     fibers,resins,laminates = lpfile.parse(f)
