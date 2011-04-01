@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-29 00:22:36 rsmith>
+# Time-stamp: <2011-04-01 19:13:31 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -182,8 +182,8 @@ class Laminate:
                 self.density += l.density*l.thickness
                 self.vf += l.vf*l.thickness
         # Finish the matrices, discarding very small numbers in ABD.
-        for i in range(0,6):
-            for j in range(0,6):
+        for i in range(6):
+            for j in range(6):
                 if math.fabs(ABD[i,j]) < 1e-7:
                     ABD[i,j] = 0.0
         self.ABD = ABD

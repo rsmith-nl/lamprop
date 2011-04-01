@@ -2,7 +2,7 @@
 # LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-28 21:46:39 rsmith>
+# Time-stamp: <2011-04-01 19:14:01 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -90,7 +90,7 @@ def matrices(l, nm, printheader):
     print "          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}"
     print "        \\end{array}\\right\\} = "
     print "      \\left|\\begin{array}{cccccc}"
-    for t in range(0,6):
+    for t in range(6):
         s = "          {:6.0f} & {:6.0f} & {:6.0f} & {:6.0f}"\
         " & {:6.0f} & {:6.0f}\\\\"
         print s.format(l.ABD[t,0], l.ABD[t,1], l.ABD[t,2], 
@@ -108,7 +108,7 @@ def matrices(l, nm, printheader):
         "\\gamma^0_{xy}\\\\[3pt]"
     print "            \\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}"
     print "          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}"
-    for t in range(0,6):
+    for t in range(6):
         s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}"\
         " & {:6.3g} & {:6.3g}\\\\"
         print s.format(l.abd[t,0]*1e6, l.abd[t,1]*1e6, l.abd[t,2]*1e6, 
