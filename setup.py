@@ -2,10 +2,13 @@
 # Installation script for lamprop.
 #
 # R.F. Smith <rsmith@xs4all.nl>
-# Time-stamp: <2011-03-27 23:48:34 rsmith>
+# Time-stamp: <2011-04-13 21:12:47 rsmith>
 
 from distutils.core import setup
 import lpver
+
+with open('README.txt') as file:
+    ld = file.read()
 
 setup(name=lpver.name,
       version=lpver.version,
@@ -26,5 +29,6 @@ setup(name=lpver.name,
                    'Operating System :: OS Independent',
                    'Programming Language :: Python :: 2.7',
                    'Topic :: Scientific/Engineering'
-                   ]
+                   ],
+      long_description = ld
       )
