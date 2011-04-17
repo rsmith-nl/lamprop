@@ -2,7 +2,7 @@
 # Text output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-04-01 19:13:47 rsmith>
+# Time-stamp: <2011-04-17 12:13:30 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -50,8 +50,8 @@ def engprop(l, nm):
         print "{0:3} {1:6g} {2:5g} {3}".format(ln+1, la.weight, la.angle, 
                                                la.fiber.name)
     print "E_x  = {0:.0f} MPa".format(l.Ex)
-    print "E_y  = {0:0f} MPa".format(l.Ey)
-    print "G_xy = {0:0f} MPa".format(l.Gxy)
+    print "E_y  = {0:.0f} MPa".format(l.Ey)
+    print "G_xy = {0:.0f} MPa".format(l.Gxy)
     print "v_xy = {0:7.5f}".format(l.Vxy)
     print "v_yx = {0:7.5f}".format(l.Vyx)
     print "cte_x = {0:9.4g} K⁻¹, cte_y = {1:9.4g} K⁻¹".format(l.cte_x, l.cte_y)
