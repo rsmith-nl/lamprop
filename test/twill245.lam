@@ -1,0 +1,17 @@
+Time-stamp: <2011-06-17 10:35:05 rsmith>
+
+soorten vezels
+   E1         E2       v12  G12   alpha1   alpha2 rho  naam
+f: 230000 23000 0.20 8960  -0.41e-6 9e-6    1.76 T300
+
+
+soorten hars
+   Em   v    alpha   rho name
+r: 2900 0.36 41.4e-6 1.15 Epikote04908
+
+t: twill245
+m: 0.56 Epikote04908
+l: 122.5 0  T300
+l: 122.5 90 T300
+
+
