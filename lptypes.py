@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-04-01 19:13:31 rsmith>
+# Time-stamp: <2011-07-02 23:45:01 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,7 +43,7 @@ class Fiber:
 
 class Resin:
     """A class for containing resin properties."""
-    def __init__(self, E=0.0, v=0.0, cte=0.0, density=1.0):
+    def __init__(self, E, v, cte, density):
         self.E = float(E)       # Young's Modulus [MPa]
         self.v = float(v)       # Poisson's constant
         self.G = self.E/(2.0*(1.0+self.v))      # Shear modulus [MPa]
@@ -52,7 +52,7 @@ class Resin:
 
 class Lamina:
     """A class for unidirectional layer properties."""
-    def __init__(self, fiber, resin, weight=0.0, angle=0.0, vf=0.5):
+    def __init__(self, fiber, resin, weight, angle, vf):
         self.fiber = fiber      # Fiber properties
         self.resin = resin      # Resin properties
         self.weight = float(weight)     # Area weight of the fibers [g/m²]
@@ -97,6 +97,7 @@ class Laminate:
         self.weight = 0.0       # Weight of the fibers only! [g/m²]
         self.rc = 0.0           # Weight of the resin [g/m²]
         self.vf = 0.0
+        self.density = 0.0
         self.wf = 0.0
         self.finished=False
     def append(self, lamina):
@@ -111,8 +112,12 @@ class Laminate:
         return len(self.layers)
     def finish(self):
         """Calculate the laminate properties."""
+        if self.finished == True:
+            return
         if len(self.layers) == 0:
             return
+        self.density= 0.0
+        self.vf = 0.0
         for l in self.layers:
             if l == self.layers[0]:
                 zs = -self.thickness/2
@@ -127,7 +132,6 @@ class Laminate:
         Nt_y = 0.0
         Nt_xy = 0.0
         ABD = numpy.zeros((6,6))
-        self.density = 0.0
         for l in self.layers:
                 # first row
                 ABD[0,0] += l.Q_11*l.thickness      # [1], p. 290
@@ -181,6 +185,9 @@ class Laminate:
                 # Overall density and fiber volume fraction calculation
                 self.density += l.density*l.thickness
                 self.vf += l.vf*l.thickness
+        # Finish the density and vf calculations.
+        self.density /= self.thickness
+        self.vf /= self.thickness
         # Finish the matrices, discarding very small numbers in ABD.
         for i in range(6):
             for j in range(6):
@@ -201,8 +208,6 @@ class Laminate:
                       self.abd[0,2]*Nt_xy)
         self.cte_y = (self.abd[1,0]*Nt_x + self.abd[1,1]*Nt_y + 
                       self.abd[1,2]*Nt_xy)
-        # Finish the density and vf calculations.
-        self.density /= self.thickness
-        self.vf /= self.thickness
+        # Finish the weight fraction calculation.
         self.wf = self.weight/(self.weight+self.rc)
         self.finished = True
