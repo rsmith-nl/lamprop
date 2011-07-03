@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Updates the file lpver.py after a commit is made.
+#
+# To enable this hook, copy this file to ".git/hooks/post-commit".
+
+REP=$(git --no-pager log -1 HEAD --pretty=format:"s|VERSION|%h|")
+sed -e $REP lpver.py.in >lpver.py
