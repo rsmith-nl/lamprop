@@ -2,7 +2,7 @@
 # Version data for lamprop
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-04-17 12:14:03 rsmith>
+# Time-stamp: <2011-07-03 12:06:32 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -26,7 +26,7 @@
 # SUCH DAMAGE.
 
 name = 'lamprop'
-version = '2.0.1'
+version = '2.0.2'
 license = '''{0} {1}
 Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 

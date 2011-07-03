@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-02 23:45:01 rsmith>
+# Time-stamp: <2011-07-03 17:32:06 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,6 +40,11 @@ class Fiber:
         self.cte2 = float(cte2)
         self.density = float(density)   # [g/cm³]
         self.name = name
+    def __str__(self):
+        s = "[name={}, density={}, E1={}, E2={}, "
+        s += "v12={}, G12={}, cte1={}, cte2={}]"
+        return s.format(self.name, self.density, self.E1, self.E2, self.v12, 
+                        self.G12, self.cte1, self.cte2)
 
 class Resin:
     """A class for containing resin properties."""
@@ -49,6 +54,9 @@ class Resin:
         self.G = self.E/(2.0*(1.0+self.v))      # Shear modulus [MPa]
         self.cte = float(cte)   # Coefficient of thermal expansion [K⁻¹]
         self.density = float(density)   # [g/cm³]
+    def __str__(self):
+        s = "[name={}, density={},E={}, v={}, G={}, cte={}]"
+        return s.format(self.name, self.density, self.E, self.v, self.G, self.cte)
 
 class Lamina:
     """A class for unidirectional layer properties."""
@@ -88,6 +96,10 @@ class Lamina:
         self.Q_26 = foo*n3*m+bar*n*m3
         self.Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
         self.density = fiber.density*self.vf+resin.density*vm
+    def __str__(self):
+        s = "[fiber={}, resin={}, weight={}, angle={}, vf={}]"
+        return s.format(self.fiber.name, self.resin.name, self.weight, 
+                        self.angle, self.vf)
 
 class Laminate:
     """A class for fibrous laminates."""
@@ -96,9 +108,6 @@ class Laminate:
         self.thickness = 0.0
         self.weight = 0.0       # Weight of the fibers only! [g/m²]
         self.rc = 0.0           # Weight of the resin [g/m²]
-        self.vf = 0.0
-        self.density = 0.0
-        self.wf = 0.0
         self.finished=False
     def append(self, lamina):
         """Add a layer to the laminate."""
