@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-03 17:32:06 rsmith>
+# Time-stamp: <2011-07-04 22:22:11 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,6 +27,16 @@
 
 import math
 import numpy
+
+"""References:
+@Book{Hyer:1998,
+  author =       {Micheal W. Hyer},
+  title =        {Stress analysis of fiber-reinforced composite materials},
+  publisher =    {McGraw--Hill},
+  year =         {1998},
+  note =         {ISBN~0~07~115983~5}
+}
+"""
 
 class Fiber:
     """A class for containing fiber properties. Direction 1 is in the length
@@ -85,7 +95,7 @@ class Lamina:
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2
         self.cte_xy = 2*(cte1-cte2)*m*n
-        S11 = 1/self.E1; S12 = -self.v12/self.E1
+        S11 = 1/self.E1; S12 = -self.v12/self.E2 # [1] p. 49, (2.19)
         S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12;
         Q11 = S22/denum; Q12 = -S12/denum; Q22 = S11/denum; Q66 = 1/S66
         self.Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
@@ -213,8 +223,9 @@ class Laminate:
         self.Vxy = ABD[0,1]/ABD[1,1]
         self.Vyx = ABD[0,1]/ABD[0,0];
         # Calculate the coefficients of thermal expansion.
+        # Technically only valid for a symmetric laminate!
         self.cte_x = (self.abd[0,0]*Nt_x + self.abd[0,1]*Nt_y + 
-                      self.abd[0,2]*Nt_xy)
+                      self.abd[0,2]*Nt_xy) # [1], p. 451, (11.86)
         self.cte_y = (self.abd[1,0]*Nt_x + self.abd[1,1]*Nt_y + 
                       self.abd[1,2]*Nt_xy)
         # Finish the weight fraction calculation.
