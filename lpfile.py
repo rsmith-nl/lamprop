@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-02 23:50:55 rsmith>
+# Time-stamp: <2011-07-05 23:47:43 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,6 +27,14 @@
 
 import lptypes
 
+def _numeric(val):
+   '''Tests if a value is a valid floating point number.'''
+   try:
+       float(val)
+   except ValueError:
+       return False
+   return True
+
 def parse(fname):
     '''Reads and parses the file fname. Returns a tuple containing dictionaries 
        of fibers, resins, and laminates.'''
@@ -46,9 +54,13 @@ def parse(fname):
         if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
             continue # comment line
         if lst[0][0] == 'f':
-            finame = ' '.join(lst[8:])
-            f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
-                                      lst[5], lst[6], lst[7], finame)
+            if _numeric(lst[5]): # Old format
+                finame = ' '.join(lst[8:])
+                f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
+                                          lst[5], lst[6], lst[7], finame)
+            else:               # New format; Name _must_ start with a non-mumber.
+                finame = ' '.join(lst[5:])
+                f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], finame)
         elif lst[0][0] == 'r':
             rname = ' '.join(lst[5:])
             r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
