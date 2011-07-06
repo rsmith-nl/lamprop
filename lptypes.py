@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-04 22:22:11 rsmith>
+# Time-stamp: <2011-07-06 23:45:18 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -95,7 +95,8 @@ class Lamina:
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2
         self.cte_xy = 2*(cte1-cte2)*m*n
-        S11 = 1/self.E1; S12 = -self.v12/self.E2 # [1] p. 49, (2.19)
+        # Assuming plane stress situation.
+        S11 = 1/self.E1; S12 = -self.v12/self.E1 # [1] p. 152, (4.5)
         S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12;
         Q11 = S22/denum; Q12 = -S12/denum; Q22 = S11/denum; Q66 = 1/S66
         self.Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
