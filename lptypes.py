@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-05 23:25:04 rsmith>
+# Time-stamp: <2011-07-07 22:56:35 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,10 @@
 import math
 import numpy
 
-"""References:
+"""This module contains the objects necessary to calculate the properties of
+continuous fiber reinforced laminates.
+
+The following references used in coding this module:
 @Book{Hyer:1998,
   author =       {Micheal W. Hyer},
   title =        {Stress analysis of fiber-reinforced composite materials},
@@ -43,6 +46,25 @@ import numpy
   publisher =    {Think Composites},
   year =         {1992},
   note =         {ISBN~0~9618090~3~5}
+}
+
+@Article{1992WeiEn..52...29H,
+   author = {Hart-Smith, L.~J.},
+    title = "{The ten-percent rule for preliminary sizing of fibrous
+                  composite structures}",
+  journal = {Weight Engineering},
+     year = 1992,
+   volume = 52,
+    pages = {29-45},
+  adsnote = {Provided by the Smithsonian/NASA Astrophysics Data System}
+}
+
+@Book{Vinson:1987,
+  author =       {J.R. Vinson},
+  title =        {The behavior of structures composed of composite materials},
+  publisher =    {Martinus Nijhoff Publishers},
+  year =         {1987},
+  note =         {ISBN~90~247~3125~90 (hardcover)}
 }
 """
 
