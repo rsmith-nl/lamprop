@@ -2,7 +2,7 @@
 # HTML output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-28 22:37:09 rsmith>
+# Time-stamp: <2011-09-09 17:09:00 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -115,11 +115,17 @@ def engprop(l, nm):
     print "                <tr>"
     s = "                  <td>resin</td><td>{:.0f}</td>"
     print s.format(l.rc)
+    print "                  <td align=\"left\">gr/m&sup2;</td>"
     print "                </tr>"
     print "              </tbody>"
     print "                <tr>"
     s = "                  <td>E<sub>x</sub></td><td>{:8.0f}</td>"
     print s.format(l.Ex)
+    print "                  <td align=\"left\">MPa</td>"
+    print "                </tr>"
+    print "                <tr>"
+    s = "                  <td>E<sub>y</sub></td><td>{:8.0f}</td>"
+    print s.format(l.Ey)
     print "                  <td align=\"left\">MPa</td>"
     print "                </tr>"
     print "                <tr>"
@@ -209,14 +215,14 @@ def matrices(l, nm, printheader):
     print "              <colgroup span=\"1\"></colgroup>"
     print "              <tbody align=\"center\">"
     print "                <tr>"
-    print "                  <td>{}</td>".format(fstr[0])
+    print "                  <td>{}</td>".format(dstr[0])
     print "                  <td rowspan=\"6\">=</td>"
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
     print s.format(l.abd[0,0]*1e6, l.abd[0,1]*1e6, l.abd[0,2]*1e6)
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
     print s.format(l.abd[0,3]*1e6, l.abd[0,4]*1e6, l.abd[0,5]*1e6)
-    print "                  <td rowspan=\"6\">&times;10"\
-        "<sup>-6</sup>&times;</td>"
+    print "                  <td rowspan=\"6\">&times;10<sup>-6</sup>&times;</td>"
+    print "                  <td>{}</td>".format(fstr[0])
     print "                </tr>"
     for n in range(1,6):
         print "                <tr>"
