@@ -2,7 +2,7 @@
 # LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-04-01 19:14:01 rsmith>
+# Time-stamp: <2011-09-18 14:21:23 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,21 +28,21 @@
 import lptypes
 import lpver
 
-def out(lam, name, eng, mat):
+def out(lam, eng, mat):
     '''LaTeX main output function.'''
     print "\\begin{table}[!htbp]"
     print "  \\renewcommand{\\arraystretch}{1.2}"
-    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(name)
+    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(lam.name)
     print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
-    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}\n".format(lpver.name,
+    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}".format(lpver.name,
                                                                lpver.version)
     if eng == True:
-        engprop(lam, name)
+        engprop(lam)
     if mat == True:
-        matrices(lam, name, not eng)
+        matrices(lam, not eng)
     print "\\end{table}\n"
 
-def engprop(l, nm):
+def engprop(l):
     '''Prints the engineering properties as a LaTeX table.'''
     print "  \\parbox{\\textwidth}{\\centering"
     print "    \\begin{tabular}[t]{rcrl}"
@@ -82,7 +82,7 @@ def engprop(l, nm):
     print "  }\\vspace{5mm}"
 
 
-def matrices(l, nm, printheader):
+def matrices(l, printheader):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
     print "  \\vbox{"
     print "    \\vbox{\\small\\textbf{Stiffness matrix}\\\\"

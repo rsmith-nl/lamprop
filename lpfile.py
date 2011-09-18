@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-10 23:23:40 rsmith>
+# Time-stamp: <2011-09-18 14:20:45 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,8 +40,8 @@ def parse(fname):
        of fibers, resins, and laminates.'''
     f = {} # dictionary of fibers
     r = {} # dictionary of resins
-    l = {} # dictionary of laminates
-    curlam = None       # Current laminates
+    l = [] # list of laminates
+    curlam = None       # Current laminate
     curresin = None     # Current resin
     curvf = 0.0
     try:
@@ -65,13 +65,15 @@ def parse(fname):
             r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
         elif lst[0][0] == 't':
             lname = ' '.join(lst[1:])
-            if lname in l:
+#            names = [x.name for x in l]
+            if lname in [x.name for x in l]:
                 print "Laminate '{0}' already exists! Skipping.".format(lname)
             else:
                 if curlam != None:
                     curlam.finish()
                     curresin = None
-                curlam = l[lname] = lptypes.Laminate()
+                curlam = lptypes.Laminate(lname)
+                l.append(curlam)
         elif lst[0][0] == 'm':
             if curlam == None:
                 print "Found 'm:' line outside a laminate; Skipping."

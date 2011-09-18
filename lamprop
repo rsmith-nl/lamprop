@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-02 23:10:22 rsmith>
+# Time-stamp: <2011-09-18 14:44:55 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -55,7 +55,7 @@ group = opts.add_mutually_exclusive_group()
 group.add_argument('-L', '--license', action=LicenseAction, nargs=0,
                   help="print the license")
 group.add_argument('-v', '--version', action='version', 
-                   version='%(prog)s {0}'.format(lpver.version))
+                   version='{0}'.format(lpver.version))
 opts.add_argument("files", metavar='file', nargs='*', 
                   help="one or more files to process")
 args = opts.parse_args()
@@ -84,6 +84,5 @@ for f in args.files:
     # Process the files.
     fibers,resins,laminates = lpfile.parse(f)
     # Print the results.
-    for lname,lam in laminates.iteritems():
-        out(lam, lname, args.eng, args.mat)
-
+    for curlam in laminates:
+        out(curlam, args.eng, args.mat)

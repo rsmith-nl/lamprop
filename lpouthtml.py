@@ -2,7 +2,7 @@
 # HTML output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-09 17:09:00 rsmith>
+# Time-stamp: <2011-09-18 14:19:24 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,26 +28,26 @@
 import lptypes
 import lpver
 
-def out(lam, name, eng, mat):
+def out(lam, eng, mat):
     '''HTML main output function.'''
     print "    <!-- outer table -->"
     print "    <table cellpadding=\"10%\">"
     s = "      <caption><strong>Properties of {}</strong></caption>"
-    print s.format(name)
+    print s.format(lam.name)
     print "      <tbody align=\"center\">"
     print "        <tr>"
     s = "          <td  align=\"center\" colspan=\"2\">created by {} {}.</td>"
     print s.format(lpver.name, lpver.version)
     print "        </tr>"
     if eng == True:
-        engprop(lam, name)
+        engprop(lam)
     if mat == True:
-        matrices(lam, name, not eng)
+        matrices(lam, not eng)
     print "      </tbody>"
     print "    </table>"
     print "    <hr />"
 
-def engprop(l, nm):
+def engprop(l):
     '''Prints the engineering properties as a HTML table.'''
     print "        <!-- first row; tables -->"
     print "        <tr>"
@@ -158,7 +158,7 @@ def engprop(l, nm):
     print "          </td>"
     print "        </tr>"
 
-def matrices(l, nm, printheader):
+def matrices(l, printheader):
     '''Prints the ABD and abd matrices as HTML tables.'''
     fstr = ["N<sub>x</sub>", "N<sub>y</sub>", "N<sub>xy</sub>",
             "M<sub>x</sub>", "M<sub>y</sub>", "M<sub>xy</sub>"]

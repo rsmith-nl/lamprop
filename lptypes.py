@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-10 23:20:49 rsmith>
+# Time-stamp: <2011-09-18 14:11:20 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -137,7 +137,8 @@ class Lamina:
 
 class Laminate:
     """A class for fibrous laminates."""
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.layers = []
         self.thickness = 0.0
         self.weight = 0.0       # Weight of the fibers only! [g/m²]
