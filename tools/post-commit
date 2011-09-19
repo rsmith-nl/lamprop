@@ -1,8 +1,18 @@
 #!/bin/sh
 #
-# Updates the file lpver.py after a commit is made.
+# Updates the files lpver.py, lamprop.1.* and lamprop.5.* after a commit is
+# made.
 #
 # To enable this hook, copy this file to ".git/hooks/post-commit".
 
-REP=$(git --no-pager log -1 HEAD --pretty=format:"s|VERSION|%h|")
-sed -e $REP lpver.py.in >lpver.py
+VER=$(git --no-pager log -1 HEAD --pretty=format:"s|VERSION|%h|")
+DATE=$(git --no-pager log -1 HEAD --pretty=format:"s|DATE|%ci|"|sed -e 's/ .*/|/')
+sed -e $VER lpver.py.in >lpver.py
+sed -e $VER -e $DATE lamprop.1.in >lamprop.1
+groff -Tps -mandoc lamprop.1 >lamprop.1.ps
+epspdf lamprop.1.ps
+rm -f lamprop.1.ps 
+sed -e $VER -e $DATE lamprop.5.in >lamprop.5
+groff -Tps -mandoc lamprop.5 >lamprop.5.ps
+epspdf lamprop.5.ps
+rm -f lamprop.5.ps

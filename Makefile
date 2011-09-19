@@ -6,7 +6,7 @@ help:
 	@echo "Use 'make clean' to remove all generated files."
 	@echo "Use 'make backup' to create a complete backup."
 
-install::
+install: lamprop.1
 	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
 		exit 1; \
@@ -21,3 +21,7 @@ clean::
 
 backup::
 	@sh tools/genbackup
+
+# This also recreates lamprop.5, PDF documentation and lpver.py.
+lamprop.1: lamprop.1.in
+	tools/post-commit
