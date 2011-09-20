@@ -1,5 +1,5 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2008-02-13 12:56:48 rsmith>
+.\" Time-stamp: <2011-09-21 00:05:48 rsmith>
 .\"
 .\" lamprop/lamprop.1
 .\" Copyright (c) 2002--2005,2008 R.F. Smith <rsmith@xs4all.nl>
@@ -26,114 +26,126 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.TH LAMPROP 5 "DATE" "version VERSION" ""
-.SH DESCRIPTION
-This manpage documents the file format used by version VERSION of the
-.BR lamprop (1)
-program.
-.PP
+.Dd DATE
+.Os 
+.Dt LAMPROP 5
+.Sh NAME
+.Nm lamprop
+.Nd This manpage documents the file format used by 
+.Nm .
+.Sh DESCRIPTION
+.Pp
 The file format is very simple. Functional lines have either 
-.BR f ,
-.BR r ,
-.BR t ,
-.B m
+.Ql f ,
+.Ql r ,
+.Ql t ,
+.Ql m
 or
-.B l
+.Ql l
 as the first non-whitespace
 character. This character must immediately be followed by a colon
-.RB ( : ).
+.Ql \&: .
 All other lines are seen as comments and disregarded.
-.PP
-The \fBf:\fP-line contains a definition of a fiber. It must contain the
+.Pp
+The 
+.Ql f:
+line contains a definition of a fiber. It must contain the
 following values, separated by whitespace:
-.TP
-.B E1
+.Bl -tag -width indent
+.It Sy E1
 Young's modulus in the fiber direction.
-.TP
-.B E2
+.It Sy E2
 Young's modulus perpendicular to the fiber direction.
-.TP
-.B v12
+.It Sy v12
 Poisson's constant.
-.TP
-.B G12
+.It Sy G12
 Shear modulus of the fibe.
-.TP
-.B alpha1
+.It Sy alpha1
 Coefficient of Thermal Expansion in the fiber direction.
-.TP
-.B alpha2
+.It Sy alpha2
 CTE perpendicular to the fiber direction.
-.TP
-.B rho
+.It Sy rho
 Density of the fiber.
-.TP
-.B name
+.It Sy name
 Name that identifies the fiber. Every fiber in the input files should have
 a unique name.
-.P
+.El
+.Pp
 Usually, 
-.B E1
+.Sy E1
 (and other properties in the fibre length direction) is easily obtained
 from a fiber supplier. Properties pertaining to the '2' direction
-.RB ( E2 ,
-.B v12 
+.Sy E2 ,
+.Sy v12 
 and
-.BR G12 )
+.Sy G12 )
 are much harder to
 come by, but essential for the calculations. The
-.B EXAMPLES
+.Sy EXAMPLES
 section below contains some values that the author uses for different fibers.
-.P
-The \fBr:\fP-line contains a definition of a resin. It must contain the
+.Pp
+The 
+.Ql r: 
+line contains a definition of a resin. It must contain the
 following values, separated by whitespace:
-.TP
-.B E
+.Bl -tag -width indent
+.It Sy E
 Young's modulus of the resin.
-.TP
-.B v
+.It Sy v
 Poisson's constant.
-.TP
-.B alpha
+.It Sy alpha
 CTE of the resin.
-.TP
-.B rho
+.It Sy rho
 Density of the resin.
-.TP
-.B name
+.It Sy name
 Name that identifies the resin. Every resin in the input files should have
 a unique name.
-.P
-The \fBt:\fP-line starts a new laminate. It only contains the name which
-identifies the laminate. This name must be unique within the current input
-files.
-.P
-The \fBm:\fP-line chooses a resin for the laminate. It must appear after a
-\fBt:\fP-line, and before the \fBl:\fP-lines. It must contain the following
-values, separated by whitespace:
-.TP
-.B vf
+.El
+.Pp
+The 
+.Ql t:
+line starts a new laminate. It only contains the name which identifies the
+laminate. This name must be unique within the current input files.
+.Pp
+The 
+.Ql m:
+line chooses a resin for the laminate. It must appear after a
+.Ql t:
+line, and before the 
+.Ql l:
+lines. It must contain the following values, separated by whitespace:
+.Bl -tag -width indent
+.It Sy vf
 The fiber volume fraction for the laminate.
-.TP
-.B name
+.It Sy name
 The name of the resin used in the laminate. This resin must have been
-declared previously with an \fBr:\fP-line.
-.P
-The \fBl:\fP-line defines a single layer (lamina) in the laminate. It must
-be preceded by a \fBt:\fP- and a \fBm:\fP-line. It must contain the
-following values, separated by whitespace:
-.TP
-.B weight
+declared previously with an 
+.Sy r:
+-line.
+.El
+.Pp
+The 
+.Ql l:
+line defines a single layer (lamina) in the laminate. It must
+be preceded by a 
+.Ql t:
+ and a 
+.Ql m:
+-line. It must contain the following values, separated by whitespace:
+.Bl -tag -width indent
+.It Sy weight
 The weight in grams per square meter of the dry fibers.
-.TP
-.B angle
+.It Sy angle
 The angle upwards from the x-axis under which the fibers are oriented.
-.TP
-.B name
+.It Sy name
 The name of the fiber used in this layer. This fiber must have been
-declared previously with an \fBf:\fP-line.
-.SH EXAMPLES
-The following is a sample input file for \fBlamprop\fR.
+declared previously with an 
+.Ql f:
+line.
+.El
+.Sh EXAMPLES
+The following is a sample input file for 
+.Nm .
 .nf
 Fiber definition
    E1     E2    v12  G12  alpha1   alpha2   rho  naam
@@ -152,7 +164,7 @@ l: 100 90 Hyer's carbon fiber
 l: 100 90 Hyer's carbon fiber
 l: 100  0 Hyer's carbon fiber
 .fi
-.P
+.Pp
 Below are some typical values used by the author for different kinds of
 materials:
 .TS
@@ -167,31 +179,31 @@ f:	238000	15000	0.20	15000	-0.1e-6	10e-6	1.77	UTS5631 (HS carbon)
 f:	640000	6000	0.23	16960	-1.1e-6	12.3e-6	2.12	K63712 (UHM carbon)
 f:	72400	72400	0.33	26800	5e-6	5e-6	2.54	e_glass
 .TE
-.P
+.Pp
 If anyone would be able to contribute additional material data, the author
 would be gratefull.
-.SH SEE ALSO
-.BR lamprop (1)
-.SH AUTHOR
-The lamprop software is copyright 2002-2005 by Roland Smith
+.Sh SEE ALSO
+.Xr lamprop 1
+.Sh AUTHOR
+The lamprop software is copyright 2011 by Roland Smith
 <rsmith@xs4all.nl>. The latest version of this program is available at:
-.B http://www.xs4all.nl/~rsmith/software/
-.SH LICENSE
-Copyright (c) 2002-2005  R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-.P
+.Ql http://www.xs4all.nl/~rsmith/software/
+.Sh LICENSE
+Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+.Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-.TP
-1. 
+.Bl -tag -width mm -compact
+.It 1. 
 Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
-.TP
-2. 
+.It 2. 
 Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
-.P
+.El
+.Pp
 THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
 EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE

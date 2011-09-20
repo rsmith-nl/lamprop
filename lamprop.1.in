@@ -1,5 +1,5 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2011-09-20 00:22:38 rsmith>
+.\" Time-stamp: <2011-09-21 00:06:06 rsmith>
 .\"
 .\" lamprop/lamprop.1
 .\" Copyright (c) 2011 R.F. Smith <rsmith@xs4all.nl>
@@ -73,7 +73,7 @@ format of these files is documented in
 .Pp
 It then calculates the following values for all the laminates in the input
 files:
-.Bl -tag -width indent -compact
+.Bl -tag -width cte_x -compact
 .It Sy thickness
 Total thickness of the laminate, in millimeters.
 .It Sy Vf
@@ -131,7 +131,7 @@ revision control system.
 .Sh AUTHOR
 Roland Smith <rsmith@xs4all.nl>. The latest version of this program is
 available at:
-.B http://www.xs4all.nl/~rsmith/software/
+.Ql http://www.xs4all.nl/~rsmith/software/
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
@@ -142,7 +142,7 @@ Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-.Bl -tag -width indent
+.Bl -tag -width mm -compact
 .It 1. 
 Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
