@@ -1,30 +1,8 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2011-09-21 00:05:48 rsmith>
+.\" Time-stamp: <2011-09-21 22:45:50 rsmith>
 .\"
-.\" lamprop/lamprop.1
-.\" Copyright (c) 2002--2005,2008 R.F. Smith <rsmith@xs4all.nl>
-.\" All rights reserved.
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in the
-.\"    documentation and/or other materials provided with the distribution.
-.\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND
-.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
-.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-.\" SUCH DAMAGE.
+.\" lamprop/lamprop.5
+.\" Copyright (c) 2011 R.F. Smith <rsmith@xs4all.nl>
 .\"
 .Dd DATE
 .Os 
@@ -35,113 +13,82 @@
 .Nm .
 .Sh DESCRIPTION
 .Pp
-The file format is very simple. Functional lines have either 
-.Ql f ,
-.Ql r ,
-.Ql t ,
-.Ql m
-or
-.Ql l
-as the first non-whitespace
-character. This character must immediately be followed by a colon
-.Ql \&: .
-All other lines are seen as comments and disregarded.
+The file format is very simple. Functional lines have
+either 'f', 'r', 't', 'm' or 'l' as the first non-whitespace character. This
+character must immediately be followed by a colon ':'. All other lines are
+seen as comments and disregarded.
 .Pp
-The 
-.Ql f:
-line contains a definition of a fiber. It must contain the
-following values, separated by whitespace:
+The 'f:' line contains a definition of a fiber. It must contain the following
+values, separated by whitespace:
 .Bl -tag -width indent
-.It Sy E1
+.It E1
 Young's modulus in the fiber direction.
-.It Sy E2
+.It E2
 Young's modulus perpendicular to the fiber direction.
-.It Sy v12
+.It v12
 Poisson's constant.
-.It Sy G12
+.It G12
 Shear modulus of the fibe.
-.It Sy alpha1
+.It alpha1
 Coefficient of Thermal Expansion in the fiber direction.
-.It Sy alpha2
+.It alpha2
 CTE perpendicular to the fiber direction.
-.It Sy rho
+.It rho
 Density of the fiber.
-.It Sy name
+.It name
 Name that identifies the fiber. Every fiber in the input files should have
 a unique name.
 .El
 .Pp
-Usually, 
-.Sy E1
-(and other properties in the fibre length direction) is easily obtained
-from a fiber supplier. Properties pertaining to the '2' direction
-.Sy E2 ,
-.Sy v12 
-and
-.Sy G12 )
-are much harder to
-come by, but essential for the calculations. The
-.Sy EXAMPLES
+Usually, E1 (and other properties in the fibre length direction) is easily
+obtained from a fiber supplier. Properties pertaining to the '2' direction E2
+, v12 and G12 are much harder to come by, but essential for the
+calculations. The
+.Sx EXAMPLES
 section below contains some values that the author uses for different fibers.
 .Pp
-The 
-.Ql r: 
-line contains a definition of a resin. It must contain the
-following values, separated by whitespace:
+The 'r:' line contains a definition of a resin. It must contain the following
+values, separated by whitespace:
 .Bl -tag -width indent
-.It Sy E
+.It E
 Young's modulus of the resin.
-.It Sy v
+.It v
 Poisson's constant.
-.It Sy alpha
+.It alpha
 CTE of the resin.
-.It Sy rho
+.It rho
 Density of the resin.
-.It Sy name
+.It name
 Name that identifies the resin. Every resin in the input files should have
 a unique name.
 .El
 .Pp
-The 
-.Ql t:
-line starts a new laminate. It only contains the name which identifies the
-laminate. This name must be unique within the current input files.
+The 't:' line starts a new laminate. It only contains the name which
+identifies the laminate. This name must be unique within the current input
+files.
 .Pp
-The 
-.Ql m:
-line chooses a resin for the laminate. It must appear after a
-.Ql t:
-line, and before the 
-.Ql l:
-lines. It must contain the following values, separated by whitespace:
+The 'm:' line chooses a resin for the laminate. It must appear after a 't:'
+line, and before the 'l:' lines. It must contain the following values,
+separated by whitespace:
 .Bl -tag -width indent
-.It Sy vf
+.It vf
 The fiber volume fraction for the laminate.
-.It Sy name
+.It name
 The name of the resin used in the laminate. This resin must have been
-declared previously with an 
-.Sy r:
--line.
+declared previously with an 'r:' line.
 .El
 .Pp
-The 
-.Ql l:
-line defines a single layer (lamina) in the laminate. It must
-be preceded by a 
-.Ql t:
- and a 
-.Ql m:
--line. It must contain the following values, separated by whitespace:
+The 'l:' line defines a single layer (lamina) in the laminate. It must be
+preceded by a 't:' and a 'm:' line. It must contain the following values,
+separated by whitespace:
 .Bl -tag -width indent
-.It Sy weight
+.It weight
 The weight in grams per square meter of the dry fibers.
-.It Sy angle
+.It angle
 The angle upwards from the x-axis under which the fibers are oriented.
-.It Sy name
+.It name
 The name of the fiber used in this layer. This fiber must have been
-declared previously with an 
-.Ql f:
-line.
+declared previously with an 'f:' line.
 .El
 .Sh EXAMPLES
 The following is a sample input file for 
@@ -181,15 +128,13 @@ f:	72400	72400	0.33	26800	5e-6	5e-6	2.54	e_glass
 .TE
 .Pp
 If anyone would be able to contribute additional material data, the author
-would be gratefull.
+would be grateful.
 .Sh SEE ALSO
 .Xr lamprop 1
 .Sh AUTHOR
-The lamprop software is copyright 2011 by Roland Smith
-<rsmith@xs4all.nl>. The latest version of this program is available at:
-.Ql http://www.xs4all.nl/~rsmith/software/
+.An Roland Smith Aq rsmith@xs4all.nl 
 .Sh LICENSE
-Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011 R.F. Smith. All rights reserved.
 .Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -204,15 +149,14 @@ this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
 .El
 .Pp
-THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+THIS DOCUMENTATION IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
 EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
 DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-DAMAGE.
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+DOCUMENTATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\" EOF

@@ -9,10 +9,10 @@ VER=$(git --no-pager log -1 HEAD --pretty=format:"s|VERSION|%h|")
 DATE=$(git --no-pager log -1 HEAD --pretty=format:"s|DATE|%ci|"|sed -e 's/ .*/|/')
 sed -e $VER lpver.py.in >lpver.py
 sed -e $VER -e $DATE lamprop.1.in >lamprop.1
-groff -Tps -mandoc lamprop.1 >lamprop.1.ps
+groff -Tps -mdoc lamprop.1 >lamprop.1.ps
 epspdf lamprop.1.ps
 rm -f lamprop.1.ps 
 sed -e $VER -e $DATE lamprop.5.in >lamprop.5
-groff -Tps -mandoc lamprop.5 >lamprop.5.ps
+groff -Tps -t -mdoc lamprop.5 >lamprop.5.ps
 epspdf lamprop.5.ps
 rm -f lamprop.5.ps

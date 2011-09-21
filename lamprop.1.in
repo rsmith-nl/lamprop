@@ -1,30 +1,8 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2011-09-21 00:06:06 rsmith>
+.\" Time-stamp: <2011-09-21 22:40:11 rsmith>
 .\"
 .\" lamprop/lamprop.1
 .\" Copyright (c) 2011 R.F. Smith <rsmith@xs4all.nl>
-.\" All rights reserved.
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in the
-.\"    documentation and/or other materials provided with the distribution.
-.\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND
-.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
-.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-.\" SUCH DAMAGE.
 .\"
 .Dd DATE
 .Os 
@@ -74,34 +52,32 @@ format of these files is documented in
 It then calculates the following values for all the laminates in the input
 files:
 .Bl -tag -width cte_x -compact
-.It Sy thickness
+.It thickness
 Total thickness of the laminate, in millimeters.
-.It Sy Vf
+.It Vf
 Fiber volume fraction. The fraction of the volume that the fibers
 contribute to the laminate. This calculation assumes that there are no
 voids in the laminate.
-.It Sy Wf
+.It Wf
 Fiber weight fraction. The fraction that the fibers contribute to the total
 weight of the laminate.
-.It Sy Weight
+.It Weight
 The area weight of the laminate, in grams per square meter.
-.It Sy Resin consumption
+.It Resin consumption
 The amount of resin, in grams, needed to make a square meter of laminate.
-.It Sy E_x
+.It E_x
 Young's Modulus in the x-direction, in megapascals.
-.It Sy E_y
+.It E_y
 Young's Modulus in the y-direction, in megapascals.
-.It Sy G_xy
+.It G_xy
 Shear Modulus, in megapascals.
-.It Sy v_xy 
-.It Sy v_yx
+.It v_xy and v_yx
 Poisson constants.
-.It Sy cte_x
+.It cte_x
 Coefficient of Thermal Expansion in the x-direction, in fraction per degree K.
-.It Sy cte_y
+.It cte_y
 Coefficient of thermal expansion in the y-direction, in fraction per degree K.
-.It Sy ABD 
-.It Sy abd
+.It ABD and abd
 The stiffness and compliance matrices of the laminate.
 .El
 .Pp
@@ -109,14 +85,62 @@ These values are written to the standard output.
 .Sh EXIT STATUS
 .Ex -std
 .Sh DIAGNOSTICS
+.Bl -tag -width foo -compact
+.It Cannot open: Em filename
+The file
+.Em filename
+could not be opened for reading. This could be e.g because the file doesn't exist
+or if the user doesn't have access rights to the file.
+.It Laminate 'name' already exists! Skipping.
+This error occurs when you try to use the same laminate name more than once
+within a run. 
+.It Found 'm:' line outside a laminate; Skipping.
+An 'm:' line should follow an 'l:' line.
+.It Resin 'name' unknown. Skipping.
+A resin was used that wasn't previously declared with a 'r:' line. Maybe the
+name was misspelled?
+.It Found 'l:' line but no previous 't:' line! Skipping.
+You have to start a laminatde definition with a 't:' line before you can add
+lamina to the laminate.
+.It Found 'l:' line but no previous 'm:' line! Skipping.
+Similarly, you have to define which matrix is to be used with a lamina before
+you create a lamina.
+.It Unknown fiber in 'l:' line. Skipping.
+A fiber was used that wasn't previously declared with a 'f:' line. Maybe the
+name was misspelled?
+.El 
 .Sh SEE ALSO
 .Xr lamprop 5 ,
 .Xr latex 1
+.Rs 
+.%A M. W. Hyer
+.%B Stress Analysis of Fiber Reinforced Composite Materials
+.%I McGraw-Hill
+.%C Boston, USA
+.%D 1997
+.Re
+.Rs 
+.%A J.R. Vinson
+.%A R.L. Sierakowski
+.%B The Behavior of Structures Composed of Composite Materials
+.%I Martinus Nijhoff Publishers
+.%C Dordrecht, The Netherlands
+.%D 1987
+.Re
+.Rs 
+.%A L.J. Hart-Smith
+.%B The ten-percent rule for preliminary sizing of fibrous composite structures
+.%J Weight Engineering
+.%N 52
+.%P 29-45
+.%D 1992
+.Re
 .Sh HISTORY
 This program was written to automate the calculations necessary to obtain the
 properties of a fiber reinforced laminate based on the properties of the
 fibers and the matrix used. While these calculations are well documented in
-the literature, they are quite cumbersome to do by hand.
+the literature (see the references above), they are quite cumbersome to do by
+hand.
 .Pp
 The original version of this program was written in C, since implementing it
 in a spreadsheet proved cumbersome, inflexible and even produced incorrect
@@ -129,15 +153,18 @@ versioning numbers were dropped in favor of the short commit-id from the
 .Xr git 1
 revision control system.
 .Sh AUTHOR
-Roland Smith <rsmith@xs4all.nl>. The latest version of this program is
-available at:
-.Ql http://www.xs4all.nl/~rsmith/software/
+.An Roland Smith Aq rsmith@xs4all.nl 
+.Pp
+The latest version of this program is available at:
+.Lk http://www.xs4all.nl/~rsmith/software/
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
-fibers like carbon and aramid.
+fibers like carbon and aramid. In 
+.Xr lamprop 5
+some values that the author has gathered are reproduced.
 .Sh LICENSE
-Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011 R.F. Smith. All rights reserved.
 .Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
