@@ -1,12 +1,11 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2011-09-21 22:40:11 rsmith>
-.\"
-.\" lamprop/lamprop.1
-.\" Copyright (c) 2011 R.F. Smith <rsmith@xs4all.nl>
+.\" lamprop.1
+.\" By: R.F. Smith <rsmith@xs4all.nl>
+.\" Time-stamp: <2011-09-24 20:40:37 rsmith>
 .\"
 .Dd DATE
 .Os 
-.Dt LAMPROP 1
+.Dt LAMPROP 1 CON
 .Sh NAME
 .Nm lamprop
 .Nd calculates properties of fiber-reinforced composite laminates.
@@ -22,7 +21,9 @@
 .Op Ar
 .\" [-h] [-l | -H] [-e] [-m] [-L | -v] [file [file ...]]
 .Sh DESCRIPTION
-This manual page documents version VERSION of the 
+This manual page documents version
+.Ql VERSION
+of the
 .Nm
 program, a program to calculate mechanical and thermal properties of
 fiber-reinforced composite laminates.
@@ -32,9 +33,22 @@ The following options are available:
 .It Fl h Fl -help
 Show this help message and exit.
 .It Fl l Fl -latex
-LaTeX output.
+Output the generated properties as a LaTeX table. It makes use of the 
+.Xr booktabs
+package. It in meant to be included in a LaTeX document (using
+.Ql \e\input
+), so it is not a self-contained LaTeX document.
 .It Fl H Fl -html
-HTML output.
+Output the generated properties as a HTML table. It is meant to be inserted
+into a HTML page so it doesn't contain 
+.Ql <head>
+and
+.Ql <body>
+tags, but both
+.Xr links 1
+and
+.Xr firefox 1
+will render it properly without them.
 .It Fl e Fl -eng
 Produce the layers and engineering properties.
 .It Fl m Fl -mat
@@ -51,7 +65,7 @@ format of these files is documented in
 .Pp
 It then calculates the following values for all the laminates in the input
 files:
-.Bl -tag -width cte_x -compact
+.Bl -tag -width "Resin consumption" -compact
 .It thickness
 Total thickness of the laminate, in millimeters.
 .It Vf
@@ -81,7 +95,8 @@ Coefficient of thermal expansion in the y-direction, in fraction per degree K.
 The stiffness and compliance matrices of the laminate.
 .El
 .Pp
-These values are written to the standard output.
+These values are written to the standard output, in the form specified by the
+output options. The default is plain text output.
 .Sh EXIT STATUS
 .Ex -std
 .Sh DIAGNOSTICS
@@ -95,13 +110,13 @@ or if the user doesn't have access rights to the file.
 This error occurs when you try to use the same laminate name more than once
 within a run. 
 .It Found 'm:' line outside a laminate; Skipping.
-An 'm:' line should follow an 'l:' line.
+An 'm:' line should follow an 't:' line.
 .It Resin 'name' unknown. Skipping.
 A resin was used that wasn't previously declared with a 'r:' line. Maybe the
 name was misspelled?
 .It Found 'l:' line but no previous 't:' line! Skipping.
-You have to start a laminatde definition with a 't:' line before you can add
-lamina to the laminate.
+You have to start a laminate definition with a 't:' line before you can add
+lamina (layers) to the laminate.
 .It Found 'l:' line but no previous 'm:' line! Skipping.
 Similarly, you have to define which matrix is to be used with a lamina before
 you create a lamina.
@@ -109,8 +124,14 @@ you create a lamina.
 A fiber was used that wasn't previously declared with a 'f:' line. Maybe the
 name was misspelled?
 .El 
+.Sh COMPATIBILITY
+This version of the 
+.Nm
+program requires the Python interpreter and the Numerical
+Python extension.
 .Sh SEE ALSO
 .Xr lamprop 5 ,
+.Xr python 1 ,
 .Xr latex 1
 .Rs 
 .%A M. W. Hyer
@@ -135,6 +156,18 @@ name was misspelled?
 .%P 29-45
 .%D 1992
 .Re
+.Rs
+.%B The booktabs package
+.%U http://www.ctan.org/tex-archive/macros/latex/contrib/booktabs/
+.Re
+.Rs
+.%B Python Programming Language - Official Website
+.%U http://www.python.org/
+.Re
+.Rs
+.%B Numerical Python
+.%U http://numpy.scipy.org/
+.Re
 .Sh HISTORY
 This program was written to automate the calculations necessary to obtain the
 properties of a fiber reinforced laminate based on the properties of the
@@ -153,10 +186,13 @@ versioning numbers were dropped in favor of the short commit-id from the
 .Xr git 1
 revision control system.
 .Sh AUTHOR
-.An Roland Smith Aq rsmith@xs4all.nl 
+This manual and the 
+.Nm
+software were written by 
+.An Roland Smith Aq rsmith@xs4all.nl .
 .Pp
 The latest version of this program is available at:
-.Lk http://www.xs4all.nl/~rsmith/software/
+.Lk http://rsmith.home.xs4all.nl/software/ 
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
@@ -164,30 +200,38 @@ fibers like carbon and aramid. In
 .Xr lamprop 5
 some values that the author has gathered are reproduced.
 .Sh LICENSE
-Copyright © 2011 R.F. Smith. All rights reserved.
+To the extent possible under law, Roland Smith has waived all copyright and
+related or neighboring rights to this manual. This work is published from the
+Netherlands. See 
+.Lk http://creativecommons.org/publicdomain/zero/1.0/
+.Pp
+The
+.Nm
+program itself is released under the two-clause BSD license given below;
+.Pp
+Copyright \(co 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 .Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-.Bl -tag -width mm -compact
-.It 1. 
+.Bl -tag -width "foo" -compact
+.It 1.
 Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
-.It 2. 
-Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
+.It 2.
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
 .El
 .Pp
-THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-DAMAGE.
+THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\" EOF

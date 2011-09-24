@@ -1,12 +1,11 @@
 .\" -*- nroff -*-
-.\" Time-stamp: <2011-09-21 22:45:50 rsmith>
-.\"
-.\" lamprop/lamprop.5
-.\" Copyright (c) 2011 R.F. Smith <rsmith@xs4all.nl>
+.\" lamprop.5
+.\" By: R.F. Smith <rsmith@xs4all.nl>
+.\" Time-stamp: <2011-09-24 18:50:21 rsmith>
 .\"
 .Dd DATE
 .Os 
-.Dt LAMPROP 5
+.Dt LAMPROP 5 CON
 .Sh NAME
 .Nm lamprop
 .Nd This manpage documents the file format used by 
@@ -20,7 +19,7 @@ seen as comments and disregarded.
 .Pp
 The 'f:' line contains a definition of a fiber. It must contain the following
 values, separated by whitespace:
-.Bl -tag -width indent
+.Bl -tag -width "alpha2" -compact
 .It E1
 Young's modulus in the fiber direction.
 .It E2
@@ -49,7 +48,7 @@ section below contains some values that the author uses for different fibers.
 .Pp
 The 'r:' line contains a definition of a resin. It must contain the following
 values, separated by whitespace:
-.Bl -tag -width indent
+.Bl -tag -width "alpha" -compact
 .It E
 Young's modulus of the resin.
 .It v
@@ -70,7 +69,7 @@ files.
 The 'm:' line chooses a resin for the laminate. It must appear after a 't:'
 line, and before the 'l:' lines. It must contain the following values,
 separated by whitespace:
-.Bl -tag -width indent
+.Bl -tag -width "name" -compact
 .It vf
 The fiber volume fraction for the laminate.
 .It name
@@ -81,7 +80,7 @@ declared previously with an 'r:' line.
 The 'l:' line defines a single layer (lamina) in the laminate. It must be
 preceded by a 't:' and a 'm:' line. It must contain the following values,
 separated by whitespace:
-.Bl -tag -width indent
+.Bl -tag -width "weight" -compact
 .It weight
 The weight in grams per square meter of the dry fibers.
 .It angle
@@ -93,7 +92,7 @@ declared previously with an 'f:' line.
 .Sh EXAMPLES
 The following is a sample input file for 
 .Nm .
-.nf
+.Bd -literal -offset indent
 Fiber definition
    E1     E2    v12  G12  alpha1   alpha2   rho  naam
 f: 233000 23100 0.2  8960 -0.54e-6 10.1e-6  1.76 Hyer's carbon fiber
@@ -110,7 +109,7 @@ l: 100  0 Hyer's carbon fiber
 l: 100 90 Hyer's carbon fiber
 l: 100 90 Hyer's carbon fiber
 l: 100  0 Hyer's carbon fiber
-.fi
+.Ed
 .Pp
 Below are some typical values used by the author for different kinds of
 materials:
@@ -132,31 +131,16 @@ would be grateful.
 .Sh SEE ALSO
 .Xr lamprop 1
 .Sh AUTHOR
-.An Roland Smith Aq rsmith@xs4all.nl 
+This manual and the 
+.Nm
+software were written by 
+.An Roland Smith Aq rsmith@xs4all.nl .
+.Pp
+The latest version of this program is available at:
+.Lk http://rsmith.home.xs4all.nl/software/
 .Sh LICENSE
-Copyright © 2011 R.F. Smith. All rights reserved.
-.Pp
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-.Bl -tag -width mm -compact
-.It 1. 
-Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
-.It 2. 
-Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-.El
-.Pp
-THIS DOCUMENTATION IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-DOCUMENTATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+To the extent possible under law, Roland Smith has waived all copyright and
+related or neighboring rights to this manual. This work is published from the
+Netherlands. See 
+.Lk http://creativecommons.org/publicdomain/zero/1.0/
 .\" EOF

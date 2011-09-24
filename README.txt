@@ -20,4 +20,8 @@ laminates cannot readily be calculated from the strengths of the separate
 materials that form the laminate. These strengths have to be determined
 from tests.
 
-The program has options for producing LaTeX and HTML output.
+The program has options for producing LaTeX and HTML output in addition to
+plain text output.
+
+The program and its file format are documented by two manuals; lamprop.1 and
+lamprop.5 respectively. 

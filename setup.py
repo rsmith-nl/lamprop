@@ -2,7 +2,7 @@
 # Installation script for lamprop.
 #
 # R.F. Smith <rsmith@xs4all.nl>
-# Time-stamp: <2011-07-02 23:51:53 rsmith>
+# Time-stamp: <2011-09-24 16:44:53 rsmith>
 
 from distutils.core import setup
 import lpver
@@ -17,6 +17,7 @@ setup(name=lpver.name,
       author_email='rsmith@xs4all.nl',
       url='http://www.xs4all.nl/~rsmith/software/',
       scripts=['lamprop'],
+      data_files=[('share/doc/lamprop', ['lamprop.1.pdf', 'lamprop.5.pdf'])],
       requires=['numpy'],
       provides=[lpver.name],
       py_modules=['lpfile', 'lpouthtml', 'lpoutlatex',
