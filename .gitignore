@@ -9,3 +9,4 @@ py-lamprop-*.tar.gz
 lamprop.?
 lamprop.?.ps
 lamprop.?.pdf
+tools/replace.sed

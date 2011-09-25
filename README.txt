@@ -24,4 +24,7 @@ The program has options for producing LaTeX and HTML output in addition to
 plain text output.
 
 The program and its file format are documented by two manuals; lamprop.1 and
-lamprop.5 respectively. 
+lamprop.5 respectively. If you install this program on UNIX-like systems with
+'make install', these will be installed automatically. For users of other
+systems, PDF versions are included in the distribution. Installation of the
+program on those systems should be done with 'python setup.py install'.

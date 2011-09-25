@@ -1,2 +1,3 @@
 include Makefile
+include lamprop.?
 include lamprop.?.pdf
