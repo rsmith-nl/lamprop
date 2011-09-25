@@ -3,8 +3,9 @@
 
 MANBASE=/usr/local/man
 
-all: lamprop.1 lamprop.5 lpver.py .git/hooks/post-commit tools/replace.sed
-
+#beginskip
+all: lamprop.1 lamprop.5 lpver.py .git/hooks/post-commit tools/replace.sed lamprop.1.pdf lamprop.5.pdf
+#endskip
 install: lamprop.1 lamprop.5 lpver.py
 	if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
@@ -17,11 +18,16 @@ install: lamprop.1 lamprop.5 lpver.py
 	install -m 644 lamprop.5.gz $(MANBASE)/man5
 	rm -f lamprop.1.gz lamprop.5.gz
 
+#beginskip
 dist: all lamprop.1 lamprop.1.pdf lamprop.5 lamprop.5.pdf
+	mv Makefile Makefile.org
+	awk -f tools/makemakefile.awk Makefile.org >Makefile
 	python setup.py sdist
+	mv Makefile.org Makefile
+	rm -f MANIFEST
 
 clean::
-	rm -rf dist py-lamprop-*.tar.gz *.pyc lamprop.1 lamprop.5 lamprop.1.pdf lamprop.5.pdf lpver.py
+	rm -rf dist py-lamprop-*.tar.gz *.pyc lamprop.1 lamprop.5 lamprop.1.pdf lamprop.5.pdf lpver.py MANIFEST
 
 backup::
 	sh tools/genbackup
@@ -32,21 +38,22 @@ backup::
 lamprop.1: lamprop.1.in tools/replace.sed
 	sed -f tools/replace.sed lamprop.1.in >$@
 
-lamprop.1.pdf: lamprop.1
-	mandoc -Tps $> >$*.ps
-	epspdf $*.ps
-	rm -f $*.ps
-
 lamprop.5: lamprop.5.in tools/replace.sed
 	sed -f tools/replace.sed lamprop.5.in >$@
-
-lamprop.5.pdf: lamprop.5
-	mandoc -Tps $> >$*.ps
-	epspdf $*.ps
-	rm -f $*.ps
 
 lpver.py: lpver.in.py tools/replace.sed
 	sed -f tools/replace.sed lpver.in.py > $@
 
 tools/replace.sed: .git/index
 	tools/post-commit
+
+lamprop.1.pdf: lamprop.1
+	mandoc -Tps $> >$*.ps
+	epspdf $*.ps
+	rm -f $*.ps
+
+lamprop.5.pdf: lamprop.5
+	mandoc -Tps $> >$*.ps
+	epspdf $*.ps
+	rm -f $*.ps
+#endskip
