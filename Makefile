@@ -30,7 +30,7 @@ backup::
 	install -m 755 $> $@
 
 lamprop.1: lamprop.1.in tools/replace.sed
-	sed -f tools/replace.sed $> >$@
+	sed -f tools/replace.sed lamprop.1.in >$@
 
 lamprop.1.pdf: lamprop.1
 	mandoc -Tps $> >$*.ps
@@ -38,7 +38,7 @@ lamprop.1.pdf: lamprop.1
 	rm -f $*.ps
 
 lamprop.5: lamprop.5.in tools/replace.sed
-	sed -f tools/replace.sed $> >$@
+	sed -f tools/replace.sed lamprop.5.in >$@
 
 lamprop.5.pdf: lamprop.5
 	mandoc -Tps $> >$*.ps
@@ -46,7 +46,7 @@ lamprop.5.pdf: lamprop.5
 	rm -f $*.ps
 
 lpver.py: lpver.in.py tools/replace.sed
-	sed -f tools/replace.sed $> >$@
+	sed -f tools/replace.sed lpver.in.py > $@
 
 tools/replace.sed: .git/index
 	tools/post-commit
