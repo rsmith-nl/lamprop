@@ -2,6 +2,6 @@
 # -*- shell-script -*-
 NAME=py-lamprop
 NUM=$(git log -n 1 --oneline |cut -c 1-7)
-DF=py-lamprop-$NUM.tar.gz
-cd .. ; tar czf /tmp/$DF $NAME/
-mv /tmp/$DF $NAME/
+DF=${NAME}-${NUM}.tar.gz
+cd .. ; tar czf /tmp/${DF} ${NAME}/
+mv /tmp/${DF} ${NAME}/
