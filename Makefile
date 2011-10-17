@@ -22,12 +22,12 @@ install: lamprop.1 lamprop.5 lpver.py
 dist: all lamprop.1 lamprop.1.pdf lamprop.5 lamprop.5.pdf
 	mv Makefile Makefile.org
 	awk -f tools/makemakefile.awk Makefile.org >Makefile
-	python setup.py sdist
+	python setup.py sdist --format=zip
 	mv Makefile.org Makefile
 	rm -f MANIFEST
 
 clean::
-	rm -rf dist py-lamprop-*.tar.gz *.pyc lamprop.1 lamprop.5 lamprop.1.pdf lamprop.5.pdf lpver.py MANIFEST
+	rm -rf dist backup-*.tar.gz *.pyc lamprop.1 lamprop.5 lamprop.1.pdf lamprop.5.pdf lpver.py MANIFEST
 
 backup::
 	sh tools/genbackup

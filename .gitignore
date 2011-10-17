@@ -5,7 +5,7 @@ lpver.py
 #*#
 build/*
 dist/*
-py-lamprop-*.tar.gz
+backup-*.tar.gz
 lamprop.?
 lamprop.?.ps
 lamprop.?.pdf
