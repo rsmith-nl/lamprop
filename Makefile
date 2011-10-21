@@ -6,12 +6,14 @@ MANBASE=/usr/local/man
 #beginskip
 all: lamprop.1 lamprop.5 lpver.py .git/hooks/post-commit tools/replace.sed lamprop.1.pdf lamprop.5.pdf
 #endskip
+BINDIR=/usr/local/bin
 install: lamprop.1 lamprop.5 lpver.py
 	if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
 		exit 1; \
 	fi
 	python setup.py install
+	mv $(BINDIR)/lamprop.py $(BINDIR)/lamprop
 	rm -rf build
 	gzip -k lamprop.1 lamprop.5
 	install -m 644 lamprop.1.gz $(MANBASE)/man1
