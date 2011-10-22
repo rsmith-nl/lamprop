@@ -1,60 +1,66 @@
-.PHONY: help install dist clean backup
-.SUFFIXES: .ps .pdf 
-
-MANBASE=/usr/local/man
+.PHONY: all install dist clean backup
+.SUFFIXES: .ps .pdf .py
 
 #beginskip
-all: lamprop.1 lamprop.5 lpver.py .git/hooks/post-commit tools/replace.sed lamprop.1.pdf lamprop.5.pdf
+PROG = lamprop
+ALL = ${PROG}.1 ${PROG}.1.pdf ${PROG}.5 ${PROG}.5.pdf
+
+all: ${ALL} .git/hooks/post-commit tools/replace.sed
 #endskip
-BINDIR=/usr/local/bin
-install: lamprop.1 lamprop.5 lpver.py
-	if [ `id -u` != 0 ]; then \
+BASE=/usr/local
+MANDIR=$(BASE)/man
+BINDIR=$(BASE)/bin
+
+install: ${PROG}.1 setup.py ${PROG}
+	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
 		exit 1; \
 	fi
+# Let Python do most of the install work.
 	python setup.py install
-	mv $(BINDIR)/lamprop.py $(BINDIR)/lamprop
+# Lose the extension; this is UNIX. :-)
+	mv $(BINDIR)/${PROG}.py $(BINDIR)/${PROG}
 	rm -rf build
-	gzip -k lamprop.1 lamprop.5
-	install -m 644 lamprop.1.gz $(MANBASE)/man1
-	install -m 644 lamprop.5.gz $(MANBASE)/man5
-	rm -f lamprop.1.gz lamprop.5.gz
+#Install the manual page.
+	gzip -k ${PROG}.1
+	install -m 644 ${PROG}.1.gz $(MANDIR)/man1
+	rm -f ${PROG}.1.gz
 
 #beginskip
-dist: all lamprop.1 lamprop.1.pdf lamprop.5 lamprop.5.pdf
+dist: ${ALL}
+# Make simplified makefile.
 	mv Makefile Makefile.org
 	awk -f tools/makemakefile.awk Makefile.org >Makefile
+# Create distribution file. Use zip format to make deployment easier on windoze.
 	python setup.py sdist --format=zip
 	mv Makefile.org Makefile
 	rm -f MANIFEST
 
 clean::
-	rm -rf dist backup-*.tar.gz *.pyc lamprop.1 lamprop.5 lamprop.1.pdf lamprop.5.pdf lpver.py MANIFEST
+	rm -rf dist build backup-*.tar.gz *.pyc ${ALL} MANIFEST
 
-backup::
+backup:  ${ALL}
+# Generate a full backup.
 	sh tools/genbackup
 
 .git/hooks/post-commit: tools/post-commit
 	install -m 755 $> $@
 
-lamprop.1: lamprop.1.in tools/replace.sed
-	sed -f tools/replace.sed lamprop.1.in >$@
-
-lamprop.5: lamprop.5.in tools/replace.sed
-	sed -f tools/replace.sed lamprop.5.in >$@
-
-lpver.py: lpver.in.py tools/replace.sed
-	sed -f tools/replace.sed lpver.in.py > $@
-
 tools/replace.sed: .git/index
 	tools/post-commit
 
-lamprop.1.pdf: lamprop.1
+${PROG}.1: ${PROG}.1.in tools/replace.sed
+	sed -f tools/replace.sed ${PROG}.1.in >$@
+
+${PROG}.1.pdf: ${PROG}.1
 	mandoc -Tps $> >$*.ps
 	epspdf $*.ps
 	rm -f $*.ps
 
-lamprop.5.pdf: lamprop.5
+${PROG}.5: ${PROG}.5.in tools/replace.sed
+	sed -f tools/replace.sed ${PROG}.5.in >$@
+
+${PROG}.5.pdf: ${PROG}.5
 	mandoc -Tps $> >$*.ps
 	epspdf $*.ps
 	rm -f $*.ps
