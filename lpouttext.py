@@ -2,7 +2,7 @@
 # Text output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:16:55 rsmith>
+# Time-stamp: <2011-10-22 20:19:27 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,9 +30,9 @@ import lpver
 
 def out(lam, eng, mat):
     '''Plain text main output function.'''
-    if eng == True:
+    if eng:
         engprop(lam)
-    if mat == True:
+    if mat:
         matrices(lam, not eng)
 
 def engprop(l):

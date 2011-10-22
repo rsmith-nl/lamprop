@@ -2,7 +2,7 @@
 # HTML output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:19:24 rsmith>
+# Time-stamp: <2011-10-22 20:18:56 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,9 +39,9 @@ def out(lam, eng, mat):
     s = "          <td  align=\"center\" colspan=\"2\">created by {} {}.</td>"
     print s.format(lpver.name, lpver.version)
     print "        </tr>"
-    if eng == True:
+    if eng:
         engprop(lam)
-    if mat == True:
+    if mat:
         matrices(lam, not eng)
     print "      </tbody>"
     print "    </table>"

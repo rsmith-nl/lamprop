@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:11:20 rsmith>
+# Time-stamp: <2011-10-22 20:19:46 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -156,7 +156,7 @@ class Laminate:
         return len(self.layers)
     def finish(self):
         """Calculate the laminate properties."""
-        if self.finished == True:
+        if self.finished:
             return
         if len(self.layers) == 0:
             return

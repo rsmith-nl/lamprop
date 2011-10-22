@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:44:55 rsmith>
+# Time-stamp: <2011-10-22 20:18:24 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -63,9 +63,9 @@ del opts, group
 if args.mat == False and args.eng == False:
     args.eng = True
     args.mat = True
-elif args.mat == True and args.eng == True:
+elif args.mat and args.eng:
     pass
-elif args.eng == True:
+elif args.eng:
     args.mat = False
 else:
     args.eng = False
@@ -76,9 +76,9 @@ if len(args.files) == 0:
 
 # Set the output method.
 out = lpouttext.out
-if args.latex == True:
+if args.latex:
     out = lpoutlatex.out
-elif args.html == True:
+elif args.html:
     out = lpouthtml.out
 for f in args.files:
     # Process the files.

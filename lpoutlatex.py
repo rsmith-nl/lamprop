@@ -2,7 +2,7 @@
 # LaTeX output routines for lamprop.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:21:23 rsmith>
+# Time-stamp: <2011-10-22 20:19:12 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -36,9 +36,9 @@ def out(lam, eng, mat):
     print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
     print "  \\tiny calculated by {0} {1}\\\\[3pt]}}".format(lpver.name,
                                                                lpver.version)
-    if eng == True:
+    if eng:
         engprop(lam)
-    if mat == True:
+    if mat:
         matrices(lam, not eng)
     print "\\end{table}\n"
 
