@@ -11,7 +11,7 @@ BASE=/usr/local
 MANDIR=$(BASE)/man
 BINDIR=$(BASE)/bin
 
-install: ${PROG}.1 setup.py ${PROG}
+install: ${PROG}.1 setup.py ${PROG}.py
 	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
 		exit 1; \
