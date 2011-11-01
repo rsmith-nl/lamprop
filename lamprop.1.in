@@ -1,7 +1,7 @@
 .\" -*- nroff -*-
 .\" lamprop.1
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" Time-stamp: <2011-09-24 20:40:37 rsmith>
+.\" Time-stamp: <2011-11-01 22:49:50 rsmith>
 .\"
 .Dd DATE
 .Os 
@@ -133,12 +133,19 @@ Python extension.
 .Xr lamprop 5 ,
 .Xr python 1 ,
 .Xr latex 1
-.Rs 
+.Rs
 .%A M. W. Hyer
 .%B Stress Analysis of Fiber Reinforced Composite Materials
 .%I McGraw-Hill
 .%C Boston, USA
 .%D 1997
+.Re
+.Rs 
+.%A Stephen W. Tsai
+.%B Theory of composites design
+.%I Think Composites
+.%C Dayton, USA
+.%D 1992
 .Re
 .Rs 
 .%A J.R. Vinson
@@ -183,6 +190,9 @@ As an exercise in learning the language, the author ported the program to the
 Python programming language. This proved to be a much cleaner, more
 maintainable and shorter implementation. At the same time the rather arbitrary
 versioning numbers were dropped in favor of the short commit-id from the
+.Pp
+Additionally, the generally hard to obtain transverse fiber properties were
+replaced with properties derived from the matrix.
 .Xr git 1
 revision control system.
 .Sh AUTHOR

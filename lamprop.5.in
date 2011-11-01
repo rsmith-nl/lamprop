@@ -1,7 +1,7 @@
 .\" -*- nroff -*-
 .\" lamprop.5
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" Time-stamp: <2011-09-24 18:50:21 rsmith>
+.\" Time-stamp: <2011-11-01 22:39:54 rsmith>
 .\"
 .Dd DATE
 .Os 
@@ -19,32 +19,24 @@ seen as comments and disregarded.
 .Pp
 The 'f:' line contains a definition of a fiber. It must contain the following
 values, separated by whitespace:
-.Bl -tag -width "alpha2" -compact
+.Bl -tag -width "alpha1" -compact
 .It E1
 Young's modulus in the fiber direction.
-.It E2
-Young's modulus perpendicular to the fiber direction.
 .It v12
 Poisson's constant.
-.It G12
-Shear modulus of the fibe.
 .It alpha1
 Coefficient of Thermal Expansion in the fiber direction.
-.It alpha2
-CTE perpendicular to the fiber direction.
 .It rho
 Density of the fiber.
 .It name
 Name that identifies the fiber. Every fiber in the input files should have
 a unique name.
 .El
-.Pp
-Usually, E1 (and other properties in the fibre length direction) is easily
-obtained from a fiber supplier. Properties pertaining to the '2' direction E2
-, v12 and G12 are much harder to come by, but essential for the
-calculations. The
-.Sx EXAMPLES
-section below contains some values that the author uses for different fibers.
+Usually, E1 and other properties in the fibre length direction are easily
+obtained from a fiber supplier. Previous versions of this program also
+required some properties perpendicular to the fiber to calculate transverse
+properties of the lamina. Since these values are very hard to obtain, they
+have been replaced by values derived from the matrix, according to Tsai(1992).
 .Pp
 The 'r:' line contains a definition of a resin. It must contain the following
 values, separated by whitespace:
@@ -94,8 +86,8 @@ The following is a sample input file for
 .Nm .
 .Bd -literal -offset indent
 Fiber definition
-   E1     E2    v12  G12  alpha1   alpha2   rho  naam
-f: 233000 23100 0.2  8960 -0.54e-6 10.1e-6  1.76 Hyer's carbon fiber
+   E1     v12  alpha1   rho  naam
+f: 233000 0.2  -0.54e-6 1.76 Hyer's carbon fiber
 
 Matrix definition
    Em   v    alpha   rho name
@@ -115,21 +107,28 @@ Below are some typical values used by the author for different kinds of
 materials:
 .TS
 center;
-C S C C C C C C L
-R C C C C C C C L.
-E1	E2	v12	G12	alpha1	alpha2	rho	name
-f:	124000	5800	0.30	2300	-2e-6	56e-6	1.44	HM_aramid
-f:	233000	23100	0.20	9000	-0.38e-6	10e-6	1.80	T700SC (HS carbon)
-f:	238000	15000	0.20	15000	-0.1e-6	10e-6	1.77	STS5631 (HS carbon)
-f:	238000	15000	0.20	15000	-0.1e-6	10e-6	1.77	UTS5631 (HS carbon)
-f:	640000	6000	0.23	16960	-1.1e-6	12.3e-6	2.12	K63712 (UHM carbon)
-f:	72400	72400	0.33	26800	5e-6	5e-6	2.54	e_glass
+C C C C L
+R C C C L.
+E1	v12	alpha1	rho	name
+124000	0.30	-2e-6	1.44	HM_aramid
+233000	0.20	-0.38e-6	1.80	T700SC (HS carbon)
+238000	0.20	-0.1e-6	1.77	STS5631 (HS carbon)
+238000	0.20	-0.1e-6	1.77	UTS5631 (HS carbon)
+640000	0.23	-1.1e-6	2.12	K63712 (UHM carbon)
+72400	0.33	5e-6	2.54	e_glass
 .TE
 .Pp
 If anyone would be able to contribute additional material data, the author
 would be grateful.
 .Sh SEE ALSO
 .Xr lamprop 1
+.Rs 
+.%A Stephen W. Tsai
+.%B Theory of composites design
+.%I Think Composites
+.%C Dayton, USA
+.%D 1992
+.Re
 .Sh AUTHOR
 This manual and the 
 .Nm
