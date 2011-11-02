@@ -3,15 +3,15 @@
 
 #beginskip
 PROG = lamprop
-ALL = ${PROG}.1 ${PROG}.1.pdf ${PROG}.5 ${PROG}.5.pdf lpver.py
+ALL = ${PROG}.1 ${PROG}.1.pdf ${PROG}.5 ${PROG}.5.pdf lpver.py 
 
-all: ${ALL} .git/hooks/post-commit tools/replace.sed
+all: ${ALL} ${PROG}.py .git/hooks/post-commit tools/replace.sed
 #endskip
 BASE=/usr/local
 MANDIR=$(BASE)/man
 BINDIR=$(BASE)/bin
 
-install: ${PROG}.1 setup.py ${PROG}.py
+install: ${ALL} ${PROG}.py
 	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
 		exit 1; \
@@ -22,9 +22,10 @@ install: ${PROG}.1 setup.py ${PROG}.py
 	mv $(BINDIR)/${PROG}.py $(BINDIR)/${PROG}
 	rm -rf build
 #Install the manual page.
-	gzip -k ${PROG}.1
+	gzip -k ${PROG}.1 ${PROG}.5
 	install -m 644 ${PROG}.1.gz $(MANDIR)/man1
-	rm -f ${PROG}.1.gz
+	install -m 644 ${PROG}.5.gz $(MANDIR)/man5
+	rm -f ${PROG}.1.gz ${PROG}.5.gz
 
 #beginskip
 dist: ${ALL}
