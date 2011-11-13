@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-11-13 15:08:59 rsmith>
+# Time-stamp: <2011-11-13 18:48:44 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -105,8 +105,8 @@ class Resin:
         self.cte = float(cte)
         self.density = float(density)
     def __str__(self):
-        s = "[name={}, density={},E={}, v={}, G={}, cte={}]"
-        return s.format(self.name, self.density, self.E, self.v, self.G, self.cte)
+        s = "[density={},E={}, v={}, G={}, cte={}]"
+        return s.format(self.density, self.E, self.v, self.G, self.cte)
 
 class Lamina:
     """A class for unidirectional layer properties."""
@@ -142,7 +142,7 @@ class Lamina:
         self.cte_y = cte1*n2+cte2*m2
         self.cte_xy = 2*(cte1-cte2)*m*n
         S11 = 1/self.E1; S12 = -self.v12/self.E1 # Hyer:1998, p. 152, (4.5)
-        S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12;
+        S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12
         Q11 = S22/denum; Q12 = -S12/denum; Q22 = S11/denum; Q66 = 1/S66
         self.Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
         foo = Q11-Q12-2*Q66; bar = Q12-Q22+2*Q66
@@ -160,15 +160,28 @@ class Lamina:
 class Laminate:
     """A class for fibrous laminates."""
     def __init__(self, name):
-    """Create a laminate instance.
-
-    name: Identifier for the laminate."""
+        """Create a laminate instance.
+        
+        name: Identifier for the laminate."""
         self.name = name
         self.layers = []
         self.thickness = 0.0
         self.weight = 0.0       # Weight of the fibers only! [g/m²]
         self.rc = 0.0           # Weight of the resin [g/m²]
-        self.finished=False
+        self.finished = False
+        self.vf = None
+        self.wf = None
+        self.Ex = None
+        self.Ey = None
+        self.Gxy = None
+        self.Vxy = None
+        self.Vyx = None
+        self.density = None
+        self.ABD = None
+        self.abd = None
+        self.cte_x = None
+        self.cte_y = None
+
     def append(self, lamina):
         """Add a layer to the laminate."""
         self.layers.append(lamina)
@@ -185,7 +198,7 @@ class Laminate:
             return
         if len(self.layers) == 0:
             return
-        self.density= 0.0
+        self.density = 0.0
         self.vf = 0.0
         for l in self.layers:
             if l == self.layers[0]:
@@ -196,88 +209,88 @@ class Laminate:
             ze = zs + l.thickness
             l.z2 = (ze*ze-zs*zs)/2
             l.z3 = (ze*ze*ze-zs*zs*zs)/3
-            prev=l
+            prev = l
         Nt_x = 0.0
         Nt_y = 0.0
         Nt_xy = 0.0
-        ABD = numpy.zeros((6,6))
+        ABD = numpy.zeros((6, 6))
         for l in self.layers:
-                # first row
-                ABD[0,0] += l.Q_11*l.thickness      # Hyer:1998, p. 290
-                ABD[0,1] += l.Q_12*l.thickness
-                ABD[0,2] += l.Q_16*l.thickness
-                ABD[0,3] += l.Q_11*l.z2;
-                ABD[0,4] += l.Q_12*l.z2;
-                ABD[0,5] += l.Q_16*l.z2;
-                # second row
-                ABD[1,0] += l.Q_12*l.thickness
-                ABD[1,1] += l.Q_22*l.thickness
-                ABD[1,2] += l.Q_26*l.thickness
-                ABD[1,3] += l.Q_12*l.z2;
-                ABD[1,4] += l.Q_22*l.z2;
-                ABD[1,5] += l.Q_26*l.z2;
-                # third row
-                ABD[2,0] += l.Q_16*l.thickness
-                ABD[2,1] += l.Q_26*l.thickness
-                ABD[2,2] += l.Q_66*l.thickness
-                ABD[2,3] += l.Q_16*l.z2;
-                ABD[2,4] += l.Q_26*l.z2;
-                ABD[2,5] += l.Q_66*l.z2;
-                # fourth row
-                ABD[3,0] += l.Q_11*l.z2;
-                ABD[3,1] += l.Q_12*l.z2;
-                ABD[3,2] += l.Q_16*l.z2;
-                ABD[3,3] += l.Q_11*l.z3;
-                ABD[3,4] += l.Q_12*l.z3;
-                ABD[3,5] += l.Q_16*l.z3;
-                # fifth row
-                ABD[4,0] += l.Q_12*l.z2;
-                ABD[4,1] += l.Q_22*l.z2;
-                ABD[4,2] += l.Q_26*l.z2;
-                ABD[4,3] += l.Q_12*l.z3;
-                ABD[4,4] += l.Q_22*l.z3;
-                ABD[4,5] += l.Q_26*l.z3;
-                # sixth row
-                ABD[5,0] += l.Q_16*l.z2;
-                ABD[5,1] += l.Q_26*l.z2;
-                ABD[5,2] += l.Q_66*l.z2;
-                ABD[5,3] += l.Q_16*l.z3;
-                ABD[5,4] += l.Q_26*l.z3;
-                ABD[5,5] += l.Q_66*l.z3;
-                # Calculate unit thermal stress resultants.
-                Nt_x += (l.Q_11*l.cte_x + l.Q_12*l.cte_y + 
-                         l.Q_16*l.cte_xy)*l.thickness  # Hyer:1998, p. 445
-                Nt_y += (l.Q_12*l.cte_x + l.Q_22*l.cte_y + 
-                         l.Q_26*l.cte_xy)*l.thickness 
-                Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y + 
-                          l.Q_66*l.cte_xy)*l.thickness
-                # Overall density and fiber volume fraction calculation
-                self.density += l.density*l.thickness
-                self.vf += l.vf*l.thickness
+            # first row
+            ABD[0, 0] += l.Q_11*l.thickness      # Hyer:1998, p. 290
+            ABD[0, 1] += l.Q_12*l.thickness
+            ABD[0, 2] += l.Q_16*l.thickness
+            ABD[0, 3] += l.Q_11*l.z2
+            ABD[0, 4] += l.Q_12*l.z2
+            ABD[0, 5] += l.Q_16*l.z2
+            # second row
+            ABD[1, 0] += l.Q_12*l.thickness
+            ABD[1, 1] += l.Q_22*l.thickness
+            ABD[1, 2] += l.Q_26*l.thickness
+            ABD[1, 3] += l.Q_12*l.z2
+            ABD[1, 4] += l.Q_22*l.z2
+            ABD[1, 5] += l.Q_26*l.z2
+            # third row
+            ABD[2, 0] += l.Q_16*l.thickness
+            ABD[2, 1] += l.Q_26*l.thickness
+            ABD[2, 2] += l.Q_66*l.thickness
+            ABD[2, 3] += l.Q_16*l.z2
+            ABD[2, 4] += l.Q_26*l.z2
+            ABD[2, 5] += l.Q_66*l.z2
+            # fourth row
+            ABD[3, 0] += l.Q_11*l.z2
+            ABD[3, 1] += l.Q_12*l.z2
+            ABD[3, 2] += l.Q_16*l.z2
+            ABD[3, 3] += l.Q_11*l.z3
+            ABD[3, 4] += l.Q_12*l.z3
+            ABD[3, 5] += l.Q_16*l.z3
+            # fifth row
+            ABD[4, 0] += l.Q_12*l.z2
+            ABD[4, 1] += l.Q_22*l.z2
+            ABD[4, 2] += l.Q_26*l.z2
+            ABD[4, 3] += l.Q_12*l.z3
+            ABD[4, 4] += l.Q_22*l.z3
+            ABD[4, 5] += l.Q_26*l.z3
+            # sixth row
+            ABD[5, 0] += l.Q_16*l.z2
+            ABD[5, 1] += l.Q_26*l.z2
+            ABD[5, 2] += l.Q_66*l.z2
+            ABD[5, 3] += l.Q_16*l.z3
+            ABD[5, 4] += l.Q_26*l.z3
+            ABD[5, 5] += l.Q_66*l.z3
+            # Calculate unit thermal stress resultants.
+            Nt_x += (l.Q_11*l.cte_x + l.Q_12*l.cte_y + 
+                     l.Q_16*l.cte_xy)*l.thickness  # Hyer:1998, p. 445
+            Nt_y += (l.Q_12*l.cte_x + l.Q_22*l.cte_y + 
+                     l.Q_26*l.cte_xy)*l.thickness 
+            Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y + 
+                      l.Q_66*l.cte_xy)*l.thickness
+            # Overall density and fiber volume fraction calculation
+            self.density += l.density*l.thickness
+            self.vf += l.vf*l.thickness
         # Finish the density and vf calculations.
         self.density /= self.thickness
         self.vf /= self.thickness
         # Finish the matrices, discarding very small numbers in ABD.
         for i in range(6):
             for j in range(6):
-                if math.fabs(ABD[i,j]) < 1e-7:
-                    ABD[i,j] = 0.0
+                if math.fabs(ABD[i, j]) < 1e-7:
+                    ABD[i, j] = 0.0
         self.ABD = ABD
         self.abd = numpy.linalg.inv(ABD)
         # Calculate the engineering properties.
-        self.Ex = ((ABD[0,0]*ABD[1,1]-ABD[0,1]*ABD[0,1])/
-                   (ABD[1,1]*self.thickness))  # Hyer:1998, p. 326 
-        self.Ey = ((ABD[0,0]*ABD[1,1]-ABD[0,1]*ABD[0,1])/
-                   (ABD[0,0]*self.thickness))
-        self.Gxy = ABD[2,2]/self.thickness
-        self.Vxy = ABD[0,1]/ABD[1,1]
-        self.Vyx = ABD[0,1]/ABD[0,0];
+        self.Ex = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
+                   (ABD[1, 1]*self.thickness))  # Hyer:1998, p. 326 
+        self.Ey = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
+                   (ABD[0, 0]*self.thickness))
+        self.Gxy = ABD[2, 2]/self.thickness
+        self.Vxy = ABD[0, 1]/ABD[1, 1]
+        self.Vyx = ABD[0, 1]/ABD[0, 0]
         # Calculate the coefficients of thermal expansion.
         # Technically only valid for a symmetric laminate!
-        self.cte_x = (self.abd[0,0]*Nt_x + self.abd[0,1]*Nt_y + 
-                      self.abd[0,2]*Nt_xy) # Hyer:1998, p. 451, (11.86)
-        self.cte_y = (self.abd[1,0]*Nt_x + self.abd[1,1]*Nt_y + 
-                      self.abd[1,2]*Nt_xy)
+        self.cte_x = (self.abd[0, 0]*Nt_x + self.abd[0, 1]*Nt_y + 
+                      self.abd[0, 2]*Nt_xy) # Hyer:1998, p. 451, (11.86)
+        self.cte_y = (self.abd[1, 0]*Nt_x + self.abd[1, 1]*Nt_y + 
+                      self.abd[1, 2]*Nt_xy)
         # Finish the weight fraction calculation.
         self.wf = self.weight/(self.weight+self.rc)
         self.finished = True

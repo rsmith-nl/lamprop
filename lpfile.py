@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-09-18 14:20:45 rsmith>
+# Time-stamp: <2011-11-13 18:21:07 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,16 +28,16 @@
 import lptypes
 
 def _numeric(val):
-   '''Tests if a value is a valid floating point number.'''
-   try:
-       float(val)
-   except ValueError:
-       return False
-   return True
+    '''Tests if a value is a valid floating point number.'''
+    try:
+        float(val)
+    except ValueError:
+        return False
+    return True
 
 def parse(fname):
     '''Reads and parses the file fname. Returns a tuple containing dictionaries 
-       of fibers, resins, and laminates.'''
+    of fibers, resins, and laminates.'''
     f = {} # dictionary of fibers
     r = {} # dictionary of resins
     l = [] # list of laminates
@@ -48,7 +48,7 @@ def parse(fname):
         fl = open(fname)
     except IOError:
         print "Cannot open:", fname
-        return None,None,None
+        return None, None, None
     for line in fl:
         lst = line.split()
         if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
@@ -101,5 +101,5 @@ def parse(fname):
                                          lst[1], lst[2], curvf))
     curlam.finish()
     fl.close()
-    return f,r,l
+    return f, r, l
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-10-22 20:18:24 rsmith>
+# Time-stamp: <2011-11-13 18:17:06 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,6 @@
 
 import argparse
 import sys
-import lptypes
 import lpfile
 import lpver
 import lpouttext
@@ -82,7 +81,7 @@ elif args.html:
     out = lpouthtml.out
 for f in args.files:
     # Process the files.
-    fibers,resins,laminates = lpfile.parse(f)
+    fibers, resins, laminates = lpfile.parse(f)
     # Print the results.
     for curlam in laminates:
         out(curlam, args.eng, args.mat)
