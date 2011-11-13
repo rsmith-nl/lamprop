@@ -1,7 +1,7 @@
 .\" -*- nroff -*-
 .\" lamprop.1
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" Time-stamp: <2011-11-01 22:49:50 rsmith>
+.\" Time-stamp: <2011-11-13 18:04:04 rsmith>
 .\"
 .Dd DATE
 .Os 
@@ -63,11 +63,25 @@ It reads the composition of the laminates from one or more input files. The
 format of these files is documented in 
 .Xr lamprop 5 .
 .Pp
+The program expects properties in metric units as specified in 
+.Xr lamprop 5 .
+In short;
+.Bl -hyphen -compact
+.It
+Young's moduli are given in MPa.
+.It
+Coefficients of thermal expansion are given in 1/K.
+.It
+Area weights are given in g/m2.
+.It
+Densities are given in g/cm3.
+.El
+.Pp
 It then calculates the following values for all the laminates in the input
 files:
 .Bl -tag -width "Resin consumption" -compact
 .It thickness
-Total thickness of the laminate, in millimeters.
+Total thickness of the laminate, in mm.
 .It Vf
 Fiber volume fraction. The fraction of the volume that the fibers
 contribute to the laminate. This calculation assumes that there are no
@@ -76,23 +90,64 @@ voids in the laminate.
 Fiber weight fraction. The fraction that the fibers contribute to the total
 weight of the laminate.
 .It Weight
-The area weight of the laminate, in grams per square meter.
+The area weight of the laminate, in g/m2.
 .It Resin consumption
-The amount of resin, in grams, needed to make a square meter of laminate.
+The amount of resin embedded in the laminate, in g/m2.
 .It E_x
-Young's Modulus in the x-direction, in megapascals.
+Young's modulus in the x-direction, in MPa.
 .It E_y
-Young's Modulus in the y-direction, in megapascals.
+Young's modulus in the y-direction, in MPa.
 .It G_xy
-Shear Modulus, in megapascals.
+Shear modulus, in MPa.
 .It v_xy and v_yx
 Poisson constants.
 .It cte_x
-Coefficient of Thermal Expansion in the x-direction, in fraction per degree K.
+Coefficient of Thermal Expansion in the x-direction, in 1/K.
 .It cte_y
-Coefficient of thermal expansion in the y-direction, in fraction per degree K.
+Coefficient of thermal expansion in the y-direction, in 1/K.
 .It ABD and abd
-The stiffness and compliance matrices of the laminate.
+The stiffness and compliance matrices of the laminate. 
+.El
+The ABD and adb matrices describe the properties of the laminate in
+detail. Their format is as follows.
+.Pp
+.TS
+tab( );
+L C C C C C C C C L.
+Nx  A11 A12 A16 B11 B12 B16  \(*ex
+Ny  A12 A22 A26 B12 B22 B26  \(*ey
+Nxy \(eq A16 A26 A66 B16 B26 B66 \(mu \(*exy
+Mx  B11 B12 B16 D11 D12 D16  \(*kx
+My  B12 B22 B26 D12 D22 D26  \(*ky
+Mxy  B16 B26 B66 D16 D26 D66  \(*kxy
+.TE
+
+.TS
+tab( );
+L C C C C C C C C L.
+\(*ex  a11 a12 a16 b11 b12 b16  Nx
+\(*ey  a12 a22 a26 b12 b22 b26  Ny
+\(*exy \(eq a16 a26 a66 b16 b26 b66 \(mu Nxy
+\(*kx  b11 b12 b16 d11 d12 d16  Mx
+\(*ky  b12 b22 b26 d12 d22 d26  Mky
+\(*kxy  b16 b26 b66 d16 d26 d66  Mxy
+.TE
+.Pp
+The units of the parts of the ABD and abd matrix are as follows (where x is 1,
+2 or 6) :
+.Bl -hyphen -compact
+.It
+Axx in N/mm.
+.It
+Bxx in N.
+.It
+Dxx in Nmm.
+.It
+axx in mm/N
+.It
+bxx in 1/N
+.It
+dxx in 1/Nm
 .El
 .Pp
 These values are written to the standard output, in the form specified by the

@@ -1,7 +1,7 @@
 .\" -*- nroff -*-
 .\" lamprop.5
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" Time-stamp: <2011-11-01 22:39:54 rsmith>
+.\" Time-stamp: <2011-11-13 18:11:20 rsmith>
 .\"
 .Dd DATE
 .Os 
@@ -17,17 +17,21 @@ either 'f', 'r', 't', 'm' or 'l' as the first non-whitespace character. This
 character must immediately be followed by a colon ':'. All other lines are
 seen as comments and disregarded.
 .Pp
+This program assumes specific metric units. The units used below are important
+because the program internally calculates the thickness of layers (in mm)
+based on the volume fractions and densities of the fibers and resins.
+.Pp
 The 'f:' line contains a definition of a fiber. It must contain the following
 values, separated by whitespace:
 .Bl -tag -width "alpha1" -compact
 .It E1
-Young's modulus in the fiber direction.
+Young's modulus in the fiber direction in MPa.
 .It v12
-Poisson's constant.
+Poisson's constant (dimensionless).
 .It alpha1
-Coefficient of Thermal Expansion in the fiber direction.
+Coefficient of Thermal Expansion in the fiber direction in 1/K.
 .It rho
-Density of the fiber.
+Density of the fiber in g/cm3.
 .It name
 Name that identifies the fiber. Every fiber in the input files should have
 a unique name.
@@ -42,13 +46,13 @@ The 'r:' line contains a definition of a resin. It must contain the following
 values, separated by whitespace:
 .Bl -tag -width "alpha" -compact
 .It E
-Young's modulus of the resin.
+Young's modulus of the resin in MPa.
 .It v
-Poisson's constant.
+Poisson's constant (dimensionless).
 .It alpha
-CTE of the resin.
+CTE of the resin in 1/K.
 .It rho
-Density of the resin.
+Density of the resin in g/cm3.
 .It name
 Name that identifies the resin. Every resin in the input files should have
 a unique name.
@@ -74,7 +78,7 @@ preceded by a 't:' and a 'm:' line. It must contain the following values,
 separated by whitespace:
 .Bl -tag -width "weight" -compact
 .It weight
-The weight in grams per square meter of the dry fibers.
+The weight in g/m2 of the dry fibers.
 .It angle
 The angle upwards from the x-axis under which the fibers are oriented.
 .It name

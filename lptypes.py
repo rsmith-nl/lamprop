@@ -2,7 +2,7 @@
 # Classes for fiber, matrix and lamina properties.
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-10-22 20:19:46 rsmith>
+# Time-stamp: <2011-11-13 15:08:59 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -72,10 +72,17 @@ class Fiber:
     """A class for containing fiber properties. Direction 1 is in the length
     of the fiber, direction 2 is perpendicular to that."""
     def __init__(self, E1, v12, cte1, density, name):
-        self.E1 = float(E1)     # Young's Modulus [MPa]
-        self.v12 = float(v12)   # Poisson's constant
-        self.cte1 = float(cte1) # Coefficient of thermal expansion [K⁻¹]
-        self.density = float(density)   # [g/cm³]
+        """Create a fiber instance.
+
+        E1: Young's modulus along the length of the fiber in MPa.
+        v12: Poisson's constant of the fiber (dimensionless).
+        cte1: Coefficient of thermal expansion in K⁻¹.
+        density: In g/cm³.
+        name: Identifier"""
+        self.E1 = float(E1)
+        self.v12 = float(v12)
+        self.cte1 = float(cte1)
+        self.density = float(density)
         self.name = name
     def __str__(self):
         s = "[name={}, density={}, E1={}, v12={}, cte1={}]"
@@ -85,11 +92,18 @@ class Fiber:
 class Resin:
     """A class for containing resin properties."""
     def __init__(self, E, v, cte, density):
-        self.E = float(E)       # Young's Modulus [MPa]
-        self.v = float(v)       # Poisson's constant
+        """Create a Resin instance.
+
+        E: Young's Modulus of the resin in MPa.
+        v: Poisson's constant of the resin (dimensionless).
+        cte: Coefficient of thermal expansion of the resin in K⁻¹.
+        density: in g/cm³.
+        name: Identifier."""
+        self.E = float(E)
+        self.v = float(v)
         self.G = self.E/(2.0*(1.0+self.v))      # Shear modulus [MPa]
-        self.cte = float(cte)   # Coefficient of thermal expansion [K⁻¹]
-        self.density = float(density)   # [g/cm³]
+        self.cte = float(cte)
+        self.density = float(density)
     def __str__(self):
         s = "[name={}, density={},E={}, v={}, G={}, cte={}]"
         return s.format(self.name, self.density, self.E, self.v, self.G, self.cte)
@@ -97,11 +111,19 @@ class Resin:
 class Lamina:
     """A class for unidirectional layer properties."""
     def __init__(self, fiber, resin, weight, angle, vf):
-        self.fiber = fiber      # Fiber properties
-        self.resin = resin      # Resin properties
-        self.weight = float(weight)     # Area weight of the fibers [g/m²]
-        self.angle = float(angle)       # Angle of the fibers [degrees]
-        self.vf = float(vf)             # Volume fraction of fibers in the lamina
+        """Create a Lamina (layer) instance.
+
+        fiber: Identifier of the Fiber used in this layer.
+        resin: Identifier of the Resin used in this layer.
+        weight: Area weight of the Fiber in g/m².
+        angle: Angle of the fibers w.r.t. the 0-axis in degrees.
+        vf: Volume fraction of fibers in the lamina 
+        (dimensionless, between 0 and 1)."""
+        self.fiber = fiber
+        self.resin = resin
+        self.weight = float(weight)
+        self.angle = float(angle)
+        self.vf = float(vf)
         vm = (1.0 - self.vf)            # Volume fraction of resin material
         self.thickness = self.weight/(fiber.density*1000.0)*(1+vm/vf)
         self.rc = self.thickness*vm*resin.density*1000.0        # Resin [g/m²]
@@ -138,6 +160,9 @@ class Lamina:
 class Laminate:
     """A class for fibrous laminates."""
     def __init__(self, name):
+    """Create a laminate instance.
+
+    name: Identifier for the laminate."""
         self.name = name
         self.layers = []
         self.thickness = 0.0
