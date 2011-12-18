@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-11-13 18:17:06 rsmith>
+# Time-stamp: <2011-12-18 12:58:00 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,8 +40,8 @@ class LicenseAction(argparse.Action):
 
 # Process the command-line arguments
 opts = argparse.ArgumentParser(prog=lpver.name,
- description='Calculate the elastic properties of a fibrous composite laminate. '
-             'See lamprop(1) for the manual of this program and lamprop(5) '
+ description='Calculate the elastic properties of a fibrous composite laminate.'
+             ' See lamprop(1) for the manual of this program and lamprop(5) '
              'for the manual of the data file format.')
 group = opts.add_mutually_exclusive_group()
 group.add_argument('-l', '--latex', action='store_true', help="LaTeX output")
@@ -81,7 +81,8 @@ elif args.html:
     out = lpouthtml.out
 for f in args.files:
     # Process the files.
-    fibers, resins, laminates = lpfile.parse(f)
+    fp = lpfile.LPparser()
+    fibers, resins, laminates = fp.parse(f)
     # Print the results.
     for curlam in laminates:
         out(curlam, args.eng, args.mat)

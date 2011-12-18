@@ -2,7 +2,7 @@
 # Read and parse a lamprop file
 #
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-11-13 18:21:07 rsmith>
+# Time-stamp: <2011-12-18 13:16:41 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,71 +35,92 @@ def _numeric(val):
         return False
     return True
 
-def parse(fname):
-    '''Reads and parses the file fname. Returns a tuple containing dictionaries 
-    of fibers, resins, and laminates.'''
-    f = {} # dictionary of fibers
-    r = {} # dictionary of resins
-    l = [] # list of laminates
-    curlam = None       # Current laminate
-    curresin = None     # Current resin
-    curvf = 0.0
-    try:
-        fl = open(fname)
-    except IOError:
-        print "Cannot open:", fname
-        return None, None, None
-    for line in fl:
-        lst = line.split()
-        if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
-            continue # comment line
-        if lst[0][0] == 'f':
-            if _numeric(lst[5]): # Old format
-                finame = ' '.join(lst[8:])
-                f[finame] = lptypes.Fiber(lst[1], lst[3], lst[5], lst[7], finame)
-            else:               # New format; Name _must_ start with a non-mumber.
-                finame = ' '.join(lst[5:])
-                f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], finame)
-        elif lst[0][0] == 'r':
-            rname = ' '.join(lst[5:])
-            r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
-        elif lst[0][0] == 't':
-            lname = ' '.join(lst[1:])
-#            names = [x.name for x in l]
-            if lname in [x.name for x in l]:
-                print "Laminate '{0}' already exists! Skipping.".format(lname)
-            else:
-                if curlam != None:
-                    curlam.finish()
-                    curresin = None
-                curlam = lptypes.Laminate(lname)
-                l.append(curlam)
-        elif lst[0][0] == 'm':
-            if curlam == None:
-                print "Found 'm:' line outside a laminate; Skipping."
-                continue
-            curvf = float(lst[1])
-            mname = ' '.join(lst[2:])
-            if mname in r:
-                curresin = r[mname]
-            else:
-                curlam = None
-                curresin = None
-                print "Resin '{0}' unknown. Skipping".format(mname)
-        elif lst[0][0] == 'l':
-            if curlam == None:
-                print "Found 'l:' line but no previous 't:' line! Skipping."
-                continue
-            if curresin == None:
-                print "Found 'l:' line but no previous 'm:' line! Skipping."
-                continue
-            finame = ' '.join(lst[3:])
-            if finame not in f:
-                print "Unknown fiber in 'l:' line. Skipping."
-                continue
-            curlam.append(lptypes.Lamina(f[finame], curresin, 
-                                         lst[1], lst[2], curvf))
-    curlam.finish()
-    fl.close()
-    return f, r, l
+class LPparser:
+    def __init__(self):
+        '''Initialize an empty parser object.'''
+        self.f = {}
+        self.r = {}
+        self.l = []
+        self.curlam = None
+        self.curresin = None
+        self.curvf = 0.0
+
+    def _parse_f(self, lst):
+        '''Parse a fiber line.'''
+        if _numeric(lst[5]): # Old format
+            finame = ' '.join(lst[8:])
+            self.f[finame] = lptypes.Fiber(lst[1], lst[3], lst[5], lst[7], 
+                                           finame)
+        else:  # New format; Name _must_ start with a non-mumber.
+            finame = ' '.join(lst[5:])
+            self.f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
+                                           finame)
+
+    def _parse_r(self, lst):
+        '''Parse a resin line.'''
+        rname = ' '.join(lst[5:])
+        self.r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
+
+    def _parse_t(self, lst):
+        '''Parse a laminate line.'''
+        lname = ' '.join(lst[1:])
+        if lname in [x.name for x in self.l]:
+            print "Laminate '{0}' already exists! Skipping.".format(lname)
+            return
+        if self.curlam != None:
+            self.curlam.finish()
+            self.curresin = None
+        self.curlam = lptypes.Laminate(lname)
+        self.l.append(self.curlam)
+
+    def _parse_m(self, lst):
+        '''Parse a matrix line.'''
+        if self.curlam == None:
+            print "Found 'm:' line outside a laminate; Skipping."
+            return
+        self.curvf = float(lst[1])
+        mname = ' '.join(lst[2:])
+        if mname in self.r:
+            self.curresin = self.r[mname]
+        else:
+            self.curlam = None
+            self.curresin = None
+            print "Resin '{0}' unknown. Skipping".format(mname)
+
+    def _parse_l(self, lst):
+        '''Parse a lamina line.'''
+        if self.curlam == None:
+            print "Found 'l:' line but no previous 't:' line! Skipping."
+            return
+        if self.curresin == None:
+            print "Found 'l:' line but no previous 'm:' line! Skipping."
+            return
+        finame = ' '.join(lst[3:])
+        if finame not in self.f:
+            print "Unknown fiber in 'l:' line. Skipping."
+            return
+        self.curlam.append(lptypes.Lamina(self.f[finame], self.curresin, 
+                                          lst[1], lst[2], self.curvf))
+
+    def parse(self, fname):
+        '''Reads and parses the file fname. Returns a tuple containing
+        dictionaries of fibers, resins, and laminates.'''
+        self.__init__()
+        try:
+            fl = open(fname)
+        except IOError:
+            print "Cannot open:", fname
+            return None, None, None
+        for line in fl:
+            lst = line.split()
+            if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
+                continue # comment line
+            try:
+                # Dispatch to the appropriate private method
+                getattr(self, '_parse_'+lst[0][0])(lst)
+            except AttributeError:
+                print "Unknown line type '{}:'!".format(lst[0][0])
+        self.curlam.finish()
+        fl.close()
+        return self.f, self.r, self.l
 
