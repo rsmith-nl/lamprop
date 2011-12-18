@@ -2,17 +2,17 @@
 # Installation script for lamprop.
 #
 # R.F. Smith <rsmith@xs4all.nl>
-# Time-stamp: <2011-10-21 12:05:44 rsmith>
+# Time-stamp: <2011-12-18 14:12:02 rsmith>
 
 from distutils.core import setup
 import lpver
 
-with open('README.txt') as file:
-    ld = file.read()
+with open('README.txt') as f:
+    ld = f.read()
 
 setup(name=lpver.name,
       version=lpver.version,
-      description='Program to calculate elastic properties of fibrous composites',
+      description='Calculates elastic properties of fibrous composites',
       author='Roland Smith',
       author_email='rsmith@xs4all.nl',
       url='http://www.xs4all.nl/~rsmith/software/',

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Classes for fiber, matrix and lamina properties.
-#
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-11-13 18:48:44 rsmith>
+# Time-stamp: <2011-12-18 14:27:11 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,10 +23,8 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-import math
-import numpy
-
-"""This module contains the objects necessary to calculate the properties of
+"""
+This module contains the classes necessary to calculate the properties of
 continuous fiber reinforced laminates.
 
 The following references used in coding this module:
@@ -68,6 +64,9 @@ The following references used in coding this module:
 }
 """
 
+import math
+import numpy
+
 class Fiber:
     """A class for containing fiber properties. Direction 1 is in the length
     of the fiber, direction 2 is perpendicular to that."""
@@ -88,6 +87,11 @@ class Fiber:
         s = "[name={}, density={}, E1={}, v12={}, cte1={}]"
         return s.format(self.name, self.density, self.E1, self.v12, 
                         self.cte1)
+    def thickness(self, aw):
+        """Return the theoretical thickness of a fiber layer in mm based on
+        the area weight aw in gr/m²."""
+        # [gr/m²]/[gr/cm³] = [cm³/m²] = 1/10000 [cm³/cm²] = 1/1000 [mm]
+        return float(aw)/(self.density*1000)
 
 class Resin:
     """A class for containing resin properties."""
@@ -125,7 +129,7 @@ class Lamina:
         self.angle = float(angle)
         self.vf = float(vf)
         vm = (1.0 - self.vf)            # Volume fraction of resin material
-        self.thickness = self.weight/(fiber.density*1000.0)*(1+vm/vf)
+        self.thickness = fiber.thickness(weight)*(1+vm/vf)
         self.rc = self.thickness*vm*resin.density*1000.0        # Resin [g/m²]
         self.E1 = self.vf*fiber.E1+resin.E*vm   # Hyer:1998, p. 115, (3.32)
         self.E2 = 3*self.resin.E        # Tsai:1992, p. 3-13
@@ -134,22 +138,33 @@ class Lamina:
         m = math.cos(math.radians(self.angle))
         n = math.sin(math.radians(self.angle))
         # The powers of the sine and cosine of the angle are often used later.
-        m2 = m*m; m3 = m2*m; m4 = m3*m
-        n2 = n*n; n3 = n2*n; n4 = n3*n
+        m2 = m*m
+        m3 = m2*m
+        m4 = m3*m
+        n2 = n*n
+        n3 = n2*n
+        n4 = n3*n
         cte1 = (fiber.cte1*fiber.E1*self.vf+resin.cte*resin.E*vm)/self.E1
         cte2 = resin.cte # This is not 100% accurate, but simple.
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2
         self.cte_xy = 2*(cte1-cte2)*m*n
-        S11 = 1/self.E1; S12 = -self.v12/self.E1 # Hyer:1998, p. 152, (4.5)
-        S22 = 1/self.E2; S66 = 1/self.G12; denum = S11*S22-S12*S12
-        Q11 = S22/denum; Q12 = -S12/denum; Q22 = S11/denum; Q66 = 1/S66
+        S11 = 1/self.E1  # Hyer:1998, p. 152, (4.5)
+        S12 = -self.v12/self.E1
+        S22 = 1/self.E2
+        S66 = 1/self.G12
+        denum = S11*S22-S12*S12
+        Q11 = S22/denum
+        Q12 = -S12/denum
+        Q22 = S11/denum
+        Q66 = 1/S66
         self.Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
-        foo = Q11-Q12-2*Q66; bar = Q12-Q22+2*Q66
+        QA = Q11-Q12-2*Q66
+        QB = Q12-Q22+2*Q66
         self.Q_12 = (Q11+Q22-4*Q66)*n2*m2+Q12*(n4+m4)
-        self.Q_16 = foo*n*m3+bar*n3*m
+        self.Q_16 = QA*n*m3+QB*n3*m
         self.Q_22 = Q11*n4+2*(Q12+2*Q66)*n2*m2+Q22*m4
-        self.Q_26 = foo*n3*m+bar*n*m3
+        self.Q_26 = QA*n3*m+QB*n*m3
         self.Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
         self.density = fiber.density*self.vf+resin.density*vm
     def __str__(self):

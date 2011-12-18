@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-12-18 12:58:00 rsmith>
+# Time-stamp: <2011-12-18 14:19:57 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,7 +35,7 @@ import lpouthtml
 
 class LicenseAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        print lpver.license
+        print lpver.lic
         sys.exit()
 
 # Process the command-line arguments

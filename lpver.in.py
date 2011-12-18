@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Version data for lamprop
-#
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-07-03 17:53:16 rsmith>
+# Time-stamp: <2011-12-18 14:19:44 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,9 +23,11 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+"Version data for lamprop."
+
 name = 'lamprop'
 version = 'VERSION'
-license = '''lamprop VERSION
+lic = '''lamprop VERSION
 Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

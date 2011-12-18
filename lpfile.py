@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Read and parse a lamprop file
-#
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-12-18 13:16:41 rsmith>
+# Time-stamp: <2011-12-18 14:17:10 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,6 +22,8 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
+
+"Contains the LPparser class for parsing lamprop files."
 
 import lptypes
 

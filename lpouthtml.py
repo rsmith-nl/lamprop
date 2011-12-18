@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# HTML output routines for lamprop.
-#
 # Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-11-13 18:27:47 rsmith>
+# Time-stamp: <2011-12-18 14:24:08 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,6 +22,8 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
+
+"HTML output routines for lamprop."
 
 import lpver
 
@@ -220,7 +220,8 @@ def _matrices(l):
     print s.format(l.abd[0, 0]*1e6, l.abd[0, 1]*1e6, l.abd[0, 2]*1e6)
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
     print s.format(l.abd[0, 3]*1e6, l.abd[0, 4]*1e6, l.abd[0, 5]*1e6)
-    print "                  <td rowspan=\"6\">&times;10<sup>-6</sup>&times;</td>"
+    print "                  <td rowspan=\"6\">&times;"\
+        "10<sup>-6</sup>&times;</td>"
     print "                  <td>{}</td>".format(fstr[0])
     print "                </tr>"
     for n in range(1, 6):
