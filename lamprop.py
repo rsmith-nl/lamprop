@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # lamprop - main program.
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <>
+# Time-stamp: <2012-01-28 15:26:19 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -81,8 +81,9 @@ elif args.html:
     out = lpouthtml.out
 for f in args.files:
     # Process the files.
-    fp = lpfile.LPparser()
-    fibers, resins, laminates = fp.parse(f)
+    fp = lpfile.LPparser(f)
+    for s in fp.parse():
+        sys.stderr.write(s+'\n')
     # Print the results.
-    for curlam in laminates:
+    for curlam in fp.l:
         out(curlam, args.eng, args.mat)

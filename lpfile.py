@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <>
+# Time-stamp: <2012-01-28 15:46:46 rsmith>
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -36,14 +36,15 @@ def _numeric(val):
     return True
 
 class LPparser:
-    def __init__(self):
-        '''Initialize an empty parser object.'''
-        self.f = {}
-        self.r = {}
-        self.l = []
+    def __init__(self, fname):
+        '''Initialize a parser object to parse the file 'fname'.'''
+        self.f = {} # fibres
+        self.r = {} # resins
+        self.l = [] # lamina
         self.curlam = None
         self.curresin = None
         self.curvf = 0.0
+        self.fname = fname
 
     def _parse_f(self, lst):
         '''Parse a fiber line.'''
@@ -55,11 +56,13 @@ class LPparser:
             finame = ' '.join(lst[5:])
             self.f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
                                            finame)
+        return '{}: Fiber "{}"'.format(self.fname, finame)
 
     def _parse_r(self, lst):
         '''Parse a resin line.'''
         rname = ' '.join(lst[5:])
         self.r[rname] = lptypes.Resin(lst[1], lst[2], lst[3], lst[4])
+        return '{}: Resin "{}"'.format(self.fname, rname)
 
     def _parse_t(self, lst):
         '''Parse a laminate line.'''
@@ -72,6 +75,7 @@ class LPparser:
             self.curresin = None
         self.curlam = lptypes.Laminate(lname)
         self.l.append(self.curlam)
+        return '{}: Laminate "{}"'.format(self.fname, lname)
 
     def _parse_m(self, lst):
         '''Parse a matrix line.'''
@@ -85,42 +89,41 @@ class LPparser:
         else:
             self.curlam = None
             self.curresin = None
-            print "Resin '{0}' unknown. Skipping".format(mname)
+            return "Resin '{0}' unknown. Skipping".format(mname)
+        return '{}: Using "{}" as matrix'.format(self.fname, mname)
 
     def _parse_l(self, lst):
         '''Parse a lamina line.'''
         if self.curlam == None:
-            print "Found 'l:' line but no previous 't:' line! Skipping."
-            return
+            return "Found 'l:' line but no previous 't:' line! Skipping."
         if self.curresin == None:
-            print "Found 'l:' line but no previous 'm:' line! Skipping."
-            return
+            return "Found 'l:' line but no previous 'm:' line! Skipping."
         finame = ' '.join(lst[3:])
         if finame not in self.f:
-            print "Unknown fiber in 'l:' line. Skipping."
-            return
+            return "Unknown fiber in 'l:' line. Skipping."
         self.curlam.append(lptypes.Lamina(self.f[finame], self.curresin, 
                                           lst[1], lst[2], self.curvf))
+        s = '{}: Lamina of {} g/m2 of "{}" fibers'
+        s += ' at {} degrees.'
+        return s.format(self.fname, lst[1], self.f[finame].name, lst[2])
 
-    def parse(self, fname):
-        '''Reads and parses the file fname. Returns a tuple containing
-        dictionaries of fibers, resins, and laminates.'''
-        self.__init__()
+    def parse(self):
+        '''Generator for parsing the file. Returns a string describing what
+        was found at each run.'''
         try:
-            fl = open(fname)
+            fl = open(self.fname)
         except IOError:
             print "Cannot open:", fname
-            return None, None, None
+            return
         for line in fl:
             lst = line.split()
             if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
                 continue # comment line
             try:
                 # Dispatch to the appropriate private method
-                getattr(self, '_parse_'+lst[0][0])(lst)
+                yield getattr(self, '_parse_'+lst[0][0])(lst)
             except AttributeError:
                 print "Unknown line type '{}:'!".format(lst[0][0])
         self.curlam.finish()
         fl.close()
-        return self.f, self.r, self.l
-
+        return
