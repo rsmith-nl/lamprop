@@ -1,12 +1,10 @@
 MANIFEST
 *.pyc
-lpver.py
 *~
 #*#
 build/*
 dist/*
 backup-*.tar.gz
-lamprop.?
 lamprop.?.ps
 lamprop.?.pdf
-tools/replace.sed
+

@@ -3,9 +3,9 @@
 
 #beginskip
 PROG = lamprop
-ALL = ${PROG}.1 ${PROG}.1.pdf ${PROG}.5 ${PROG}.5.pdf lpver.py 
+ALL = ${PROG}.1.pdf ${PROG}.5.pdf
 
-all: ${ALL} ${PROG}.py .git/hooks/post-commit tools/replace.sed
+all: ${ALL} ${PROG}.py .git/hooks/post-commit
 #endskip
 BASE=/usr/local
 MANDIR=$(BASE)/man
@@ -39,7 +39,7 @@ dist: ${ALL}
 	rm -f MANIFEST
 
 clean::
-	rm -rf dist build backup-*.tar.gz *.pyc ${ALL} MANIFEST lpver.py
+	rm -rf dist build backup-*.tar.gz *.pyc ${ALL} MANIFEST
 
 backup:  ${ALL}
 # Generate a full backup.
@@ -48,22 +48,10 @@ backup:  ${ALL}
 .git/hooks/post-commit: tools/post-commit
 	install -m 755 $> $@
 
-tools/replace.sed: .git/index
-	tools/post-commit
-
-lpver.py: lpver.in.py
-	sed -f tools/replace.sed lpver.in.py >$@
-
-${PROG}.1: ${PROG}.1.in tools/replace.sed
-	sed -f tools/replace.sed ${PROG}.1.in >$@
-
 ${PROG}.1.pdf: ${PROG}.1
 	mandoc -Tps $> >$*.ps
 	epspdf $*.ps
 	rm -f $*.ps
-
-${PROG}.5: ${PROG}.5.in tools/replace.sed
-	sed -f tools/replace.sed ${PROG}.5.in >$@
 
 ${PROG}.5.pdf: ${PROG}.5
 	mandoc -Tps $> >$*.ps

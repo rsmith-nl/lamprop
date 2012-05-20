@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <>
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +25,7 @@
 
 "LaTeX output routines for lamprop."
 
-import lpver
+__version__ = '$Revision$'[11:-2]
 
 def out(lam, eng, mat):
     '''LaTeX main output function.'''
@@ -33,8 +33,7 @@ def out(lam, eng, mat):
     print "  \\renewcommand{\\arraystretch}{1.2}"
     print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(lam.name)
     print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
-    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}".format(lpver.name,
-                                                               lpver.version)
+    print "  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__)
     if eng:
         _engprop(lam)
     if mat:

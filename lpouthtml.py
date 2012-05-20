@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <>
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +25,7 @@
 
 "HTML output routines for lamprop."
 
-import lpver
+__version__ = '$Revision$'[11:-2]
 
 def out(lam, eng, mat):
     '''HTML main output function.'''
@@ -36,7 +36,7 @@ def out(lam, eng, mat):
     print "      <tbody align=\"center\">"
     print "        <tr>"
     s = "          <td  align=\"center\" colspan=\"2\">created by {} {}.</td>"
-    print s.format(lpver.name, lpver.version)
+    print s.format('lamprop', __version__)
     print "        </tr>"
     if eng:
         _engprop(lam)

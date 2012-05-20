@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2012-01-28 15:46:46 rsmith>
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,6 +24,8 @@
 # SUCH DAMAGE.
 
 "Contains the LPparser class for parsing lamprop files."
+
+__version__ = '$Revision$'[11:-2]
 
 import lptypes
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <>
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -63,6 +63,8 @@ The following references used in coding this module:
   note =         {ISBN~90~247~3125~90 (hardcover)}
 }
 """
+
+__version__ = '$Revision$'[11:-2]
 
 import math
 import numpy
