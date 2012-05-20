@@ -4,7 +4,9 @@
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
 
-_lic = '''lamprop $Revision$
+__version__ = '$Revision$'[11:-2]
+
+_lic = '''lamprop {}
 Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,9 +28,7 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.'''
-
-__version__ = '$Revision$'[11:-2]
+SUCH DAMAGE.'''.format(__version__)
 
 import argparse
 import sys
