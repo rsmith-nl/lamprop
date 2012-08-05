@@ -1,7 +1,10 @@
+MANIFEST
 *.pyc
-lpver.py
 *~
 #*#
 build/*
 dist/*
+backup-*.tar.gz
+lamprop.?.ps
+lamprop.?.pdf
 

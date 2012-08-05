@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# LaTeX output routines for lamprop.
-#
-# Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-04-01 19:14:01 rsmith>
+# Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,24 +23,24 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-import lptypes
-import lpver
+"LaTeX output routines for lamprop."
 
-def out(lam, name, eng, mat):
+__version__ = '$Revision$'[11:-2]
+
+def out(lam, eng, mat):
     '''LaTeX main output function.'''
     print "\\begin{table}[!htbp]"
     print "  \\renewcommand{\\arraystretch}{1.2}"
-    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(name)
+    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(lam.name)
     print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
-    print "  \\tiny calculated by {0} {1}\\\\[3pt]}}\n".format(lpver.name,
-                                                               lpver.version)
-    if eng == True:
-        engprop(lam, name)
-    if mat == True:
-        matrices(lam, name, not eng)
+    print "  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__)
+    if eng:
+        _engprop(lam)
+    if mat:
+        _matrices(lam)
     print "\\end{table}\n"
 
-def engprop(l, nm):
+def _engprop(l):
     '''Prints the engineering properties as a LaTeX table.'''
     print "  \\parbox{\\textwidth}{\\centering"
     print "    \\begin{tabular}[t]{rcrl}"
@@ -52,9 +50,9 @@ def engprop(l, nm):
     print "      Layer & Weight & Angle & Fiber type\\\\"
     print "            & [gr/m$^2$] & [$\\circ$] & \\\\"
     print "      \\midrule"
-    for ln,la in enumerate(l.layers):
-        s="      {} & {:4.0f} & {:5.0f} & {}\\\\"
-        print s.format(ln, la.weight, la.angle,la.fiber.name)
+    for ln, la in enumerate(l.layers):
+        s = "      {} & {:4.0f} & {:5.0f} & {}\\\\"
+        print s.format(ln, la.weight, la.angle, la.fiber.name)
     print "      \\bottomrule"
     print "    \\end{tabular}\\hspace{0.02\\textwidth}"
     print "    \\begin{tabular}[t]{rrl}"
@@ -82,7 +80,7 @@ def engprop(l, nm):
     print "  }\\vspace{5mm}"
 
 
-def matrices(l, nm, printheader):
+def _matrices(l):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
     print "  \\vbox{"
     print "    \\vbox{\\small\\textbf{Stiffness matrix}\\\\"
@@ -93,8 +91,8 @@ def matrices(l, nm, printheader):
     for t in range(6):
         s = "          {:6.0f} & {:6.0f} & {:6.0f} & {:6.0f}"\
         " & {:6.0f} & {:6.0f}\\\\"
-        print s.format(l.ABD[t,0], l.ABD[t,1], l.ABD[t,2], 
-                       l.ABD[t,3], l.ABD[t,4], l.ABD[t,5])
+        print s.format(l.ABD[t, 0], l.ABD[t, 1], l.ABD[t, 2], 
+                       l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5])
     print "          \\end{array}\\right| \\times"
     print "        \\left\\{\\begin{array}{c}"
     print "            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "\
@@ -111,8 +109,8 @@ def matrices(l, nm, printheader):
     for t in range(6):
         s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}"\
         " & {:6.3g} & {:6.3g}\\\\"
-        print s.format(l.abd[t,0]*1e6, l.abd[t,1]*1e6, l.abd[t,2]*1e6, 
-                       l.abd[t,3]*1e6, l.abd[t,4]*1e6, l.abd[t,5]*1e6)
+        print s.format(l.abd[t, 0]*1e6, l.abd[t, 1]*1e6, l.abd[t, 2]*1e6, 
+                       l.abd[t, 3]*1e6, l.abd[t, 4]*1e6, l.abd[t, 5]*1e6)
     print "          \\end{array}\\right|\\times10^{-6}\\times"
     print "        \\left\\{\\begin{array}{c}"
     print "            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}"

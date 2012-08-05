@@ -1,8 +1,12 @@
-Time-stamp: <2011-03-27 18:41:54 rsmith>
+Time-stamp: <2011-11-01 22:42:36 rsmith>
 
-soorten vezels
+soorten vezels (oud formaat)
    E1         E2       v12  G12   alpha1   alpha2 rho  naam
 f: 230000 23000 0.20 8960  -0.41e-6 9e-6    1.76 T300
+
+Nieuw formaat:
+   E1      v12   alpha1   rho  naam
+f: 230000  0.30  -0.41e-6 1.76 T300-2
 
 
 soorten hars
@@ -15,5 +19,12 @@ l: 100 0  T300
 l: 100 90 T300
 l: 100 90 T300
 l: 100 0  T300
+
+t: CD0200-2
+m: 0.5 Epikote04908
+l: 100 0  T300-2
+l: 100 90 T300-2
+l: 100 90 T300-2
+l: 100 0  T300-2
 
 

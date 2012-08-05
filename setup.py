@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # Installation script for lamprop.
-#
 # R.F. Smith <rsmith@xs4all.nl>
-# Time-stamp: <2011-07-02 23:51:53 rsmith>
+# $Date$
 
 from distutils.core import setup
-import lpver
 
-with open('README.txt') as file:
-    ld = file.read()
+with open('README.txt') as f:
+    ld = f.read()
 
-setup(name=lpver.name,
-      version=lpver.version,
-      description='Program to calculate elastic properties of fibrous composites',
+name = 'lamprop'
+setup(name=name,
+      version='$Revision$'[11:-2],
+      description='Calculates elastic properties of fibrous composites',
       author='Roland Smith',
       author_email='rsmith@xs4all.nl',
       url='http://www.xs4all.nl/~rsmith/software/',
-      scripts=['lamprop'],
+      scripts=['lamprop.py'],
+#      data_files=[('share/doc/lamprop', ['lamprop.1.pdf', 'lamprop.5.pdf'])],
       requires=['numpy'],
-      provides=[lpver.name],
+      provides=[name],
       py_modules=['lpfile', 'lpouthtml', 'lpoutlatex',
-                  'lpouttext', 'lptypes', 'lpver'],
+                  'lpouttext', 'lptypes'],
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'Intended Audience :: End Users/Desktop',

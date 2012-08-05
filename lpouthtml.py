@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# HTML output routines for lamprop.
-#
-# Copyright © 2011 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Time-stamp: <2011-03-28 22:37:09 rsmith>
+# Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,29 +23,30 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-import lptypes
-import lpver
+"HTML output routines for lamprop."
 
-def out(lam, name, eng, mat):
+__version__ = '$Revision$'[11:-2]
+
+def out(lam, eng, mat):
     '''HTML main output function.'''
     print "    <!-- outer table -->"
     print "    <table cellpadding=\"10%\">"
     s = "      <caption><strong>Properties of {}</strong></caption>"
-    print s.format(name)
+    print s.format(lam.name)
     print "      <tbody align=\"center\">"
     print "        <tr>"
     s = "          <td  align=\"center\" colspan=\"2\">created by {} {}.</td>"
-    print s.format(lpver.name, lpver.version)
+    print s.format('lamprop', __version__)
     print "        </tr>"
-    if eng == True:
-        engprop(lam, name)
-    if mat == True:
-        matrices(lam, name, not eng)
+    if eng:
+        _engprop(lam)
+    if mat:
+        _matrices(lam)
     print "      </tbody>"
     print "    </table>"
     print "    <hr />"
 
-def engprop(l, nm):
+def _engprop(l):
     '''Prints the engineering properties as a HTML table.'''
     print "        <!-- first row; tables -->"
     print "        <tr>"
@@ -65,7 +64,7 @@ def engprop(l, nm):
     print "                </tr>"
     print "              </thead>"
     print "              <tbody align=\"right\">"
-    for ln,la in enumerate(l.layers):
+    for ln, la in enumerate(l.layers):
         print "                <tr>"
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
         print s.format(ln, la.weight, la.angle)
@@ -115,11 +114,17 @@ def engprop(l, nm):
     print "                <tr>"
     s = "                  <td>resin</td><td>{:.0f}</td>"
     print s.format(l.rc)
+    print "                  <td align=\"left\">gr/m&sup2;</td>"
     print "                </tr>"
     print "              </tbody>"
     print "                <tr>"
     s = "                  <td>E<sub>x</sub></td><td>{:8.0f}</td>"
     print s.format(l.Ex)
+    print "                  <td align=\"left\">MPa</td>"
+    print "                </tr>"
+    print "                <tr>"
+    s = "                  <td>E<sub>y</sub></td><td>{:8.0f}</td>"
+    print s.format(l.Ey)
     print "                  <td align=\"left\">MPa</td>"
     print "                </tr>"
     print "                <tr>"
@@ -152,7 +157,7 @@ def engprop(l, nm):
     print "          </td>"
     print "        </tr>"
 
-def matrices(l, nm, printheader):
+def _matrices(l):
     '''Prints the ABD and abd matrices as HTML tables.'''
     fstr = ["N<sub>x</sub>", "N<sub>y</sub>", "N<sub>xy</sub>",
             "M<sub>x</sub>", "M<sub>y</sub>", "M<sub>xy</sub>"]
@@ -176,19 +181,19 @@ def matrices(l, nm, printheader):
     print "                  <td>{}</td>".format(fstr[0])
     print "                  <td rowspan=\"6\">=</td>"
     s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print s.format(l.ABD[0,0], l.ABD[0,1], l.ABD[0,2])
+    print s.format(l.ABD[0, 0], l.ABD[0, 1], l.ABD[0, 2])
     s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print s.format(l.ABD[0,3], l.ABD[0,4], l.ABD[0,5])
+    print s.format(l.ABD[0, 3], l.ABD[0, 4], l.ABD[0, 5])
     print "                  <td rowspan=\"6\">&times;</td>"
     print "                  <td>{}</td>".format(dstr[0])
     print "                </tr>"
-    for n in range(1,6):
+    for n in range(1, 6):
         print "                <tr>"
         print "                  <td>{}</td>".format(fstr[n])
         s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print s.format(l.ABD[n,0], l.ABD[n,1], l.ABD[n,2])
+        print s.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2])
         s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print s.format(l.ABD[n,3], l.ABD[n,4], l.ABD[n,5])
+        print s.format(l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5])
         print "                  <td>{}</td>".format(dstr[n])
         print "                </tr>"
     print "              </tbody>"
@@ -209,22 +214,23 @@ def matrices(l, nm, printheader):
     print "              <colgroup span=\"1\"></colgroup>"
     print "              <tbody align=\"center\">"
     print "                <tr>"
-    print "                  <td>{}</td>".format(fstr[0])
+    print "                  <td>{}</td>".format(dstr[0])
     print "                  <td rowspan=\"6\">=</td>"
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print s.format(l.abd[0,0]*1e6, l.abd[0,1]*1e6, l.abd[0,2]*1e6)
+    print s.format(l.abd[0, 0]*1e6, l.abd[0, 1]*1e6, l.abd[0, 2]*1e6)
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print s.format(l.abd[0,3]*1e6, l.abd[0,4]*1e6, l.abd[0,5]*1e6)
-    print "                  <td rowspan=\"6\">&times;10"\
-        "<sup>-6</sup>&times;</td>"
+    print s.format(l.abd[0, 3]*1e6, l.abd[0, 4]*1e6, l.abd[0, 5]*1e6)
+    print "                  <td rowspan=\"6\">&times;"\
+        "10<sup>-6</sup>&times;</td>"
+    print "                  <td>{}</td>".format(fstr[0])
     print "                </tr>"
-    for n in range(1,6):
+    for n in range(1, 6):
         print "                <tr>"
         print "                  <td>{}</td>".format(dstr[n])
         s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print s.format(l.abd[n,0]*1e6, l.abd[n,1]*1e6, l.abd[n,2]*1e6)
+        print s.format(l.abd[n, 0]*1e6, l.abd[n, 1]*1e6, l.abd[n, 2]*1e6)
         s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print s.format(l.abd[n,3]*1e6, l.abd[n,4]*1e6, l.abd[n,5]*1e6)
+        print s.format(l.abd[n, 3]*1e6, l.abd[n, 4]*1e6, l.abd[n, 5]*1e6)
         print "                  <td>{}</td>".format(fstr[n])
         print "                </tr>"
     print "              </tbody>"

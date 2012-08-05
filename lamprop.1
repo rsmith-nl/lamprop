@@ -1,0 +1,305 @@
+.\" -*- nroff -*-
+.\" lamprop.1
+.\" By: R.F. Smith <rsmith@xs4all.nl>
+.\" $Date$
+.\"
+.Dd
+.Os 
+.Dt LAMPROP 1 CON
+.Sh NAME
+.Nm lamprop
+.Nd calculates properties of fiber-reinforced composite laminates.
+.Sh SYNOPSIS
+.Nm 
+.Op Fl h | Fl -help
+.Op Fl l | Fl -latex
+.Op Fl H | Fl -html
+.Op Fl e | Fl -eng
+.Op Fl m| Fl -mat
+.Op Fl L| Fl -license
+.Op Fl v| Fl -version
+.Op Ar
+.\" [-h] [-l | -H] [-e] [-m] [-L | -v] [file [file ...]]
+.Sh DESCRIPTION
+This manual page documents
+.Ql $Revision$
+of the
+.Nm
+program, a program to calculate mechanical and thermal properties of
+fiber-reinforced composite laminates.
+.Pp
+The following options are available:
+.Bl -tag -width indent
+.It Fl h Fl -help
+Show this help message and exit.
+.It Fl l Fl -latex
+Output the generated properties as a LaTeX table. It makes use of the 
+.Xr booktabs
+package. It in meant to be included in a LaTeX document (using
+.Ql \e\input
+), so it is not a self-contained LaTeX document.
+.It Fl H Fl -html
+Output the generated properties as a HTML table. It is meant to be inserted
+into a HTML page so it doesn't contain 
+.Ql <head>
+and
+.Ql <body>
+tags, but both
+.Xr links 1
+and
+.Xr firefox 1
+will render it properly without them.
+.It Fl e Fl -eng
+Produce the layers and engineering properties.
+.It Fl m Fl -mat
+Produce the ABD and abd matrices.
+.It Fl L Fl -license
+Print the license and exit.
+.It Fl v Fl -version
+Show program's version number and exit
+.El
+.Pp
+It reads the composition of the laminates from one or more input files. The
+format of these files is documented in 
+.Xr lamprop 5 .
+.Pp
+The program expects properties in metric units as specified in 
+.Xr lamprop 5 .
+In short;
+.Bl -hyphen -compact
+.It
+Young's moduli are given in MPa.
+.It
+Coefficients of thermal expansion are given in 1/K.
+.It
+Area weights are given in g/m2.
+.It
+Densities are given in g/cm3.
+.El
+.Pp
+It then calculates the following values for all the laminates in the input
+files:
+.Bl -tag -width "Resin consumption" -compact
+.It thickness
+Total thickness of the laminate, in mm.
+.It Vf
+Fiber volume fraction. The fraction of the volume that the fibers
+contribute to the laminate. This calculation assumes that there are no
+voids in the laminate.
+.It Wf
+Fiber weight fraction. The fraction that the fibers contribute to the total
+weight of the laminate.
+.It Weight
+The area weight of the laminate, in g/m2.
+.It Resin consumption
+The amount of resin embedded in the laminate, in g/m2.
+.It E_x
+Young's modulus in the x-direction, in MPa.
+.It E_y
+Young's modulus in the y-direction, in MPa.
+.It G_xy
+Shear modulus, in MPa.
+.It v_xy and v_yx
+Poisson constants.
+.It cte_x
+Coefficient of Thermal Expansion in the x-direction, in 1/K.
+.It cte_y
+Coefficient of thermal expansion in the y-direction, in 1/K.
+.It ABD and abd
+The stiffness and compliance matrices of the laminate. 
+.El
+The ABD and adb matrices describe the properties of the laminate in
+detail. Their format is as follows.
+.Pp
+.TS
+tab( );
+L C C C C C C C C L.
+Nx  A11 A12 A16 B11 B12 B16  \(*ex
+Ny  A12 A22 A26 B12 B22 B26  \(*ey
+Nxy \(eq A16 A26 A66 B16 B26 B66 \(mu \(*exy
+Mx  B11 B12 B16 D11 D12 D16  \(*kx
+My  B12 B22 B26 D12 D22 D26  \(*ky
+Mxy  B16 B26 B66 D16 D26 D66  \(*kxy
+.TE
+
+.TS
+tab( );
+L C C C C C C C C L.
+\(*ex  a11 a12 a16 b11 b12 b16  Nx
+\(*ey  a12 a22 a26 b12 b22 b26  Ny
+\(*exy \(eq a16 a26 a66 b16 b26 b66 \(mu Nxy
+\(*kx  b11 b12 b16 d11 d12 d16  Mx
+\(*ky  b12 b22 b26 d12 d22 d26  Mky
+\(*kxy  b16 b26 b66 d16 d26 d66  Mxy
+.TE
+.Pp
+The units of the parts of the ABD and abd matrix are as follows (where x is 1,
+2 or 6) :
+.Bl -hyphen -compact
+.It
+Axx in N/mm.
+.It
+Bxx in N.
+.It
+Dxx in Nmm.
+.It
+axx in mm/N
+.It
+bxx in 1/N
+.It
+dxx in 1/Nm
+.El
+.Pp
+The stress resultants N has units of force per unit of length (N/mm). The
+moment resultant has units of torque per unit of length (Nmm/mm = N). Both
+\(*e and \(*k are dimensionless.
+.Pp
+These values are written to the standard output, in the form specified by the
+output options. The default is plain text output.
+.Sh EXIT STATUS
+.Ex -std
+.Sh DIAGNOSTICS
+.Bl -tag -width foo -compact
+.It Cannot open: Em filename
+The file
+.Em filename
+could not be opened for reading. This could be e.g because the file doesn't exist
+or if the user doesn't have access rights to the file.
+.It Laminate 'name' already exists! Skipping.
+This error occurs when you try to use the same laminate name more than once
+within a run. 
+.It Found 'm:' line outside a laminate; Skipping.
+An 'm:' line should follow an 't:' line.
+.It Resin 'name' unknown. Skipping.
+A resin was used that wasn't previously declared with a 'r:' line. Maybe the
+name was misspelled?
+.It Found 'l:' line but no previous 't:' line! Skipping.
+You have to start a laminate definition with a 't:' line before you can add
+lamina (layers) to the laminate.
+.It Found 'l:' line but no previous 'm:' line! Skipping.
+Similarly, you have to define which matrix is to be used with a lamina before
+you create a lamina.
+.It Unknown fiber in 'l:' line. Skipping.
+A fiber was used that wasn't previously declared with a 'f:' line. Maybe the
+name was misspelled?
+.El 
+.Sh COMPATIBILITY
+This version of the 
+.Nm
+program requires the Python interpreter and the Numerical
+Python extension.
+.Sh SEE ALSO
+.Xr lamprop 5 ,
+.Xr python 1 ,
+.Xr latex 1
+.Rs
+.%A M. W. Hyer
+.%B Stress Analysis of Fiber Reinforced Composite Materials
+.%I McGraw-Hill
+.%C Boston, USA
+.%D 1997
+.Re
+.Rs 
+.%A Stephen W. Tsai
+.%B Theory of composites design
+.%I Think Composites
+.%C Dayton, USA
+.%D 1992
+.Re
+.Rs 
+.%A J.R. Vinson
+.%A R.L. Sierakowski
+.%B The Behavior of Structures Composed of Composite Materials
+.%I Martinus Nijhoff Publishers
+.%C Dordrecht, The Netherlands
+.%D 1987
+.Re
+.Rs 
+.%A L.J. Hart-Smith
+.%B The ten-percent rule for preliminary sizing of fibrous composite structures
+.%J Weight Engineering
+.%N 52
+.%P 29-45
+.%D 1992
+.Re
+.Rs
+.%B The booktabs package
+.%U http://www.ctan.org/tex-archive/macros/latex/contrib/booktabs/
+.Re
+.Rs
+.%B Python Programming Language - Official Website
+.%U http://www.python.org/
+.Re
+.Rs
+.%B Numerical Python
+.%U http://numpy.scipy.org/
+.Re
+.Sh HISTORY
+This program was written to automate the calculations necessary to obtain the
+properties of a fiber reinforced laminate based on the properties of the
+fibers and the matrix used. While these calculations are well documented in
+the literature (see the references above), they are quite cumbersome to do by
+hand.
+.Pp
+The original version of this program was written in C, since implementing it
+in a spreadsheet proved cumbersome, inflexible and even produced incorrect
+results. The C version ran up to 1.3.x. 
+.Pp
+As an exercise in learning the language, the author ported the program to the
+Python programming language. This proved to be a much cleaner, more
+maintainable and shorter implementation.
+.Pp
+Additionally, the generally hard to obtain transverse fiber properties were
+replaced with properties derived from the matrix.
+.Xr git 1
+revision control system.
+.Sh AUTHOR
+This manual and the 
+.Nm
+software were written by 
+.An Roland Smith Aq rsmith@xs4all.nl .
+.Pp
+The latest version of this program is available at:
+.Lk http://rsmith.home.xs4all.nl/software/ 
+.Sh BUGS
+Some of the calculations depend on the perpendicular modulus of the
+fibers. This property is hard to find in product literature for anisotropic
+fibers like carbon and aramid. In 
+.Xr lamprop 5
+some values that the author has gathered are reproduced.
+.Sh LICENSE
+To the extent possible under law, Roland Smith has waived all copyright and
+related or neighboring rights to this manual. This work is published from the
+Netherlands. See 
+.Lk http://creativecommons.org/publicdomain/zero/1.0/
+.Pp
+The
+.Nm
+program itself is released under the two-clause BSD license given below;
+.Pp
+Copyright \(co 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+.Pp
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+.Bl -tag -width "foo" -compact
+.It 1.
+Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+.It 2.
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+.El
+.Pp
+THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\" EOF

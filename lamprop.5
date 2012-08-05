@@ -1,0 +1,151 @@
+.\" -*- nroff -*-
+.\" lamprop.5
+.\" By: R.F. Smith <rsmith@xs4all.nl>
+.\" $Date$
+.\"
+.Dd 
+.Os 
+.Dt LAMPROP 5 CON
+.Sh NAME
+.Nm lamprop
+.Nd This manpage documents the file format used by 
+.Ql $Revision$
+of the
+.Nm .
+.Sh DESCRIPTION
+.Pp
+The file format is very simple. Functional lines have
+either 'f', 'r', 't', 'm' or 'l' as the first non-whitespace character. This
+character must immediately be followed by a colon ':'. All other lines are
+seen as comments and disregarded.
+.Pp
+This program assumes specific metric units. The units used below are important
+because the program internally calculates the thickness of layers (in mm)
+based on the volume fractions and densities of the fibers and resins.
+.Pp
+The 'f:' line contains a definition of a fiber. It must contain the following
+values, separated by whitespace:
+.Bl -tag -width "alpha1" -compact
+.It E1
+Young's modulus in the fiber direction in MPa.
+.It v12
+Poisson's constant (dimensionless).
+.It alpha1
+Coefficient of Thermal Expansion in the fiber direction in 1/K.
+.It rho
+Density of the fiber in g/cm3.
+.It name
+Name that identifies the fiber. Every fiber in the input files should have
+a unique name.
+.El
+Usually, E1 and other properties in the fibre length direction are easily
+obtained from a fiber supplier. Previous versions of this program also
+required some properties perpendicular to the fiber to calculate transverse
+properties of the lamina. Since these values are very hard to obtain, they
+have been replaced by values derived from the matrix, according to Tsai(1992).
+.Pp
+The 'r:' line contains a definition of a resin. It must contain the following
+values, separated by whitespace:
+.Bl -tag -width "alpha" -compact
+.It E
+Young's modulus of the resin in MPa.
+.It v
+Poisson's constant (dimensionless).
+.It alpha
+CTE of the resin in 1/K.
+.It rho
+Density of the resin in g/cm3.
+.It name
+Name that identifies the resin. Every resin in the input files should have
+a unique name.
+.El
+.Pp
+The 't:' line starts a new laminate. It only contains the name which
+identifies the laminate. This name must be unique within the current input
+files.
+.Pp
+The 'm:' line chooses a resin for the laminate. It must appear after a 't:'
+line, and before the 'l:' lines. It must contain the following values,
+separated by whitespace:
+.Bl -tag -width "name" -compact
+.It vf
+The fiber volume fraction for the laminate.
+.It name
+The name of the resin used in the laminate. This resin must have been
+declared previously with an 'r:' line.
+.El
+.Pp
+The 'l:' line defines a single layer (lamina) in the laminate. It must be
+preceded by a 't:' and a 'm:' line. It must contain the following values,
+separated by whitespace:
+.Bl -tag -width "weight" -compact
+.It weight
+The weight in g/m2 of the dry fibers.
+.It angle
+The angle upwards from the x-axis under which the fibers are oriented.
+.It name
+The name of the fiber used in this layer. This fiber must have been
+declared previously with an 'f:' line.
+.El
+.Sh EXAMPLES
+The following is a sample input file for 
+.Nm .
+.Bd -literal -offset indent
+Fiber definition
+   E1     v12  alpha1   rho  naam
+f: 233000 0.2  -0.54e-6 1.76 Hyer's carbon fiber
+
+Matrix definition
+   Em   v    alpha   rho name
+r: 4620 0.36 41.4e-6 1.1  Hyer's resin
+
+t: [0/90]s laminate
+This is a standard symmetric cross-ply laminate. It has fine extensional
+moduli in the fiber directions, but a very low shear modulus.
+m: 0.5 Hyer's resin
+l: 100  0 Hyer's carbon fiber
+l: 100 90 Hyer's carbon fiber
+l: 100 90 Hyer's carbon fiber
+l: 100  0 Hyer's carbon fiber
+.Ed
+.Pp
+Below are some typical values used by the author for different kinds of
+materials:
+.TS
+center;
+C C C C L
+R C C C L.
+E1	v12	alpha1	rho	name
+124000	0.30	-2e-6	1.44	HM_aramid
+233000	0.20	-0.38e-6	1.80	T700SC (HS carbon)
+238000	0.20	-0.1e-6	1.77	STS5631 (HS carbon)
+238000	0.20	-0.1e-6	1.77	UTS5631 (HS carbon)
+640000	0.23	-1.1e-6	2.12	K63712 (UHM carbon)
+72400	0.33	5e-6	2.54	e_glass
+.TE
+.Pp
+If anyone would be able to contribute additional material data, the author
+would be grateful.
+.Sh SEE ALSO
+.Xr lamprop 1
+.Rs 
+.%A Stephen W. Tsai
+.%B Theory of composites design
+.%I Think Composites
+.%C Dayton, USA
+.%D 1992
+.Re
+.Sh AUTHOR
+This manual and the 
+.Nm
+software were written by 
+.An Roland Smith Aq rsmith@xs4all.nl .
+.Pp
+The latest version of this program is available at:
+.Lk http://rsmith.home.xs4all.nl/software/
+.Sh LICENSE
+To the extent possible under law, Roland Smith has waived all copyright and
+related or neighboring rights to this manual. This work is published from the
+Netherlands. See 
+.Lk http://creativecommons.org/publicdomain/zero/1.0/
+.\" EOF
