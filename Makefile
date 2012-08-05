@@ -1,4 +1,4 @@
-.PHONY: all install dist clean backup
+.PHONY: all install dist clean backup check
 .SUFFIXES: .ps .pdf .py
 
 #beginskip
@@ -44,6 +44,9 @@ clean::
 backup:  ${ALL}
 # Generate a full backup.
 	sh tools/genbackup
+
+check:: .IGNORE
+	pylint -i y --rcfile=tools/pylintrc l*.py
 
 .git/hooks/post-commit: tools/post-commit
 	install -m 755 $> $@

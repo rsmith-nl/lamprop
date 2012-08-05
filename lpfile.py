@@ -115,7 +115,7 @@ class LPparser:
         try:
             fl = open(self.fname)
         except IOError:
-            print "Cannot open:", fname
+            print "Cannot open:", self.fname
             return
         for line in fl:
             lst = line.split()
