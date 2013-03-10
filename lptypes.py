@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2013 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,15 @@ The following references used in coding this module:
   year =         {1987},
   note =         {ISBN~90~247~3125~90 (hardcover)}
 }
+
+@Techreport{Nettles:1994,
+  author =       {A.T. Nettles},
+  titls =        {Basic Mechanics of Laminated Plates},
+  institution =  {NASA},
+  year =         {1994},
+  number =       {Reference Publication 1351}
+}
+
 """
 
 __version__ = '$Revision$'[11:-2]
@@ -69,9 +78,11 @@ __version__ = '$Revision$'[11:-2]
 import math
 import numpy
 
+
 class Fiber:
     """A class for containing fiber properties. Direction 1 is in the length
     of the fiber, direction 2 is perpendicular to that."""
+
     def __init__(self, E1, v12, cte1, density, name):
         """Create a fiber instance.
 
@@ -85,18 +96,22 @@ class Fiber:
         self.cte1 = float(cte1)
         self.density = float(density)
         self.name = name
+
     def __str__(self):
         s = "[name={}, density={}, E1={}, v12={}, cte1={}]"
         return s.format(self.name, self.density, self.E1, self.v12, 
                         self.cte1)
+
     def thickness(self, aw):
         """Return the theoretical thickness of a fiber layer in mm based on
         the area weight aw in gr/m²."""
         # [gr/m²]/[gr/cm³] = [cm³/m²] = 1/10000 [cm³/cm²] = 1/1000 [mm]
         return float(aw)/(self.density*1000)
 
+
 class Resin:
     """A class for containing resin properties."""
+
     def __init__(self, E, v, cte, density):
         """Create a Resin instance.
 
@@ -110,12 +125,15 @@ class Resin:
         self.G = self.E/(2.0*(1.0+self.v))      # Shear modulus [MPa]
         self.cte = float(cte)
         self.density = float(density)
+
     def __str__(self):
         s = "[density={},E={}, v={}, G={}, cte={}]"
         return s.format(self.density, self.E, self.v, self.G, self.cte)
 
+
 class Lamina:
     """A class for unidirectional layer properties."""
+
     def __init__(self, fiber, resin, weight, angle, vf):
         """Create a Lamina (layer) instance.
 
@@ -132,14 +150,14 @@ class Lamina:
         self.vf = float(vf)
         vm = (1.0 - self.vf)            # Volume fraction of resin material
         self.thickness = fiber.thickness(weight)*(1+vm/vf)
-        self.rc = self.thickness*vm*resin.density*1000.0        # Resin [g/m²]
+        self.rc = self.thickness*vm*resin.density*1000.0  # Resin [g/m²]
         self.E1 = self.vf*fiber.E1+resin.E*vm   # Hyer:1998, p. 115, (3.32)
         self.E2 = 3*self.resin.E        # Tsai:1992, p. 3-13
         self.G12 = self.E2/2            # Tsai:1992, p. 3-13
         self.v12 = 0.3                  # Tsai:1992, p. 3-13
         m = math.cos(math.radians(self.angle))
         n = math.sin(math.radians(self.angle))
-        # The powers of the sine and cosine of the angle are often used later.
+        # The powers of the sine and cosine are often used later.
         m2 = m*m
         m3 = m2*m
         m4 = m3*m
@@ -169,13 +187,16 @@ class Lamina:
         self.Q_26 = QA*n3*m+QB*n*m3
         self.Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
         self.density = fiber.density*self.vf+resin.density*vm
+
     def __str__(self):
         s = "[fiber={}, resin={}, weight={}, angle={}, vf={}]"
         return s.format(self.fiber.name, self.resin.name, self.weight, 
                         self.angle, self.vf)
 
+
 class Laminate:
     """A class for fibrous laminates."""
+
     def __init__(self, name):
         """Create a laminate instance.
         
@@ -206,9 +227,11 @@ class Laminate:
         self.rc += lamina.rc
         self.thickness += lamina.thickness
         self.finished = False
+
     def num_layers(self):
         """Return the number of layers in the laminate."""
         return len(self.layers)
+
     def finish(self):
         """Calculate the laminate properties."""
         if self.finished:
@@ -295,13 +318,31 @@ class Laminate:
         self.ABD = ABD
         self.abd = numpy.linalg.inv(ABD)
         # Calculate the engineering properties.
-        self.Ex = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
-                   (ABD[1, 1]*self.thickness))  # Hyer:1998, p. 326 
-        self.Ey = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
-                   (ABD[0, 0]*self.thickness))
-        self.Gxy = ABD[2, 2]/self.thickness
-        self.Vxy = ABD[0, 1]/ABD[1, 1]
-        self.Vyx = ABD[0, 1]/ABD[0, 0]
+        # Check if B is all zeros;
+        z = numpy.zeros([3,3])
+        if numpy.all(ABD[0:3,3:6] == z):
+            self.Ex = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
+                       (ABD[1, 1]*self.thickness))  # Hyer:1998, p. 326 
+            self.Ey = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
+                       (ABD[0, 0]*self.thickness))
+            self.Gxy = ABD[2, 2]/self.thickness
+            self.Vxy = ABD[0, 1]/ABD[1, 1]
+            self.Vyx = ABD[0, 1]/ABD[0, 0]
+        else: # non-symmetric laminates
+            dABD = numpy.linalg.det(ABD)
+            dt1 = numpy.linalg.det(ABD[1:6,1:6])
+            self.Ex = (dABD / (dt1 * self.thickness))
+            dt2 = numpy.linalg.det(numpy.delete(
+                    numpy.delete(ABD, 1, 0), 1, 1))
+            self.Ey = (dABD / (dt2 * self.thickness))
+            dt3 = numpy.linalg.det(numpy.delete(
+                    numpy.delete(ABD, 2, 0), 2, 1))
+            self.Gxy = (dABD / (dt3 * self.thickness))
+            dt4 = numpy.linalg.det(numpy.delete(
+                    numpy.delete(ABD, 0, 0), 1, 1))
+            self.Vxy = - dt4 / dt1
+            self.Vyx = - dt1 / dt4
+        # non-symmetric laminates
         # Calculate the coefficients of thermal expansion.
         # Technically only valid for a symmetric laminate!
         self.cte_x = (self.abd[0, 0]*Nt_x + self.abd[0, 1]*Nt_y + 
