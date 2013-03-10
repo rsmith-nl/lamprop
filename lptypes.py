@@ -318,30 +318,20 @@ class Laminate:
         self.ABD = ABD
         self.abd = numpy.linalg.inv(ABD)
         # Calculate the engineering properties.
-        # Check if B is all zeros;
-        z = numpy.zeros([3,3])
-        if numpy.all(ABD[0:3,3:6] == z):
-            self.Ex = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
-                       (ABD[1, 1]*self.thickness))  # Hyer:1998, p. 326 
-            self.Ey = ((ABD[0, 0]*ABD[1, 1]-ABD[0, 1]*ABD[0, 1])/
-                       (ABD[0, 0]*self.thickness))
-            self.Gxy = ABD[2, 2]/self.thickness
-            self.Vxy = ABD[0, 1]/ABD[1, 1]
-            self.Vyx = ABD[0, 1]/ABD[0, 0]
-        else: # non-symmetric laminates
-            dABD = numpy.linalg.det(ABD)
-            dt1 = numpy.linalg.det(ABD[1:6,1:6])
-            self.Ex = (dABD / (dt1 * self.thickness))
-            dt2 = numpy.linalg.det(numpy.delete(
-                    numpy.delete(ABD, 1, 0), 1, 1))
-            self.Ey = (dABD / (dt2 * self.thickness))
-            dt3 = numpy.linalg.det(numpy.delete(
-                    numpy.delete(ABD, 2, 0), 2, 1))
-            self.Gxy = (dABD / (dt3 * self.thickness))
-            dt4 = numpy.linalg.det(numpy.delete(
-                    numpy.delete(ABD, 0, 0), 1, 1))
-            self.Vxy = - dt4 / dt1
-            self.Vyx = - dt1 / dt4
+        # Nettles:1994, p. 34 e.v.
+        dABD = numpy.linalg.det(ABD)
+        dt1 = numpy.linalg.det(ABD[1:6,1:6])
+        self.Ex = (dABD / (dt1 * self.thickness))
+        dt2 = numpy.linalg.det(numpy.delete(
+                numpy.delete(ABD, 1, 0), 1, 1))
+        self.Ey = (dABD / (dt2 * self.thickness))
+        dt3 = numpy.linalg.det(numpy.delete(
+                numpy.delete(ABD, 2, 0), 2, 1))
+        self.Gxy = (dABD / (dt3 * self.thickness))
+        dt4 = numpy.linalg.det(numpy.delete(
+                numpy.delete(ABD, 0, 0), 1, 1))
+        self.Vxy = dt4 / dt1
+        self.Vyx = dt4 / dt2
         # non-symmetric laminates
         # Calculate the coefficients of thermal expansion.
         # Technically only valid for a symmetric laminate!
