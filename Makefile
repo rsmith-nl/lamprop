@@ -1,9 +1,10 @@
-.PHONY: all install dist clean backup check
+.PHONY: all install dist clean backup check refresh
 .SUFFIXES: .ps .pdf .py
 
 #beginskip
 PROG = lamprop
 ALL = ${PROG}.1.pdf ${PROG}.5.pdf
+PYFILES!=ls *.py
 
 all: ${ALL} ${PROG}.py .git/hooks/post-commit
 #endskip
@@ -60,4 +61,9 @@ ${PROG}.5.pdf: ${PROG}.5
 	mandoc -Tps $> >$*.ps
 	epspdf $*.ps
 	rm -f $*.ps
+
+refresh::
+	rm -f ${PYFILES}
+	git checkout ${PYFILES}
+
 #endskip
