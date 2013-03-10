@@ -330,8 +330,10 @@ class Laminate:
         self.Gxy = (dABD / (dt3 * self.thickness))
         dt4 = numpy.linalg.det(numpy.delete(
                 numpy.delete(ABD, 0, 0), 1, 1))
+        dt5 = numpy.linalg.det(numpy.delete(
+                numpy.delete(ABD, 1, 0), 0, 1))
         self.Vxy = dt4 / dt1
-        self.Vyx = dt4 / dt2
+        self.Vyx = dt5 / dt2
         # non-symmetric laminates
         # Calculate the coefficients of thermal expansion.
         # Technically only valid for a symmetric laminate!
