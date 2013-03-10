@@ -320,7 +320,7 @@ class Laminate:
         # Calculate the engineering properties.
         # Nettles:1994, p. 34 e.v.
         dABD = numpy.linalg.det(ABD)
-        dt1 = numpy.linalg.det(ABD[1:6,1:6])
+        dt1 = numpy.linalg.det(ABD[1:6, 1:6])
         self.Ex = (dABD / (dt1 * self.thickness))
         dt2 = numpy.linalg.det(numpy.delete(
                 numpy.delete(ABD, 1, 0), 1, 1))
