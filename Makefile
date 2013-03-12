@@ -1,13 +1,14 @@
 .PHONY: all install dist clean backup check refresh
 .SUFFIXES: .ps .pdf .py
 
-#beginskip
 PROG = lamprop
+#beginskip
 ALL = ${PROG}.1.pdf ${PROG}.5.pdf
 PYFILES!=ls *.py
 
 all: ${ALL} ${PROG}.py .git/hooks/post-commit
 #endskip
+SCRIPTNAME = ${PROG}.py
 BASE=/usr/local
 MANDIR=$(BASE)/man
 BINDIR=$(BASE)/bin
