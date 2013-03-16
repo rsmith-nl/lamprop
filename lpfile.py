@@ -29,6 +29,14 @@ __version__ = '$Revision$'[11:-2]
 
 import lptypes
 
+def _w(s):
+    return 'Warning: ' + s
+
+
+def _e(s):
+    return 'ERROR: ' + s
+
+
 def _numeric(val):
     '''Tests if a value is a valid floating point number.'''
     try:
@@ -70,7 +78,7 @@ class LPparser:
         '''Parse a laminate line.'''
         lname = ' '.join(lst[1:])
         if lname in [x.name for x in self.l]:
-            print "Laminate '{0}' already exists! Skipping.".format(lname)
+            print _w("Laminate '{0}' already exists! Skip.".format(lname))
             return
         if self.curlam != None:
             self.curlam.finish()
@@ -82,7 +90,7 @@ class LPparser:
     def _parse_m(self, lst):
         '''Parse a matrix line.'''
         if self.curlam == None:
-            print "Found 'm:' line outside a laminate; Skipping."
+            print _w("Found 'm:' line outside a laminate; Skipping.")
             return
         self.curvf = float(lst[1])
         mname = ' '.join(lst[2:])
@@ -91,18 +99,18 @@ class LPparser:
         else:
             self.curlam = None
             self.curresin = None
-            return "Resin '{0}' unknown. Skipping".format(mname)
+            return _w("Resin '{0}' unknown. Skipping".format(mname))
         return '{}: Using "{}" as matrix'.format(self.fname, mname)
 
     def _parse_l(self, lst):
         '''Parse a lamina line.'''
         if self.curlam == None:
-            return "Found 'l:' line but no previous 't:' line! Skipping."
+            return _w("Found 'l:' line but no previous 't:' line! Skipping.")
         if self.curresin == None:
-            return "Found 'l:' line but no previous 'm:' line! Skipping."
+            return _w("Found 'l:' line but no previous 'm:' line! Skipping.")
         finame = ' '.join(lst[3:])
         if finame not in self.f:
-            return "Unknown fiber in 'l:' line. Skipping."
+            return _w("Unknown fiber in 'l:' line. Skipping.")
         self.curlam.append(lptypes.Lamina(self.f[finame], self.curresin, 
                                           lst[1], lst[2], self.curvf))
         s = '{}: Lamina of {} g/m2 of "{}" fibers'
@@ -115,7 +123,7 @@ class LPparser:
         try:
             fl = open(self.fname)
         except IOError:
-            print "Cannot open:", self.fname
+            print _e("Cannot open: {}".format(self.fname))
             return
         for line in fl:
             lst = line.split()
@@ -125,7 +133,7 @@ class LPparser:
                 # Dispatch to the appropriate private method
                 yield getattr(self, '_parse_'+lst[0][0])(lst)
             except AttributeError:
-                print "Unknown line type '{}:'!".format(lst[0][0])
+                print _e("Unknown line type '{}:'!".format(lst[0][0]))
         self.curlam.finish()
         fl.close()
         return

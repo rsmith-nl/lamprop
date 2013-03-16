@@ -50,9 +50,9 @@ group = opts.add_mutually_exclusive_group()
 group.add_argument('-l', '--latex', action='store_true', help="LaTeX output")
 group.add_argument('-H', '--html', action='store_true', help="HTML output")
 opts.add_argument('-e', '--eng', action='store_true', 
-                   help="produce the layers and engineering properties")
+                   help="produce only the layers and engineering properties")
 opts.add_argument('-m', '--mat', action='store_true', 
-                   help="produce the ABD and abd matrices")
+                   help="produce only the ABD and abd matrices")
 group = opts.add_mutually_exclusive_group()
 group.add_argument('-L', '--license', action=LicenseAction, nargs=0,
                   help="print the license")
@@ -86,7 +86,8 @@ for f in args.files:
     # Process the files.
     fp = lpfile.LPparser(f)
     for s in fp.parse():
-        sys.stderr.write(s+'\n')
+        if 'Warning' in s or 'ERROR' in s:
+            sys.stderr.write(s+'\n')
     # Print the results.
     for curlam in fp.l:
         out(curlam, args.eng, args.mat)
