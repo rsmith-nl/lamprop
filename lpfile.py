@@ -78,7 +78,7 @@ class LPparser:
         '''Parse a laminate line.'''
         lname = ' '.join(lst[1:])
         if lname in [x.name for x in self.l]:
-            print _w("Laminate '{0}' already exists! Skip.".format(lname))
+            print(_w("Laminate '{0}' already exists! Skip.".format(lname)))
             return
         if self.curlam != None:
             self.curlam.finish()
@@ -90,7 +90,7 @@ class LPparser:
     def _parse_m(self, lst):
         '''Parse a matrix line.'''
         if self.curlam == None:
-            print _w("Found 'm:' line outside a laminate; Skipping.")
+            print(_w("Found 'm:' line outside a laminate; Skipping."))
             return
         self.curvf = float(lst[1])
         mname = ' '.join(lst[2:])
@@ -123,7 +123,7 @@ class LPparser:
         try:
             fl = open(self.fname)
         except IOError:
-            print _e("Cannot open: {}".format(self.fname))
+            print(_e("Cannot open: {}".format(self.fname)))
             return
         for line in fl:
             lst = line.split()
@@ -133,7 +133,7 @@ class LPparser:
                 # Dispatch to the appropriate private method
                 yield getattr(self, '_parse_'+lst[0][0])(lst)
             except AttributeError:
-                print _e("Unknown line type '{}:'!".format(lst[0][0]))
+                print(_e("Unknown line type '{}:'!".format(lst[0][0])))
         self.curlam.finish()
         fl.close()
         return

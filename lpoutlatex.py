@@ -29,92 +29,92 @@ __version__ = '$Revision$'[11:-2]
 
 def out(lam, eng, mat):
     '''LaTeX main output function.'''
-    print "\\begin{table}[!htbp]"
-    print "  \\renewcommand{\\arraystretch}{1.2}"
-    print "  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(lam.name)
-    print "  \\centering\\footnotesize{\\rule{0pt}{10pt}"
-    print "  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__)
+    print("\\begin{table}[!htbp]")
+    print("  \\renewcommand{\\arraystretch}{1.2}")
+    print("  \\caption{{\\label{{tab:{0}}}properties of {0}}}".format(lam.name))
+    print("  \\centering\\footnotesize{\\rule{0pt}{10pt}")
+    print("  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__))
     if eng:
         _engprop(lam)
     if mat:
         _matrices(lam)
-    print "\\end{table}\n"
+    print("\\end{table}\n")
 
 def _engprop(l):
     '''Prints the engineering properties as a LaTeX table.'''
-    print "  \\parbox{\\textwidth}{\\centering"
-    print "    \\begin{tabular}[t]{rcrl}"
-    print "      \\multicolumn{4}{c}{\\small"\
-        "\\textbf{Laminate stacking}}\\\\[0.1em]"
-    print "      \\toprule %% \\usepackage{booktabs}"
-    print "      Layer & Weight & Angle & Fiber type\\\\"
-    print "            & [gr/m$^2$] & [$\\circ$] & \\\\"
-    print "      \\midrule"
+    print("  \\parbox{\\textwidth}{\\centering")
+    print("    \\begin{tabular}[t]{rcrl}")
+    print("      \\multicolumn{4}{c}{\\small"\
+        "\\textbf{Laminate stacking}}\\\\[0.1em]")
+    print("      \\toprule %% \\usepackage{booktabs}")
+    print("      Layer & Weight & Angle & Fiber type\\\\")
+    print("            & [gr/m$^2$] & [$\\circ$] & \\\\")
+    print("      \\midrule")
     for ln, la in enumerate(l.layers):
         s = "      {} & {:4.0f} & {:5.0f} & {}\\\\"
-        print s.format(ln, la.weight, la.angle, la.fiber.name)
-    print "      \\bottomrule"
-    print "    \\end{tabular}\\hspace{0.02\\textwidth}"
-    print "    \\begin{tabular}[t]{rrl}"
-    print "      \\multicolumn{3}{c}{\\small\\textbf{Engineering"\
-        " properties}}\\\\[0.1em]"
-    print "      \\toprule"
-    print "      Property & Value & Dimension\\\\"
-    print "      \\midrule"
-    print "      $v_f$ & {:4.2f} &-\\\\".format(l.vf)
-    print "      $w_f$ & {:4.2f} &-\\\\".format(l.wf)
-    print "      thickness & {:.3g} & mm\\\\".format(l.thickness)
-    print "      density & {:.3g} & gr/cm$^3$\\\\".format(l.density)
-    print "      weight & {:.0f} & gr/m$^2$\\\\".format(l.weight+l.rc)
-    print "      resin & {:.0f} & gr/m$^2$\\\\".format(l.rc)
-    print "      \\midrule"
-    print "      $E_x$ & {:8.0f} & MPa\\\\".format(l.Ex)
-    print "      $E_y$ & {:8.0f} & MPa\\\\".format(l.Ey)
-    print "      $G_{{xy}}$ & {:8.0f} & MPa\\\\".format(l.Gxy)
-    print "      $\\nu_{{xy}}$ & {:g} &-\\\\".format(l.Vxy)
-    print "      $\\nu_{{yx}}$ & {:g} &-\\\\".format(l.Vyx)
-    print "      $\\alpha_x$ & {:g} & K$^{{-1}}$\\\\".format(l.cte_x)
-    print "      $\\alpha_y$ & {:g} & K$^{{-1}}$\\\\".format(l.cte_y)
-    print "      \\bottomrule"
-    print "    \\end{tabular}"
-    print "  }\\vspace{5mm}"
+        print(s.format(ln, la.weight, la.angle, la.fiber.name))
+    print("      \\bottomrule")
+    print("    \\end{tabular}\\hspace{0.02\\textwidth}")
+    print("    \\begin{tabular}[t]{rrl}")
+    print("      \\multicolumn{3}{c}{\\small\\textbf{Engineering"\
+        " properties}}\\\\[0.1em]")
+    print("      \\toprule")
+    print("      Property & Value & Dimension\\\\")
+    print("      \\midrule")
+    print("      $v_f$ & {:4.2f} &-\\\\".format(l.vf))
+    print("      $w_f$ & {:4.2f} &-\\\\".format(l.wf))
+    print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
+    print("      density & {:.3g} & gr/cm$^3$\\\\".format(l.density))
+    print("      weight & {:.0f} & gr/m$^2$\\\\".format(l.weight+l.rc))
+    print("      resin & {:.0f} & gr/m$^2$\\\\".format(l.rc))
+    print("      \\midrule")
+    print("      $E_x$ & {:8.0f} & MPa\\\\".format(l.Ex))
+    print("      $E_y$ & {:8.0f} & MPa\\\\".format(l.Ey))
+    print("      $G_{{xy}}$ & {:8.0f} & MPa\\\\".format(l.Gxy))
+    print("      $\\nu_{{xy}}$ & {:g} &-\\\\".format(l.Vxy))
+    print("      $\\nu_{{yx}}$ & {:g} &-\\\\".format(l.Vyx))
+    print("      $\\alpha_x$ & {:g} & K$^{{-1}}$\\\\".format(l.cte_x))
+    print("      $\\alpha_y$ & {:g} & K$^{{-1}}$\\\\".format(l.cte_y))
+    print("      \\bottomrule")
+    print("    \\end{tabular}")
+    print("  }\\vspace{5mm}")
 
 
 def _matrices(l):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
-    print "  \\vbox{"
-    print "    \\vbox{\\small\\textbf{Stiffness matrix}\\\\"
-    print "      \\tiny\\[\\left\\{\\begin{array}{c}"
-    print "          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}"
-    print "        \\end{array}\\right\\} = "
-    print "      \\left|\\begin{array}{cccccc}"
+    print("  \\vbox{")
+    print("    \\vbox{\\small\\textbf{Stiffness matrix}\\\\")
+    print("      \\tiny\\[\\left\\{\\begin{array}{c}")
+    print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
+    print("        \\end{array}\\right\\} = ")
+    print("      \\left|\\begin{array}{cccccc}")
     for t in range(6):
         s = "          {:6.0f} & {:6.0f} & {:6.0f} & {:6.0f}"\
         " & {:6.0f} & {:6.0f}\\\\"
-        print s.format(l.ABD[t, 0], l.ABD[t, 1], l.ABD[t, 2], 
-                       l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5])
-    print "          \\end{array}\\right| \\times"
-    print "        \\left\\{\\begin{array}{c}"
-    print "            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "\
-        "\\gamma^0_{xy}\\\\[3pt]"
-    print "            \\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}"
-    print "          \\end{array}\\right\\}\\]"
-    print "    }"
-    print "    \\vbox{\\small\\textbf{Compliance matrix}\\\\"
-    print "      \\tiny\\[\\left\\{\\begin{array}{c}"
-    print "            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "\
-        "\\gamma^0_{xy}\\\\[3pt]"
-    print "            \\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}"
-    print "          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}"
+        print(s.format(l.ABD[t, 0], l.ABD[t, 1], l.ABD[t, 2], 
+                       l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5]))
+    print("          \\end{array}\\right| \\times")
+    print("        \\left\\{\\begin{array}{c}")
+    print("            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "\
+        "\\gamma^0_{xy}\\\\[3pt]")
+    print("            \\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}")
+    print("          \\end{array}\\right\\}\\]")
+    print("    }")
+    print("    \\vbox{\\small\\textbf{Compliance matrix}\\\\")
+    print("      \\tiny\\[\\left\\{\\begin{array}{c}")
+    print("            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "\
+        "\\gamma^0_{xy}\\\\[3pt]")
+    print("            \\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}")
+    print("          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}")
     for t in range(6):
         s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}"\
         " & {:6.3g} & {:6.3g}\\\\"
-        print s.format(l.abd[t, 0]*1e6, l.abd[t, 1]*1e6, l.abd[t, 2]*1e6, 
-                       l.abd[t, 3]*1e6, l.abd[t, 4]*1e6, l.abd[t, 5]*1e6)
-    print "          \\end{array}\\right|\\times10^{-6}\\times"
-    print "        \\left\\{\\begin{array}{c}"
-    print "            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}"
-    print "          \\end{array}\\right\\}\\]\\\\"
-    print "    }"
-    print "  }"
+        print(s.format(l.abd[t, 0]*1e6, l.abd[t, 1]*1e6, l.abd[t, 2]*1e6, 
+                       l.abd[t, 3]*1e6, l.abd[t, 4]*1e6, l.abd[t, 5]*1e6))
+    print("          \\end{array}\\right|\\times10^{-6}\\times")
+    print("        \\left\\{\\begin{array}{c}")
+    print("            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
+    print("          \\end{array}\\right\\}\\]\\\\")
+    print("    }")
+    print("  }")
 
