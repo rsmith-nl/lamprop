@@ -155,29 +155,23 @@ class Lamina:
         self.E2 = 3*self.resin.E        # Tsai:1992, p. 3-13
         self.G12 = self.E2/2            # Tsai:1992, p. 3-13
         self.v12 = 0.3                  # Tsai:1992, p. 3-13
-        m = math.cos(math.radians(self.angle))
-        n = math.sin(math.radians(self.angle))
+        a = math.radians(self.angle)
+        m, n = math.cos(a), math.sin(a)
         # The powers of the sine and cosine are often used later.
         m2 = m*m
-        m3 = m2*m
-        m4 = m3*m
+        m3, m4 = m2*m, m2*m2
         n2 = n*n
-        n3 = n2*n
-        n4 = n3*n
+        n3, n4 = n2*n, n2*n2
         cte1 = (fiber.cte1*fiber.E1*self.vf+resin.cte*resin.E*vm)/self.E1
         cte2 = resin.cte # This is not 100% accurate, but simple.
         self.cte_x = cte1*m2+cte2*n2
         self.cte_y = cte1*n2+cte2*m2
         self.cte_xy = 2*(cte1-cte2)*m*n
-        S11 = 1/self.E1  # Hyer:1998, p. 152, (4.5)
-        S12 = -self.v12/self.E1
-        S22 = 1/self.E2
-        S66 = 1/self.G12
+        S11, S12 = 1/self.E1,  -self.v12/self.E1
+        S22, S66 = 1/self.E2, 1/self.G12
         denum = S11*S22-S12*S12
-        Q11 = S22/denum
-        Q12 = -S12/denum
-        Q22 = S11/denum
-        Q66 = 1/S66
+        Q11, Q12 = S22/denum, -S12/denum
+        Q22, Q66 = S11/denum, 1/S66
         self.Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
         QA = Q11-Q12-2*Q66
         QB = Q12-Q22+2*Q66
@@ -250,9 +244,7 @@ class Laminate:
             l.z2 = (ze*ze-zs*zs)/2
             l.z3 = (ze*ze*ze-zs*zs*zs)/3
             prev = l
-        Nt_x = 0.0
-        Nt_y = 0.0
-        Nt_xy = 0.0
+        Nt_x, Nt_y, Nt_xy   = 0.0, 0.0, 0.0
         ABD = numpy.zeros((6, 6))
         for l in self.layers:
             # first row
