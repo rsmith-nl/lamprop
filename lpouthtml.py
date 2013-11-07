@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -10,7 +10,7 @@
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -23,9 +23,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+from __future__ import print_function
+
 "HTML output routines for lamprop."
 
 __version__ = '$Revision$'[11:-2]
+
 
 def out(lam, eng, mat):
     '''HTML main output function.'''
@@ -46,6 +49,7 @@ def out(lam, eng, mat):
     print("    </table>")
     print("    <hr />")
 
+
 def _engprop(l):
     '''Prints the engineering properties as a HTML table.'''
     print("        <!-- first row; tables -->")
@@ -53,7 +57,8 @@ def _engprop(l):
     print("          <td>")
     print("            <table border=\"1\" frame=\"hsides\"")
     print("              rules=\"groups\" cellpadding=\"5%\">")
-    print("              <caption><strong>Laminate stacking</strong></caption>")
+    print("              "
+          "<caption><strong>Laminate stacking</strong></caption>")
     print("              <thead align=\"right\">")
     print("                <tr>")
     print("                  <td>Layer</td><td>Weight</td>")
@@ -75,10 +80,10 @@ def _engprop(l):
     print("            </table>")
     print("          </td>")
     print("          <td>")
-    print("            <table border=\"1\" frame=\"hsides\""\
-	       " rules=\"groups\" cellpadding=\"5%\">")
-    print("              <caption><strong>Engineering properties"\
-	       "</strong></caption>")
+    print("            <table border=\"1\" frame=\"hsides\""
+          " rules=\"groups\" cellpadding=\"5%\">")
+    print("              <caption><strong>Engineering properties"
+          "</strong></caption>")
     print("              <thead align=\"right\">")
     print("                <tr>")
     print("                  <td>Property</td><td>Value</td>")
@@ -128,7 +133,7 @@ def _engprop(l):
     print("                  <td align=\"left\">MPa</td>")
     print("                </tr>")
     print("                <tr>")
-    s =  "                  <td>G<sub>xy</sub></td><td>{:8.0f}</td>"
+    s = "                  <td>G<sub>xy</sub></td><td>{:8.0f}</td>"
     print(s.format(l.Gxy))
     print("                  <td align=\"left\">MPa</td>")
     print("                </tr>")
@@ -157,6 +162,7 @@ def _engprop(l):
     print("          </td>")
     print("        </tr>")
 
+
 def _matrices(l):
     '''Prints the ABD and abd matrices as HTML tables.'''
     fstr = ["N<sub>x</sub>", "N<sub>y</sub>", "N<sub>xy</sub>",
@@ -167,10 +173,10 @@ def _matrices(l):
     print("        <tr>")
     print("          <!-- second row, stiffness matrix -->")
     print("          <td colspan=\"2\">")
-    print("            <table border=\"1\" frame=\"vsides\" "\
-	       "rules=\"groups\" cellpadding=\"5%%\">")
-    print("              <caption><strong>Stiffness matrix</strong>"\
-	       "</caption>")
+    print("            <table border=\"1\" frame=\"vsides\" "
+          "rules=\"groups\" cellpadding=\"5%%\">")
+    print("              <caption><strong>Stiffness matrix</strong>"
+          "</caption>")
     print("              <colgroup span=\"1\"></colgroup>")
     print("              <colgroup span=\"1\"></colgroup>")
     print("              <colgroup span=\"6\"></colgroup>")
@@ -190,9 +196,11 @@ def _matrices(l):
     for n in range(1, 6):
         print("                <tr>")
         print("                  <td>{}</td>".format(fstr[n]))
-        s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
+        s = "                  " \
+            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
         print(s.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2]))
-        s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
+        s = "                  " \
+            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
         print(s.format(l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5]))
         print("                  <td>{}</td>".format(dstr[n]))
         print("                </tr>")
@@ -203,10 +211,10 @@ def _matrices(l):
     print("        <tr>")
     print("          <!-- third row, compliance matrix -->")
     print("          <td colspan=\"2\">")
-    print("            <table border=\"1\" frame=\"vsides\" "\
-	       "rules=\"groups\" cellpadding=\"5%\">")
-    print("              <caption><strong>Compliance matrix</strong>"\
-	       "</caption>")
+    print("            <table border=\"1\" frame=\"vsides\" "
+          "rules=\"groups\" cellpadding=\"5%\">")
+    print("              <caption><strong>Compliance matrix</strong>"
+          "</caption>")
     print("              <colgroup span=\"1\"></colgroup>")
     print("              <colgroup span=\"1\"></colgroup>")
     print("              <colgroup span=\"6\"></colgroup>")
@@ -220,16 +228,18 @@ def _matrices(l):
     print(s.format(l.abd[0, 0]*1e6, l.abd[0, 1]*1e6, l.abd[0, 2]*1e6))
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
     print(s.format(l.abd[0, 3]*1e6, l.abd[0, 4]*1e6, l.abd[0, 5]*1e6))
-    print("                  <td rowspan=\"6\">&times;"\
-        "10<sup>-6</sup>&times;</td>")
+    print("                  <td rowspan=\"6\">&times;"
+          "10<sup>-6</sup>&times;</td>")
     print("                  <td>{}</td>".format(fstr[0]))
     print("                </tr>")
     for n in range(1, 6):
         print("                <tr>")
         print("                  <td>{}</td>".format(dstr[n]))
-        s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
+        s = "                  " \
+            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
         print(s.format(l.abd[n, 0]*1e6, l.abd[n, 1]*1e6, l.abd[n, 2]*1e6))
-        s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
+        s = "                  " \
+            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
         print(s.format(l.abd[n, 3]*1e6, l.abd[n, 4]*1e6, l.abd[n, 5]*1e6))
         print("                  <td>{}</td>".format(fstr[n]))
         print("                </tr>")
@@ -237,4 +247,3 @@ def _matrices(l):
     print("            </table>")
     print("          </td>")
     print("        </tr>")
-

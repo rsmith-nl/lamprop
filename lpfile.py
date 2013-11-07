@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -10,7 +10,7 @@
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -23,11 +23,14 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+from __future__ import print_function
+
 "Contains the LPparser class for parsing lamprop files."
 
 __version__ = '$Revision$'[11:-2]
 
 import lptypes
+
 
 def _w(s):
     return 'Warning: ' + s
@@ -45,12 +48,13 @@ def _numeric(val):
         return False
     return True
 
+
 class LPparser:
     def __init__(self, fname):
         '''Initialize a parser object to parse the file 'fname'.'''
-        self.f = {} # fibres
-        self.r = {} # resins
-        self.l = [] # lamina
+        self.f = {}  # fibres
+        self.r = {}  # resins
+        self.l = []  # lamina
         self.curlam = None
         self.curresin = None
         self.curvf = 0.0
@@ -58,13 +62,13 @@ class LPparser:
 
     def _parse_f(self, lst):
         '''Parse a fiber line.'''
-        if _numeric(lst[5]): # Old format
+        if _numeric(lst[5]):  # Old format
             finame = ' '.join(lst[8:])
-            self.f[finame] = lptypes.Fiber(lst[1], lst[3], lst[5], lst[7], 
+            self.f[finame] = lptypes.Fiber(lst[1], lst[3], lst[5], lst[7],
                                            finame)
         else:  # New format; Name _must_ start with a non-mumber.
             finame = ' '.join(lst[5:])
-            self.f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4], 
+            self.f[finame] = lptypes.Fiber(lst[1], lst[2], lst[3], lst[4],
                                            finame)
         return '{}: Fiber "{}"'.format(self.fname, finame)
 
@@ -80,7 +84,7 @@ class LPparser:
         if lname in [x.name for x in self.l]:
             print(_w("Laminate '{0}' already exists! Skip.".format(lname)))
             return
-        if self.curlam != None:
+        if self.curlam is not None:
             self.curlam.finish()
             self.curresin = None
         self.curlam = lptypes.Laminate(lname)
@@ -89,7 +93,7 @@ class LPparser:
 
     def _parse_m(self, lst):
         '''Parse a matrix line.'''
-        if self.curlam == None:
+        if self.curlam is None:
             print(_w("Found 'm:' line outside a laminate; Skipping."))
             return
         self.curvf = float(lst[1])
@@ -104,14 +108,14 @@ class LPparser:
 
     def _parse_l(self, lst):
         '''Parse a lamina line.'''
-        if self.curlam == None:
+        if self.curlam is None:
             return _w("Found 'l:' line but no previous 't:' line! Skipping.")
-        if self.curresin == None:
+        if self.curresin is None:
             return _w("Found 'l:' line but no previous 'm:' line! Skipping.")
         finame = ' '.join(lst[3:])
         if finame not in self.f:
             return _w("Unknown fiber in 'l:' line. Skipping.")
-        self.curlam.append(lptypes.Lamina(self.f[finame], self.curresin, 
+        self.curlam.append(lptypes.Lamina(self.f[finame], self.curresin,
                                           lst[1], lst[2], self.curvf))
         s = '{}: Lamina of {} g/m2 of "{}" fibers'
         s += ' at {} degrees.'
@@ -128,7 +132,7 @@ class LPparser:
         for line in fl:
             lst = line.split()
             if len(lst) == 0 or len(lst[0]) < 2 or lst[0][1] != ':':
-                continue # comment line
+                continue  # comment line
             try:
                 # Dispatch to the appropriate private method
                 yield getattr(self, '_parse_'+lst[0][0])(lst)
