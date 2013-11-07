@@ -23,8 +23,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-from __future__ import print_function
-
 """
 This module contains the classes necessary to calculate the properties of
 continuous fiber reinforced laminates.
@@ -75,13 +73,15 @@ The following references used in coding this module:
 
 """
 
+from __future__ import print_function
+
 __version__ = '$Revision$'[11:-2]
 
 import math
 import numpy
 
 
-class Fiber:
+class Fiber(object):
     """A class for containing fiber properties. Direction 1 is in the length
     of the fiber, direction 2 is perpendicular to that."""
 
@@ -111,7 +111,7 @@ class Fiber:
         return float(aw)/(self.density*1000)
 
 
-class Resin:
+class Resin(object):
     """A class for containing resin properties."""
 
     def __init__(self, E, v, cte, density):
@@ -133,7 +133,7 @@ class Resin:
         return s.format(self.density, self.E, self.v, self.G, self.cte)
 
 
-class Lamina:
+class Lamina(object):
     """A class for unidirectional layer properties."""
 
     def __init__(self, fiber, resin, weight, angle, vf):
@@ -190,7 +190,7 @@ class Lamina:
                         self.angle, self.vf)
 
 
-class Laminate:
+class Laminate(object):
     """A class for fibrous laminates."""
 
     def __init__(self, name):

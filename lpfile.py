@@ -23,9 +23,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-from __future__ import print_function
-
 "Contains the LPparser class for parsing lamprop files."
+
+from __future__ import print_function
 
 __version__ = '$Revision$'[11:-2]
 
@@ -49,7 +49,7 @@ def _numeric(val):
     return True
 
 
-class LPparser:
+class LPparser(object):
     def __init__(self, fname):
         '''Initialize a parser object to parse the file 'fname'.'''
         self.f = {}  # fibres
