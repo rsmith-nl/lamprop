@@ -16,7 +16,7 @@ setup(name=name,
       author_email='rsmith@xs4all.nl',
       url='http://www.xs4all.nl/~rsmith/software/',
       scripts=['lamprop.py'],
-#      data_files=[('share/doc/lamprop', ['lamprop.1.pdf', 'lamprop.5.pdf'])],
+      # data_files=[('share/doc/lamprop', ['lamprop.1.pdf', 'lamprop.5.pdf'])],
       requires=['numpy'],
       provides=[name],
       py_modules=['lpfile', 'lpouthtml', 'lpoutlatex',
@@ -30,5 +30,5 @@ setup(name=name,
                    'Programming Language :: Python :: 2.7',
                    'Topic :: Scientific/Engineering'
                    ],
-      long_description = ld
+      long_description=ld
       )
