@@ -6,7 +6,7 @@ PROG = lamprop
 ALL = ${PROG}.1.pdf ${PROG}.5.pdf
 PYFILES!=ls *.py
 
-all: ${ALL} ${PROG}.py .git/hooks/post-commit
+all: ${ALL} ${PROG}.py
 #endskip
 SCRIPTNAME = ${PROG}.py
 BASE=/usr/local
@@ -49,9 +49,6 @@ backup:  ${ALL}
 
 check:: .IGNORE
 	pylint -i y --rcfile=tools/pylintrc l*.py
-
-.git/hooks/post-commit: tools/post-commit
-	install -m 755 $> $@
 
 ${PROG}.1.pdf: ${PROG}.1
 	mandoc -Tps $> >$*.ps
