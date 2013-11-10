@@ -41,7 +41,7 @@ dist: ${ALL}
 	rm -f MANIFEST
 
 clean::
-	rm -rf dist build backup-*.tar.gz *.pyc ${ALL} MANIFEST
+	rm -rf dist build backup-*.tar.gz *.pyc __pycache__ ${ALL} MANIFEST
 
 backup:  ${ALL}
 # Generate a full backup.
@@ -61,7 +61,6 @@ ${PROG}.5.pdf: ${PROG}.5
 	rm -f $*.ps
 
 refresh::
-	rm -f ${PYFILES}
-	git checkout ${PYFILES}
+	.git/hooks/post-commit
 
 #endskip
