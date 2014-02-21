@@ -1,0 +1,18 @@
+Eigenschappen van een laminaat zoals weergegeven in de data-sheet van Atlac 590
+
+$Date$
+
+Vezel definitie
+    E1      ν12     α1      ρ       name
+f:  70000   0.33    5e-6        2.54    e-glas
+
+
+Matrix definitie
+    Em      ν       α       ρ       name
+r:  3500    0.36    51.5e-6   1.1   atlac-590
+
+t: atlac590-M710
+m: 0.183 atlac-590
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas

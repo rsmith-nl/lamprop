@@ -1,0 +1,27 @@
+Eigenschappen van een laminaat zoals weergegeven in de data-sheet van Atlac 430
+
+$Date$
+
+Vezel definitie
+    E1      ν12     α1      ρ       name
+f:  70000   0.33    5e-6        2.54    e-glas
+
+
+Matrix definitie
+    Em      ν       α       ρ       name
+r:  3600    0.36    60e-6   1.145   atlac-430
+
+t: atlac430-CSM450
+m: 0.22 atlac-430
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
