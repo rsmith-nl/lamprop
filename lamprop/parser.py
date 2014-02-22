@@ -28,7 +28,7 @@
 """Parser for lamprop files"""
 
 from __future__ import print_function, division
-from lamprop.types import Fiber, Resin
+from lamprop.types import Fiber, Resin, Lamina, Laminate
 
 __version__ = '$Revision$'[11:-2]
 
@@ -41,20 +41,66 @@ def parse(filename):
     """
     with open(filename, 'r') as df:
         data = df.readlines()
-    ds = 'DEBUG: {} contains {} {}'
-    print(ds.format(filename, len(data), 'lines'))
+#    ds = 'DEBUG: {} contains {} {}'
+#    print(ds.format(filename, len(data), 'lines'))
     directives = [(num, ln.rstrip()) for num, ln in enumerate(data)
-                  if len(ln) > 1 and ln[1] is ':']
-    print(ds.format(filename, len(directives), 'directives'))
+                  if len(ln) > 2 and ln[1] is ':']
+#    print(ds.format(filename, len(directives), 'directives'))
     fibers = [_f(ln, num) for num, ln in directives if ln[0] is 'f']
-    print(ds.format(filename, len(fibers), 'fiber definitions'))
+    fdict = {fiber.name: fiber for fiber in fibers}
+#    print(ds.format(filename, len(fibers), 'fiber definitions'))
+    _rmdup(fibers, 'fibers')
     resins = [_r(ln, num) for num, ln in directives if ln[0] is 'r']
-    print(ds.format(filename, len(resins), 'resin definitions'))
+    rdict = {resin.name: resin for resin in resins}
+#    print(ds.format(filename, len(resins), 'resin definitions'))
+    _rmdup(resins, 'resins')
     directives = [(num, ln) for num, ln in directives if ln[0] in 'tml']
-    laminatelines = [dnum for dnum, (num, ln) in enumerate(directives)
-                     if ln[0] is 't']
-    print(ds.format(filename, len(laminatelines), 'laminate definitions'))
-    print(laminatelines)
+    tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
+    tindices.append(len(directives))
+    pairs = zip(tindices, tindices[1:])
+    laminatedata = [directives[start:stop] for start, stop in pairs]
+    laminates = []
+    for lam in laminatedata:
+        numt, t = lam[0]
+        numm, m = lam[1]
+        if m[0] is not 'm':
+            print('No "m:"-line after "t:". Skipping laminate')
+            continue
+        name = t[2:].strip()
+        items = m.split(None, 2)
+        try:
+            vf = float(items[1])
+            mname = items[2]
+        except ValueError:
+            vf = None
+            mname = items[1]
+        try:
+            resin = rdict[mname]
+        except KeyError:
+            s = "Unknown resin '{}' on line {}. Skipping laminate."
+            print(s.format(mname, numm))
+            continue
+        layers = []
+        for numl, l in lam[2:]:
+            if l[0] is not 'l':
+                s = "Unexpected '{}:' on line {}. Skipping line."
+                print(s.format(l[0], numl))
+                continue
+            else:
+                values = _l(l, numl, resin, vf)
+            try:
+                fiber = fdict(values[0])
+                values[0] = fiber
+            except KeyError:
+                s = "Unknown fiber '{}' on line {}. Skipping line."
+                print(s.format(values[0], numl))
+                continue
+            layers.append(Lamina(*values))
+        if not layers:
+            print('Empty laminate. Skipping')
+            continue
+        laminates.append(Laminate(name, layers))
+    return laminates
 
 
 def _num(val):
@@ -73,17 +119,19 @@ def _num(val):
 def _f(line, number):
     """Parse a line describing a fiber.
 
+    f: <E1> <Poisson's ratio 1,2> <CTE1> <density> <name>
+
     :param line: text line to parse
     :param number: line number in the original file.
     :returns: a types.Fiber
     """
     test = line.split()
     if _num(test[5]):  # old format
-        print('DEBUG: old fiber format')
+#        print('DEBUG: old fiber format')
         items = line.split(None, 8)
         indices = [1, 3, 5, 7, 8]
     else:
-        print('DEBUG: new fiber format')
+#        print('DEBUG: new fiber format')
         items = line.split(None, 5)
         indices = [1, 2, 3, 4, 5]
     try:
@@ -93,12 +141,14 @@ def _f(line, number):
     except ValueError as e:
         print('ERROR on line {}: ', number, e)
         return None
-    print('DEBUG: fiber', values)
+#    print('DEBUG: fiber', values)
     return Fiber(*values)
 
 
 def _r(line, number):
     """Parse a line describing a resin.
+
+    r: <Ematrix> <Poisson's ratio> <CTE> <density> <name>
 
     :param line: string to parse
     :param number: line number in the original file.
@@ -112,5 +162,47 @@ def _r(line, number):
     except ValueError as e:
         print('ERROR on line {}:', number, e)
         return None
-    print('DEBUG: resin', values)
+#    print('DEBUG: resin', values)
     return Resin(*values)
+
+
+def _l(line, number, resin, vf):
+    """Parse a lamina line;
+
+    l: <weight> <angle> [<vf>] <fiber name>
+
+    :param line: string to parse
+    :param number: line number in the original file.
+    :param resin: the resin type to use
+    :param vf: global fiber volume fraction
+    :returns: a types.Lamina
+    """
+    items = line.split(None, 4)
+    try:
+        vf = float(items[3])
+    except ValueError:
+        if vf is None:
+            s = 'No vf in laminate line {}, and no global vf.'
+            raise ValueError(s.format(line))
+        items = line.split(None, 3)
+    values = [items[-1], resin]
+    values += [float(j) for j in items[1:3]]
+    values.append(vf)
+    return values
+
+
+def _rmdup(lst, name):
+    """Remove duplicate Fibers, Resins or Laminates.
+
+    :param lst: List to search through.
+    :param name: Name of the thing we're searching for
+    :returns: @todo
+    """
+    names = []
+    for n, i in enumerate(lst):
+        if i.name not in names:
+            names.append(i.name)
+        else:
+            s = "{} '{}' at line {} is a duplicate, will be ignored."
+            print(s.format(name, i.name, i.line))
+            del(lst[n])
