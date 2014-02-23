@@ -8,7 +8,7 @@ from __future__ import print_function, division
 __version__ = '$Revision$'[11:-2]
 
 _lic = '''lamprop {}
-Copyright © 2011-2013 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -33,10 +33,10 @@ SUCH DAMAGE.'''.format(__version__)
 
 import argparse
 import sys
-import lpfile
-import lpouttext
-import lpoutlatex
-import lpouthtml
+from lamprop.parser import parse
+import lamprop.text as text
+import lamprop.latex as latex
+import lamprop.html as html
 
 
 class LicenseAction(argparse.Action):
@@ -81,17 +81,13 @@ if len(args.files) == 0:
     sys.exit(1)
 
 # Set the output method.
-out = lpouttext.out
+out = text.out
 if args.latex:
-    out = lpoutlatex.out
+    out = latex.out
 elif args.html:
-    out = lpouthtml.out
+    out = html.out
 for f in args.files:
     # Process the files.
-    fp = lpfile.LPparser(f)
-    for s in fp.parse():
-        if 'Warning' in s or 'ERROR' in s:
-            sys.stderr.write(s+'\n')
-    # Print the results.
-    for curlam in fp.l:
+    laminates = parse(f)
+    for curlam in laminates:
         out(curlam, args.eng, args.mat)

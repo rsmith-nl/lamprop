@@ -38,7 +38,7 @@ dist: ${ALL}
 # Create distribution file. Use zip format to make deployment easier on windoze.
 	python setup.py sdist --format=zip
 	mv Makefile.org Makefile
-	rm -f MANIFEST
+	rm -f lamprop.egg-info
 
 clean::
 	rm -rf dist build backup-*.tar.gz *.pyc __pycache__ ${ALL} MANIFEST
