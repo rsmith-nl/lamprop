@@ -29,6 +29,7 @@
 
 from __future__ import print_function, division
 from lamprop.types import Fiber, Resin, Lamina, Laminate
+from lamprop.utils import warn, error
 
 __version__ = '$Revision$'[11:-2]
 
@@ -37,7 +38,7 @@ def parse(filename):
     """Parse a lamprop file
 
     :param filename: name of the file to parse
-    :returns: @todo
+    :returns: a list of laminates
     """
     with open(filename, 'r') as df:
         data = df.readlines()
@@ -64,7 +65,7 @@ def parse(filename):
         numt, t = lam[0]
         numm, m = lam[1]
         if m[0] is not 'm':
-            print('No "m:"-line after "t:". Skipping laminate')
+            error('No "m:"-line after "t:". Skipping laminate')
             continue
         name = t[2:].strip()
         items = m.split(None, 2)
@@ -78,26 +79,26 @@ def parse(filename):
             resin = rdict[mname]
         except KeyError:
             s = "Unknown resin '{}' on line {}. Skipping laminate."
-            print(s.format(mname, numm))
+            error(s.format(mname, numm))
             continue
         layers = []
         for numl, l in lam[2:]:
             if l[0] is not 'l':
                 s = "Unexpected '{}:' on line {}. Skipping line."
-                print(s.format(l[0], numl))
+                warn(s.format(l[0], numl))
                 continue
             else:
                 values = _l(l, numl, resin, vf)
             try:
-                fiber = fdict(values[0])
+                fiber = fdict[values[0]]
                 values[0] = fiber
             except KeyError:
                 s = "Unknown fiber '{}' on line {}. Skipping line."
-                print(s.format(values[0], numl))
+                warn(s.format(values[0], numl))
                 continue
             layers.append(Lamina(*values))
         if not layers:
-            print('Empty laminate. Skipping')
+            error('Empty laminate. Skipping')
             continue
         laminates.append(Laminate(name, layers))
     return laminates
@@ -204,5 +205,5 @@ def _rmdup(lst, name):
             names.append(i.name)
         else:
             s = "{} '{}' at line {} is a duplicate, will be ignored."
-            print(s.format(name, i.name, i.line))
+            warn(s.format(name, i.name, i.line))
             del(lst[n])

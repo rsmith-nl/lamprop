@@ -25,10 +25,56 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-"""Core types of lamprop."""
+"""Core types of lamprop.
+
+The following references used in coding this module:
+@Book{Hyer:1998,
+  author =       {Micheal W. Hyer},
+  title =        {Stress analysis of fiber-reinforced composite materials},
+  publisher =    {McGraw--Hill},
+  year =         {1998},
+  note =         {ISBN~0~07~115983~5}
+}
+
+@Book{Tsai:1992,
+  author =       {Stephen W. Tsai},
+  title =        {Theory of composites design},
+  publisher =    {Think Composites},
+  year =         {1992},
+  note =         {ISBN~0~9618090~3~5}
+}
+
+@Article{1992WeiEn..52...29H,
+   author = {Hart-Smith, L.~J.},
+    title = "{The ten-percent rule for preliminary sizing of fibrous
+                  composite structures}",
+  journal = {Weight Engineering},
+     year = 1992,
+   volume = 52,
+    pages = {29-45},
+  adsnote = {Provided by the Smithsonian/NASA Astrophysics Data System}
+}
+
+@Book{Vinson:1987,
+  author =       {J.R. Vinson},
+  title =        {The behavior of structures composed of composite materials},
+  publisher =    {Martinus Nijhoff Publishers},
+  year =         {1987},
+  note =         {ISBN~90~247~3125~90 (hardcover)}
+}
+
+@Techreport{Nettles:1994,
+  author =       {A.T. Nettles},
+  titls =        {Basic Mechanics of Laminated Plates},
+  institution =  {NASA},
+  year =         {1994},
+  number =       {Reference Publication 1351}
+}
+"""
 
 from __future__ import print_function, division
 from collections import namedtuple
+import numpy as np
 import math
 
 __version__ = '$Revision$'[11:-2]
@@ -105,7 +151,7 @@ class Lamina(object):
         Q_26 = QA*n3*m+QB*n*m3
         Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
         density = fiber.density*vf+resin.density*vm
-        self._fiber, self._resin, self._weight = fiber, resin. weight
+        self._fiber, self._resin, self._weight = fiber, resin, weight
         self._angle, self._vf, self._rc = angle, vf, rc
         self._E1, self._E2, self._G12, self._v12 = E1, E2, G12, v12
         self._cte_x, self._cte_y, self._cte_xy = cte_x, cte_y, cte_xy
@@ -199,7 +245,8 @@ class Laminate(object):
     """Laminate properties."""
 
     __slots__ = ('_name', '_layers', '_thickness', '_weight', '_density',
-                 '_vf', '_rc', '_wf')
+                 '_vf', '_rc', '_wf', '_ABD', '_abd', '_Ex', '_Ey', '_Gxy',
+                 '_Vxy', '_Vyx', '_cte_x', '_cte_y')
 
     def __init__(self, name, layers):
         """Create a laminate from its name and constituent layers.
@@ -218,6 +265,92 @@ class Laminate(object):
         self._vf = sum([l.vf*l.thickness for l in layers])/self._thickness
         self._rc = sum([l.rc for l in layers])  # resin content
         self._wf = self._weight/(self._weight + self._rc)
+        # Set z-values for lamina.
+        zs = -self._thickness/2
+        for l in self._layers:
+            ze = zs + l.thickness
+            l.z2 = (ze*ze-zs*zs)/2
+            l.z3 = (ze*ze*ze-zs*zs*zs)/3
+            zs = ze
+        Nt_x, Nt_y, Nt_xy = 0.0, 0.0, 0.0
+        ABD = np.zeros((6, 6))
+        for l in self.layers:
+            # first row
+            ABD[0, 0] += l.Q_11*l.thickness      # Hyer:1998, p. 290
+            ABD[0, 1] += l.Q_12*l.thickness
+            ABD[0, 2] += l.Q_16*l.thickness
+            ABD[0, 3] += l.Q_11*l.z2
+            ABD[0, 4] += l.Q_12*l.z2
+            ABD[0, 5] += l.Q_16*l.z2
+            # second row
+            ABD[1, 0] += l.Q_12*l.thickness
+            ABD[1, 1] += l.Q_22*l.thickness
+            ABD[1, 2] += l.Q_26*l.thickness
+            ABD[1, 3] += l.Q_12*l.z2
+            ABD[1, 4] += l.Q_22*l.z2
+            ABD[1, 5] += l.Q_26*l.z2
+            # third row
+            ABD[2, 0] += l.Q_16*l.thickness
+            ABD[2, 1] += l.Q_26*l.thickness
+            ABD[2, 2] += l.Q_66*l.thickness
+            ABD[2, 3] += l.Q_16*l.z2
+            ABD[2, 4] += l.Q_26*l.z2
+            ABD[2, 5] += l.Q_66*l.z2
+            # fourth row
+            ABD[3, 0] += l.Q_11*l.z2
+            ABD[3, 1] += l.Q_12*l.z2
+            ABD[3, 2] += l.Q_16*l.z2
+            ABD[3, 3] += l.Q_11*l.z3
+            ABD[3, 4] += l.Q_12*l.z3
+            ABD[3, 5] += l.Q_16*l.z3
+            # fifth row
+            ABD[4, 0] += l.Q_12*l.z2
+            ABD[4, 1] += l.Q_22*l.z2
+            ABD[4, 2] += l.Q_26*l.z2
+            ABD[4, 3] += l.Q_12*l.z3
+            ABD[4, 4] += l.Q_22*l.z3
+            ABD[4, 5] += l.Q_26*l.z3
+            # sixth row
+            ABD[5, 0] += l.Q_16*l.z2
+            ABD[5, 1] += l.Q_26*l.z2
+            ABD[5, 2] += l.Q_66*l.z2
+            ABD[5, 3] += l.Q_16*l.z3
+            ABD[5, 4] += l.Q_26*l.z3
+            ABD[5, 5] += l.Q_66*l.z3
+            # Calculate unit thermal stress resultants.
+            Nt_x += (l.Q_11*l.cte_x + l.Q_12*l.cte_y +
+                     l.Q_16*l.cte_xy)*l.thickness  # Hyer:1998, p. 445
+            Nt_y += (l.Q_12*l.cte_x + l.Q_22*l.cte_y +
+                     l.Q_26*l.cte_xy)*l.thickness
+            Nt_xy += (l.Q_16*l.cte_x + l.Q_26*l.cte_y +
+                      l.Q_66*l.cte_xy)*l.thickness
+        # Finish the matrices, discarding very small numbers in ABD.
+        for i in range(6):
+            for j in range(6):
+                if math.fabs(ABD[i, j]) < 1e-7:
+                    ABD[i, j] = 0.0
+        self._ABD = ABD
+        self._abd = np.linalg.inv(ABD)
+        # Calculate the engineering properties.
+        # Nettles:1994, p. 34 e.v.
+        dABD = np.linalg.det(ABD)
+        dt1 = np.linalg.det(ABD[1:6, 1:6])
+        self._Ex = (dABD / (dt1 * self.thickness))
+        dt2 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 1, 1))
+        self._Ey = (dABD / (dt2 * self.thickness))
+        dt3 = np.linalg.det(np.delete(np.delete(ABD, 2, 0), 2, 1))
+        self._Gxy = (dABD / (dt3 * self.thickness))
+        dt4 = np.linalg.det(np.delete(np.delete(ABD, 0, 0), 1, 1))
+        dt5 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 0, 1))
+        self._Vxy = dt4 / dt1
+        self._Vyx = dt5 / dt2
+        # non-symmetric laminates
+        # Calculate the coefficients of thermal expansion.
+        # Technically only valid for a symmetric laminate!
+        self._cte_x = (self.abd[0, 0]*Nt_x + self.abd[0, 1]*Nt_y +
+                       self.abd[0, 2]*Nt_xy)  # Hyer:1998, p. 451, (11.86)
+        self._cte_y = (self.abd[1, 0]*Nt_x + self.abd[1, 1]*Nt_y +
+                       self.abd[1, 2]*Nt_xy)
 
     @property
     def nlayers(self):
@@ -244,5 +377,49 @@ class Laminate(object):
         return self._density
 
     @property
+    def vf(self):
+        return self._vf
+
+    @property
     def rc(self):
         return self._rc
+
+    @property
+    def wf(self):
+        return self._wf
+
+    @property
+    def ABD(self):
+        return self._ABD
+
+    @property
+    def abd(self):
+        return self._abd
+
+    @property
+    def Ex(self):
+        return self._Ex
+
+    @property
+    def Ey(self):
+        return self._Ey
+
+    @property
+    def Gxy(self):
+        return self._Gxy
+
+    @property
+    def Vxy(self):
+        return self._Vxy
+
+    @property
+    def Vyx(self):
+        return self._Vyx
+
+    @property
+    def cte_x(self):
+        return self._cte_x
+
+    @property
+    def cte_y(self):
+        return self._cte_y
