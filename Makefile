@@ -1,22 +1,19 @@
-.PHONY: all install dist clean backup check refresh
-.SUFFIXES: .ps .pdf .py
+.PHONY: all install dist clean check refresh
 
-SUBDIR= doc
-
-PROG= lamprop
-#beginskip
-PYFILES!=ls *.py
-
-all: ${SUBDIR} lamprop
-#endskip
-SCRIPTNAME = lamprop.py
+# Installation locations
 BASE=/usr/local
 MANDIR=$(BASE)/man
 BINDIR=$(BASE)/bin
 
+# Leave these two as they are.
+SUBDIR=doc
+VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
+DISTFILES=Makefile README.txt
+
+# Default target.
 lamprop: src/__main__.py src/lamprop/*.py
-	cd src; zip -q ../foo __main__.py lamprop/*.py
-	echo '#!/usr/bin/env python2' >lamprop
+	cd src; zip -q ../foo.zip __main__.py lamprop/*.py
+	echo '#!/usr/bin/env python' >lamprop
 	cat foo.zip >>lamprop
 	chmod a+x lamprop
 	rm -f foo.zip
@@ -26,7 +23,7 @@ install: lamprop
 		echo "You must be root to install the program!"; \
 		exit 1; \
 	fi
-# Installt the zipped script.
+# Install the zipped script.
 	install lamprop ${BINDIR}
 # Install the manual page.
 	gzip -c doc/lamprop.1 >lamprop.1.gz
@@ -35,23 +32,30 @@ install: lamprop
 	install -m 644 lamprop.5.gz $(MANDIR)/man5
 	rm -f lamprop.1.gz lamprop.5.gz
 
-#beginskip
-dist: ${SUBDIR}
-# Make simplified makefile.
-	mv Makefile Makefile.org
-	awk -f tools/makemakefile.awk Makefile.org >Makefile
-# Create distribution file. Use zip format to make deployment easier on windoze.
-	python setup.py sdist --format=zip
-	mv Makefile.org Makefile
-	rm -f lamprop.egg-info
+dist: ${SUBDIR} lamprop
+	rm -rf dist
+	mkdir -p dist/lamprop-${VER}/src/lamprop
+	ln lamprop dist/lamprop-${VER}
+	for f in ${DISTFILES}; do \
+		ln $$f dist/lamprop-${VER}/$${f} ; \
+	done
+	for f in $$(find src/ -type f -name '*.py'); do \
+		ln $$f dist/lamprop-${VER}/$${f} ; \
+	done
+	mkdir -p dist/lamprop-${VER}/doc
+	for f in $$(ls doc/lamprop.*); do \
+		ln $$f dist/lamprop-${VER}/$${f} ; \
+	done
+	mkdir -p dist/lamprop-${VER}/test
+	ln test/hyer.lam dist/lamprop-${VER}/test/hyer.lam
+	cd dist; zip -r lamprop-${VER}.zip lamprop-${VER}
+	rm -rf dist/lamprop-${VER}
 
 clean: ${SUBDIR}
-	rm -rf lamprop dist build backup-*.tar.gz *.pyc __pycache__ MANIFEST
+	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
 
 check:: .IGNORE
-	pylint --rcfile=tools/pylintrc src/lamprop.py src/lamprop/*.py
+	flake8 src/__main__.py src/lamprop/*.py
 
 refresh::
 	.git/hooks/post-commit
-
-#endskip
