@@ -3,14 +3,14 @@
 .\" By: R.F. Smith <rsmith@xs4all.nl>
 .\" $Date$
 .\"
-.Dd
-.Os 
+.Dd February 24, 2014
 .Dt LAMPROP 1 CON
+.Os
 .Sh NAME
 .Nm lamprop
 .Nd calculates properties of fiber-reinforced composite laminates.
 .Sh SYNOPSIS
-.Nm 
+.Nm
 .Op Fl h | Fl -help
 .Op Fl l | Fl -latex
 .Op Fl H | Fl -html
@@ -33,14 +33,14 @@ The following options are available:
 .It Fl h Fl -help
 Show this help message and exit.
 .It Fl l Fl -latex
-Output the generated properties as a LaTeX table. It makes use of the 
+Output the generated properties as a LaTeX table. It makes use of the
 .Xr booktabs
 package. It in meant to be included in a LaTeX document (using
 .Ql \e\input
 ), so it is not a self-contained LaTeX document.
 .It Fl H Fl -html
 Output the generated properties as a HTML table. It is meant to be inserted
-into a HTML page so it doesn't contain 
+into a HTML page so it doesn't contain
 .Ql <head>
 and
 .Ql <body>
@@ -60,10 +60,10 @@ Show program's version number and exit
 .El
 .Pp
 It reads the composition of the laminates from one or more input files. The
-format of these files is documented in 
+format of these files is documented in
 .Xr lamprop 5 .
 .Pp
-The program expects properties in metric units as specified in 
+The program expects properties in metric units as specified in
 .Xr lamprop 5 .
 In short;
 .Bl -hyphen -compact
@@ -106,7 +106,7 @@ Coefficient of Thermal Expansion in the x-direction, in 1/K.
 .It cte_y
 Coefficient of thermal expansion in the y-direction, in 1/K.
 .It ABD and abd
-The stiffness and compliance matrices of the laminate. 
+The stiffness and compliance matrices of the laminate.
 .El
 The ABD and adb matrices describe the properties of the laminate in
 detail. Their format is as follows.
@@ -121,7 +121,6 @@ Mx  B11 B12 B16 D11 D12 D16  \(*kx
 My  B12 B22 B26 D12 D22 D26  \(*ky
 Mxy  B16 B26 B66 D16 D26 D66  \(*kxy
 .TE
-
 .TS
 tab( );
 L C C C C C C C C L.
@@ -160,34 +159,31 @@ output options. The default is plain text output.
 .Ex -std
 .Sh DIAGNOSTICS
 .Bl -tag -width foo -compact
-.It Cannot open: Em filename
+.It Error: cannot read <name>.
 The file
 .Em filename
 could not be opened for reading. This could be e.g because the file doesn't exist
 or if the user doesn't have access rights to the file.
-.It Laminate 'name' already exists! Skipping.
+.It Error: no laminates found in <name>.
+There were no 't:'-lines found in the file.
+.It Error: laminate 'name' on line 'num' already exists. Skipping laminate.
 This error occurs when you try to use the same laminate name more than once
-within a run. 
-.It Found 'm:' line outside a laminate; Skipping.
-An 'm:' line should follow an 't:' line.
-.It Resin 'name' unknown. Skipping.
+within a run.
+.It Error: No 'm:'-line after 't:'. Skipping laminate.
+After defining a laminate name, you must specify the resin to be used in this
+laminate.
+.It Error: Unknown resin '<name>' on line <num>. Skipping laminate.
 A resin was used that wasn't previously declared with a 'r:' line. Maybe the
 name was misspelled?
-.It Found 'l:' line but no previous 't:' line! Skipping.
-You have to start a laminate definition with a 't:' line before you can add
-lamina (layers) to the laminate.
-.It Found 'l:' line but no previous 'm:' line! Skipping.
-Similarly, you have to define which matrix is to be used with a lamina before
-you create a lamina.
-.It Unknown fiber in 'l:' line. Skipping.
+.It Error: Unknown fiber '<name>' on line <num>. Skipping line.
 A fiber was used that wasn't previously declared with a 'f:' line. Maybe the
 name was misspelled?
-.El 
+.El
 .Sh COMPATIBILITY
-This version of the 
+This version of the
 .Nm
-program requires the Python interpreter and the Numerical
-Python extension.
+program requires the Python interpreter (version 2.7) and the Numerical
+Python (numpy) extension (tested with version 1.6 and later).
 .Sh SEE ALSO
 .Xr lamprop 5 ,
 .Xr python 1 ,
@@ -199,14 +195,21 @@ Python extension.
 .%C Boston, USA
 .%D 1997
 .Re
-.Rs 
+.Rs
 .%A Stephen W. Tsai
 .%B Theory of composites design
 .%I Think Composites
 .%C Dayton, USA
 .%D 1992
 .Re
-.Rs 
+.Rs
+.%A A.T. Nettles
+.%B Basic Mechanics of Laminated Plates
+.%I NASA
+.%C USA
+.%D 1994
+.Re
+.Rs
 .%A J.R. Vinson
 .%A R.L. Sierakowski
 .%B The Behavior of Structures Composed of Composite Materials
@@ -214,7 +217,7 @@ Python extension.
 .%C Dordrecht, The Netherlands
 .%D 1987
 .Re
-.Rs 
+.Rs
 .%A L.J. Hart-Smith
 .%B The ten-percent rule for preliminary sizing of fibrous composite structures
 .%J Weight Engineering
@@ -243,7 +246,7 @@ hand.
 .Pp
 The original version of this program was written in C, since implementing it
 in a spreadsheet proved cumbersome, inflexible and even produced incorrect
-results. The C version ran up to 1.3.x. 
+results. The C version ran up to 1.3.x.
 .Pp
 As an exercise in learning the language, the author ported the program to the
 Python programming language. This proved to be a much cleaner, more
@@ -254,23 +257,23 @@ replaced with properties derived from the matrix.
 .Xr git 1
 revision control system.
 .Sh AUTHOR
-This manual and the 
+This manual and the
 .Nm
-software were written by 
+software were written by
 .An Roland Smith Aq rsmith@xs4all.nl .
 .Pp
 The latest version of this program is available at:
-.Lk http://rsmith.home.xs4all.nl/software/ 
+.Lk http://rsmith.home.xs4all.nl/software/
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
-fibers like carbon and aramid. In 
+fibers like carbon and aramid. In
 .Xr lamprop 5
 some values that the author has gathered are reproduced.
 .Sh LICENSE
 To the extent possible under law, Roland Smith has waived all copyright and
 related or neighboring rights to this manual. This work is published from the
-Netherlands. See 
+Netherlands. See
 .Lk http://creativecommons.org/publicdomain/zero/1.0/
 .Pp
 The

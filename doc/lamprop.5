@@ -3,17 +3,17 @@
 .\" By: R.F. Smith <rsmith@xs4all.nl>
 .\" $Date$
 .\"
-.Dd 
-.Os 
+.Dd February 24, 2014
 .Dt LAMPROP 5 CON
+.Os
 .Sh NAME
 .Nm lamprop
-.Nd This manpage documents the file format used by 
+.Nd This manpage documents the file format used by
 .Ql $Revision$
 of the
-.Nm .
+.Nm
+program.
 .Sh DESCRIPTION
-.Pp
 The file format is very simple. Functional lines have
 either 'f', 'r', 't', 'm' or 'l' as the first non-whitespace character. This
 character must immediately be followed by a colon ':'. All other lines are
@@ -69,7 +69,8 @@ line, and before the 'l:' lines. It must contain the following values,
 separated by whitespace:
 .Bl -tag -width "name" -compact
 .It vf
-The fiber volume fraction for the laminate.
+The fiber volume fraction for the laminate. This should be a number between 0
+and 1.
 .It name
 The name of the resin used in the laminate. This resin must have been
 declared previously with an 'r:' line.
@@ -77,18 +78,20 @@ declared previously with an 'r:' line.
 .Pp
 The 'l:' line defines a single layer (lamina) in the laminate. It must be
 preceded by a 't:' and a 'm:' line. It must contain the following values,
-separated by whitespace:
+separated by whitespace (optional items in square brackets):
 .Bl -tag -width "weight" -compact
 .It weight
 The weight in g/m2 of the dry fibers.
 .It angle
 The angle upwards from the x-axis under which the fibers are oriented.
+.It [Vf]
+Optionally the layer can have a different fiber volume fraction.
 .It name
 The name of the fiber used in this layer. This fiber must have been
 declared previously with an 'f:' line.
 .El
 .Sh EXAMPLES
-The following is a sample input file for 
+The following is a sample input file for
 .Nm .
 .Bd -literal -offset indent
 Fiber definition
@@ -128,17 +131,24 @@ If anyone would be able to contribute additional material data, the author
 would be grateful.
 .Sh SEE ALSO
 .Xr lamprop 1
-.Rs 
+.Rs
 .%A Stephen W. Tsai
 .%B Theory of composites design
 .%I Think Composites
 .%C Dayton, USA
 .%D 1992
 .Re
+.Rs
+.%A A.T. Nettles
+.%B Basic Mechanics of Laminated Plates
+.%I NASA
+.%C USA
+.%D 1994
+.Re
 .Sh AUTHOR
-This manual and the 
+This manual and the
 .Nm
-software were written by 
+software were written by
 .An Roland Smith Aq rsmith@xs4all.nl .
 .Pp
 The latest version of this program is available at:
@@ -146,6 +156,6 @@ The latest version of this program is available at:
 .Sh LICENSE
 To the extent possible under law, Roland Smith has waived all copyright and
 related or neighboring rights to this manual. This work is published from the
-Netherlands. See 
+Netherlands. See
 .Lk http://creativecommons.org/publicdomain/zero/1.0/
 .\" EOF

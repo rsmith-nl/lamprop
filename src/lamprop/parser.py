@@ -40,34 +40,43 @@ def parse(filename):
     :param filename: name of the file to parse
     :returns: a list of laminates
     """
-    with open(filename, 'r') as df:
-        data = df.readlines()
-#    ds = 'DEBUG: {} contains {} {}'
-#    print(ds.format(filename, len(data), 'lines'))
-    directives = [(num, ln.rstrip()) for num, ln in enumerate(data)
+    try:
+        with open(filename, 'r') as df:
+            data = df.readlines()
+    except IOError:
+        error("cannot read '{}'.".format(filename))
+        return []
+    data = [ln.strip() for ln in data]
+    directives = [(num, ln) for num, ln in enumerate(data)
                   if len(ln) > 2 and ln[1] is ':']
-#    print(ds.format(filename, len(directives), 'directives'))
     fibers = [_f(ln, num) for num, ln in directives if ln[0] is 'f']
     fdict = {fiber.name: fiber for fiber in fibers}
-#    print(ds.format(filename, len(fibers), 'fiber definitions'))
     _rmdup(fibers, 'fibers')
     resins = [_r(ln, num) for num, ln in directives if ln[0] is 'r']
     rdict = {resin.name: resin for resin in resins}
-#    print(ds.format(filename, len(resins), 'resin definitions'))
     _rmdup(resins, 'resins')
     directives = [(num, ln) for num, ln in directives if ln[0] in 'tml']
     tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
+    if not tindices:
+        error("no laminates found in '{}'".format(filename))
+        return []
     tindices.append(len(directives))
     pairs = zip(tindices, tindices[1:])
     laminatedata = [directives[start:stop] for start, stop in pairs]
     laminates = []
+    lamnames = []
     for lam in laminatedata:
         numt, t = lam[0]
         numm, m = lam[1]
-        if m[0] is not 'm':
-            error('No "m:"-line after "t:". Skipping laminate')
-            continue
         name = t[2:].strip()
+        if name in lamnames:
+            s = "laminate '{}' on line {} already exists. Skipping laminate."
+            error(s.format(name, numt))
+            continue
+        lamnames.append(name)
+        if m[0] is not 'm':
+            error("no 'm:'-line after 't:'. Skipping laminate.")
+            continue
         items = m.split(None, 2)
         try:
             vf = float(items[1])
@@ -78,13 +87,13 @@ def parse(filename):
         try:
             resin = rdict[mname]
         except KeyError:
-            s = "Unknown resin '{}' on line {}. Skipping laminate."
+            s = "unknown resin '{}' on line {}. Skipping laminate."
             error(s.format(mname, numm))
             continue
         layers = []
         for numl, l in lam[2:]:
             if l[0] is not 'l':
-                s = "Unexpected '{}:' on line {}. Skipping line."
+                s = "unexpected '{}:' on line {}. Skipping line."
                 warn(s.format(l[0], numl))
                 continue
             else:
@@ -93,12 +102,12 @@ def parse(filename):
                 fiber = fdict[values[0]]
                 values[0] = fiber
             except KeyError:
-                s = "Unknown fiber '{}' on line {}. Skipping line."
-                warn(s.format(values[0], numl))
+                s = "unknown fiber '{}' on line {}. Skipping line."
+                error(s.format(values[0], numl))
                 continue
             layers.append(Lamina(*values))
         if not layers:
-            error('Empty laminate. Skipping')
+            error('empty laminate. Skipping')
             continue
         laminates.append(Laminate(name, layers))
     return laminates
@@ -128,11 +137,9 @@ def _f(line, number):
     """
     test = line.split()
     if _num(test[5]):  # old format
-#        print('DEBUG: old fiber format')
         items = line.split(None, 8)
         indices = [1, 3, 5, 7, 8]
     else:
-#        print('DEBUG: new fiber format')
         items = line.split(None, 5)
         indices = [1, 2, 3, 4, 5]
     try:
@@ -142,7 +149,6 @@ def _f(line, number):
     except ValueError as e:
         print('ERROR on line {}: ', number, e)
         return None
-#    print('DEBUG: fiber', values)
     return Fiber(*values)
 
 
@@ -163,7 +169,6 @@ def _r(line, number):
     except ValueError as e:
         print('ERROR on line {}:', number, e)
         return None
-#    print('DEBUG: resin', values)
     return Resin(*values)
 
 
