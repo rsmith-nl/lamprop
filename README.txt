@@ -26,5 +26,27 @@ plain text output.
 The program and its file format are documented by two manuals; lamprop.1 and
 lamprop.5 respectively. If you install this program on UNIX-like systems with
 'make install', these will be installed automatically. For users of other
-systems, PDF versions are included in the distribution. Installation of the
-program on those systems should be done with 'python setup.py install'.
+systems, PDF versions are included in the distribution.
+
+
+Requirements
+------------
+
+This program requires Python (version 2.7.x), and the numpy module
+(version 1.5 or later).
+
+It might work with Python3 but at this time I cannot test that.
+
+
+Installation
+------------
+
+On UNIX-like platforms, run `make install` as root. This will install
+the lamprop script itself in /usr/local/bin, and the manual pages in
+/usr/local/man/man1 and /usr/local/man/man5. You can change these paths
+by editing the Makefile and changing the definitions of PREFIX, MANDIR and
+BINDIR.
+
+On windows, copy the ‘lamprop’ script to a directory in your PATH (e.g.
+the ‘Scripts’ subdirectory of your Python install) and rename it to
+‘lamprop.py’.

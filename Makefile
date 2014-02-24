@@ -1,9 +1,9 @@
-.PHONY: all install dist clean check refresh
+.PHONY: all install uninstall dist clean check refresh
 
 # Installation locations
-BASE=/usr/local
-MANDIR=$(BASE)/man
-BINDIR=$(BASE)/bin
+PREFIX=/usr/local
+MANDIR=$(PREFIX)/man
+BINDIR=$(PREFIX)/bin
 
 # Leave these two as they are.
 SUBDIR=doc
@@ -32,6 +32,11 @@ install: lamprop
 	install -m 644 lamprop.5.gz $(MANDIR)/man5
 	rm -f lamprop.1.gz lamprop.5.gz
 
+uninstall::
+	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
+	    $(MANDIR)/man5/lamprop.5*
+
+# The specifications below are for the maintainer only.
 dist: ${SUBDIR} lamprop
 	rm -rf dist
 	mkdir -p dist/lamprop-${VER}/src/lamprop
