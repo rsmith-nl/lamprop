@@ -15,12 +15,11 @@ MANDIR=$(BASE)/man
 BINDIR=$(BASE)/bin
 
 lamprop: src/__main__.py src/lamprop/*.py
-	cd src; zip -q ../lamprop lamprop/*.py
-	zip -q --junk-paths lamprop src/__main__.py
+	cd src; zip -q ../foo __main__.py lamprop/*.py
 	echo '#!/usr/bin/env python2' >lamprop
-	cat lamprop.zip >>lamprop
+	cat foo.zip >>lamprop
 	chmod a+x lamprop
-	rm -f lamprop.zip
+	rm -f foo.zip
 
 install: lamprop
 	@if [ `id -u` != 0 ]; then \

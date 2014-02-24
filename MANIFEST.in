@@ -1,0 +1,4 @@
+include src/lamprop/*.py
+include src/*.py
+include doc/lamprop.1
+include doc/lamprop.5
