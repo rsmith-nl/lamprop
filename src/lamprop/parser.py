@@ -181,7 +181,7 @@ def _l(line, number, resin, vf):
     :param number: line number in the original file.
     :param resin: the resin type to use
     :param vf: global fiber volume fraction
-    :returns: a types.Lamina
+    :returns: a tuple to initialize a Lamina
     """
     items = line.split(None, 4)
     try:

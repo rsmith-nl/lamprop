@@ -95,14 +95,13 @@ class Lamina(object):
                  '_Q_66', '_density', 'z2', 'z3')
 
     def __init__(self, fiber, resin, weight, angle, vf):
-        """@todo: Docstring for __init__
+        """Initialize a Lamina object.
 
-        :param fiber: @todo
-        :param resin: @todo
-        :param weight: @todo
-        :param angle: @todo
-        :param vf: @todo
-        :returns: @todo
+        :param fiber: the Fiber that forms the backbone of this layer
+        :param resin: the Resin binder that is used
+        :param weight: area weight of the fiber in g/m²
+        :param angle: angle from the 0-axis in degrees counterclockwise
+        :param vf: fiber volume fraction
         """
         if not isinstance(fiber, Fiber):
             raise ValueError('fiber must be a type Fiber')
@@ -252,7 +251,7 @@ class Laminate(object):
         """Create a laminate from its name and constituent layers.
 
         :param name: name of the laminate
-        :param lamina: a list of lamina that make up the laminate
+        :param lamina: a list of Lamina that make up the laminate
         """
         if not layers:
             raise ValueError('No layers!')

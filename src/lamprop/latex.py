@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# Copyright © 2011,2012 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# vim:fileencoding=utf-8
+# Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,6 +25,8 @@
 
 "LaTeX output routines for lamprop."
 
+from __future__ import division, print_function
+
 __version__ = '$Revision$'[11:-2]
 
 
@@ -46,16 +48,16 @@ def out(lam, eng, mat):
 def _engprop(l):
     '''Prints the engineering properties as a LaTeX table.'''
     print("  \\parbox{\\textwidth}{\\centering")
-    print("    \\begin{tabular}[t]{rcrl}")
+    print("    \\begin{tabular}[t]{rcrrl}")
     print("      \\multicolumn{4}{c}{\\small"
           "\\textbf{Laminate stacking}}\\\\[0.1em]")
     print("      \\toprule %% \\usepackage{booktabs}")
-    print("      Layer & Weight & Angle & Fiber type\\\\")
-    print("            & [gr/m$^2$] & [$\\circ$] & \\\\")
+    print("      Layer & Weight & Angle & vf & Fiber type\\\\")
+    print("            & [g/m$^2$] & [$\\circ$] & [-]\\\\")
     print("      \\midrule")
     for ln, la in enumerate(l.layers):
-        s = "      {} & {:4.0f} & {:5.0f} & {}\\\\"
-        print(s.format(ln, la.weight, la.angle, la.fiber.name))
+        s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
+        print(s.format(ln, la.weight, la.angle, la.vf, la.fiber.name))
     print("      \\bottomrule")
     print("    \\end{tabular}\\hspace{0.02\\textwidth}")
     print("    \\begin{tabular}[t]{rrl}")
@@ -67,9 +69,9 @@ def _engprop(l):
     print("      $v_f$ & {:4.2f} &-\\\\".format(l.vf))
     print("      $w_f$ & {:4.2f} &-\\\\".format(l.wf))
     print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
-    print("      density & {:.3g} & gr/cm$^3$\\\\".format(l.density))
-    print("      weight & {:.0f} & gr/m$^2$\\\\".format(l.weight+l.rc))
-    print("      resin & {:.0f} & gr/m$^2$\\\\".format(l.rc))
+    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.density))
+    print("      weight & {:.0f} & g/m$^2$\\\\".format(l.weight+l.rc))
+    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.rc))
     print("      \\midrule")
     print("      $E_x$ & {:8.0f} & MPa\\\\".format(l.Ex))
     print("      $E_y$ & {:8.0f} & MPa\\\\".format(l.Ey))
