@@ -1,4 +1,4 @@
-.PHONY: all install uninstall dist clean check refresh
+.PHONY: all install uninstall dist clean check refresh test
 
 # Installation locations
 PREFIX=/usr/local
@@ -18,6 +18,7 @@ lamprop: src/__main__.py src/lamprop/*.py
 	chmod a+x lamprop
 	rm -f foo.zip
 
+# Install lamprop and its documentation.
 install: lamprop
 	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the program!"; \
@@ -32,6 +33,7 @@ install: lamprop
 	install -m 644 lamprop.5.gz $(MANDIR)/man5
 	rm -f lamprop.1.gz lamprop.5.gz
 
+# Remove an installed lamprop completely
 uninstall::
 	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
 	    $(MANDIR)/man5/lamprop.5*
@@ -64,3 +66,11 @@ check:: .IGNORE
 
 refresh::
 	.git/hooks/post-commit
+
+test: lamprop
+	lamprop -e test/hyer.lam >test/hyer.txt
+	-diff --unified=0 test/hyer-1.3.5.txt test/hyer.txt
+	-diff --unified=0 test/hyer-1.4.0.txt test/hyer.txt
+	-diff --unified=0 test/hyer-1.4.1.txt test/hyer.txt
+	-diff --unified=0 test/hyer-1.4.2.txt test/hyer.txt
+	rm -f test/hyer.txt
