@@ -68,7 +68,7 @@ refresh::
 	.git/hooks/post-commit
 
 test: lamprop
-	lamprop -e test/hyer.lam >test/hyer.txt
+	./lamprop -e test/hyer.lam >test/hyer.txt
 	-diff --unified=0 test/hyer-1.3.5.txt test/hyer.txt
 	-diff --unified=0 test/hyer-1.4.0.txt test/hyer.txt
 	-diff --unified=0 test/hyer-1.4.1.txt test/hyer.txt
