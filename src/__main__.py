@@ -88,6 +88,11 @@ elif args.html:
     out = html.out
 for f in args.files:
     # Process the files.
-    laminates = parse(f)
+    laminates, messages = parse(f)
+    for m in messages:
+        if m.startswith('Error'):
+            print('\033[31m', m, '\033[0m', file=sys.stderr, sep='')
+        else:
+            print('\033[33m', m, '\033[0m', file=sys.stderr, sep='')
     for curlam in laminates:
         out(curlam, args.eng, args.mat)

@@ -29,7 +29,6 @@
 
 from __future__ import print_function, division
 from lamprop.types import Fiber, Resin, Lamina, Laminate
-from lamprop.utils import warn, error
 
 __version__ = '$Revision$'[11:-2]
 
@@ -38,28 +37,29 @@ def parse(filename):
     """Parse a lamprop file
 
     :param filename: name of the file to parse
-    :returns: a list of laminates
+    :returns: a tuple of list of laminates and a list of messages.
     """
+    msg = []
     try:
         with open(filename, 'r') as df:
             data = df.readlines()
     except IOError:
-        error("cannot read '{}'.".format(filename))
-        return []
+        msg.append("Error: cannot read '{}'.".format(filename))
+        return ([], msg)
     data = [ln.strip() for ln in data]
     directives = [(num, ln) for num, ln in enumerate(data)
                   if len(ln) > 2 and ln[1] is ':']
     fibers = [_f(ln, num) for num, ln in directives if ln[0] is 'f']
     fdict = {fiber.name: fiber for fiber in fibers}
-    _rmdup(fibers, 'fibers')
+    msg += _rmdup(fibers, 'fibers')
     resins = [_r(ln, num) for num, ln in directives if ln[0] is 'r']
     rdict = {resin.name: resin for resin in resins}
-    _rmdup(resins, 'resins')
+    msg += _rmdup(resins, 'resins')
     directives = [(num, ln) for num, ln in directives if ln[0] in 'tml']
     tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
     if not tindices:
-        error("no laminates found in '{}'".format(filename))
-        return []
+        msg.append("Error: no laminates found in '{}'".format(filename))
+        return ([], msg)
     tindices.append(len(directives))
     pairs = zip(tindices, tindices[1:])
     laminatedata = [directives[start:stop] for start, stop in pairs]
@@ -70,12 +70,14 @@ def parse(filename):
         numm, m = lam[1]
         name = t[2:].strip()
         if name in lamnames:
-            s = "laminate '{}' on line {} already exists. Skipping laminate."
-            error(s.format(name, numt))
+            s = "Error: laminate '{}' on line {} already "\
+                "exists. Skipping laminate."
+            msg.append(s.format(name, numt))
             continue
         lamnames.append(name)
         if m[0] is not 'm':
-            error("no 'm:'-line after 't:'. Skipping laminate.")
+            s = "Error: no 'm:' on line {}. Skipping laminate."
+            msg.append(s.format(numt+1))
             continue
         items = m.split(None, 2)
         try:
@@ -87,14 +89,14 @@ def parse(filename):
         try:
             resin = rdict[mname]
         except KeyError:
-            s = "unknown resin '{}' on line {}. Skipping laminate."
-            error(s.format(mname, numm))
+            s = "Error: unknown resin '{}' on line {}. Skipping laminate."
+            msg.append(s.format(mname, numm))
             continue
         layers = []
         for numl, l in lam[2:]:
             if l[0] is not 'l':
-                s = "unexpected '{}:' on line {}. Skipping line."
-                warn(s.format(l[0], numl))
+                s = "Warning: unexpected '{}:' on line {}. Skipping line."
+                msg.append(s.format(l[0], numl))
                 continue
             else:
                 values = _l(l, numl, resin, vf)
@@ -102,15 +104,15 @@ def parse(filename):
                 fiber = fdict[values[0]]
                 values[0] = fiber
             except KeyError:
-                s = "unknown fiber '{}' on line {}. Skipping line."
-                error(s.format(values[0], numl))
+                s = "Error: unknown fiber '{}' on line {}. Skipping line."
+                msg.append(s.format(values[0], numl))
                 continue
             layers.append(Lamina(*values))
         if not layers:
-            error('empty laminate. Skipping')
+            msg.append('Error: empty laminate {}. Skipping'.format(name))
             continue
         laminates.append(Laminate(name, layers))
-    return laminates
+    return (laminates, msg)
 
 
 def _num(val):
@@ -205,10 +207,12 @@ def _rmdup(lst, name):
     :returns: @todo
     """
     names = []
+    msg = []
     for n, i in enumerate(lst):
         if i.name not in names:
             names.append(i.name)
         else:
-            s = "{} '{}' at line {} is a duplicate, will be ignored."
-            warn(s.format(name, i.name, i.line))
+            s = "Warning: {} '{}' at line {} is a duplicate, will be ignored."
+            msg.append(s.format(name, i.name, i.line))
             del(lst[n])
+    return msg
