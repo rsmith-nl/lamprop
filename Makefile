@@ -23,10 +23,13 @@ lamprop: src/__main__.py src/lamprop/*.py
 # Install lamprop and its documentation.
 install: lamprop
 # Install the zipped script.
+	install -d ${BINDIR}
 	install lamprop ${BINDIR}
 # Install the manual page.
 	gzip -c doc/lamprop.1 >lamprop.1.gz
 	gzip -c doc/lamprop.5 >lamprop.5.gz
+	install -d $(MANDIR)/man1
+	install -d $(MANDIR)/man5
 	install -m 644 lamprop.1.gz $(MANDIR)/man1
 	install -m 644 lamprop.5.gz $(MANDIR)/man5
 	rm -f lamprop.1.gz lamprop.5.gz
