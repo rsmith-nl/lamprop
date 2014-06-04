@@ -20,10 +20,6 @@ lamprop: src/__main__.py src/lamprop/*.py
 
 # Install lamprop and its documentation.
 install: lamprop
-	@if [ `id -u` != 0 ]; then \
-		echo "You must be root to install the program!"; \
-		exit 1; \
-	fi
 # Install the zipped script.
 	install lamprop ${BINDIR}
 # Install the manual page.
