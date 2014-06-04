@@ -11,6 +11,8 @@ VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
 DISTFILES=Makefile README.txt
 
 # Default target.
+all: lamprop
+
 lamprop: src/__main__.py src/lamprop/*.py
 	cd src; zip -q ../foo.zip __main__.py lamprop/*.py
 	echo '#!/usr/bin/env python' >lamprop
