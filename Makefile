@@ -8,7 +8,7 @@ BINDIR=$(PREFIX)/bin
 # Leave these two as they are.
 SUBDIR=doc
 VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
-DISTFILES=Makefile README.txt
+DISTFILES=README.txt
 
 # Default target.
 all: lamprop
@@ -39,7 +39,13 @@ uninstall::
 	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
 	    $(MANDIR)/man5/lamprop.5*
 
+clean: ${SUBDIR}
+	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
+
+# EOF.
 # The specifications below are for the maintainer only.
+CUTLINE!=grep -n '\#[^E]*EOF' Makefile | cut -d ':' -f 1
+
 dist: ${SUBDIR} lamprop
 	rm -rf dist
 	mkdir -p dist/lamprop-${VER}/src/lamprop
@@ -47,6 +53,7 @@ dist: ${SUBDIR} lamprop
 	for f in ${DISTFILES}; do \
 		ln $$f dist/lamprop-${VER}/$${f} ; \
 	done
+	head -n ${CUTLINE} Makefile >dist/lamprop-${VER}/Makefile
 	for f in $$(find src/ -type f -name '*.py'); do \
 		ln $$f dist/lamprop-${VER}/$${f} ; \
 	done
@@ -58,9 +65,6 @@ dist: ${SUBDIR} lamprop
 	ln test/hyer.lam dist/lamprop-${VER}/test/hyer.lam
 	cd dist; zip -r lamprop-${VER}.zip lamprop-${VER}
 	rm -rf dist/lamprop-${VER}
-
-clean: ${SUBDIR}
-	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
 
 check:: .IGNORE
 	flake8 src/__main__.py src/lamprop/*.py
