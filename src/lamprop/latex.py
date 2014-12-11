@@ -118,9 +118,9 @@ def _matrices(l):
     for t in range(6):
         s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}" \
             " & {:6.3g} & {:6.3g}\\\\"
-        print(s.format(l.abd[t, 0]*1e6, l.abd[t, 1]*1e6, l.abd[t, 2]*1e6,
-                       l.abd[t, 3]*1e6, l.abd[t, 4]*1e6, l.abd[t, 5]*1e6))
-    print("          \\end{array}\\right|\\times10^{-6}\\times")
+        print(s.format(l.abd[t, 0], l.abd[t, 1], l.abd[t, 2],
+                       l.abd[t, 3], l.abd[t, 4], l.abd[t, 5]))
+    print("          \\end{array}\\right|\\times")
     print("        \\left\\{\\begin{array}{c}")
     print("            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
     print("          \\end{array}\\right\\}\\]\\\\")
