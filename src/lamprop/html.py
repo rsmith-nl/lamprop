@@ -227,22 +227,21 @@ def _matrices(l):
     print('                  <td>{}</td>'.format(dstr[0]))
     print('                  <td rowspan="6">=</td>')
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 0]*1e6, l.abd[0, 1]*1e6, l.abd[0, 2]*1e6))
+    print(s.format(l.abd[0, 0], l.abd[0, 1], l.abd[0, 2]))
     s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 3]*1e6, l.abd[0, 4]*1e6, l.abd[0, 5]*1e6))
-    print('                  <td rowspan="6">&times;'
-          '10<sup>-6</sup>&times;</td>')
+    print(s.format(l.abd[0, 3], l.abd[0, 4], l.abd[0, 5]))
+    print('                  <td rowspan="6">&times;</td>')
     print('                  <td>{}</td>'.format(fstr[0]))
     print('                </tr>')
     for n in range(1, 6):
         print('                <tr>')
         print('                  <td>{}</td>'.format(dstr[n]))
         s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.abd[n, 0]*1e6, l.abd[n, 1]*1e6, l.abd[n, 2]*1e6))
+            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
+        print(s.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2]))
         s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.abd[n, 3]*1e6, l.abd[n, 4]*1e6, l.abd[n, 5]*1e6))
+            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
+        print(s.format(l.abd[n, 3], l.abd[n, 4], l.abd[n, 5]))
         print('                  <td>{}</td>'.format(fstr[n]))
         print('                </tr>')
     print('              </tbody>')
