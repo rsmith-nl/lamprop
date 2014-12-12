@@ -102,18 +102,18 @@ def _matrices(l):
                        l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5]))
     print("          \\end{array}\\right| \\times")
     print("        \\left\\{\\begin{array}{c}")
-    print("            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "
-          "\\gamma^0_{xy}\\\\[3pt]")
+    print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
+          "\\gamma_{xy}\\\\[3pt]")
     print("            "
-          "\\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}")
+          "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\}\\]")
     print("    }")
     print("    \\vbox{\\small\\textbf{Compliance matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
-    print("            \\epsilon^0_x\\\\[3pt] \\epsilon^0_y\\\\[3pt] "
-          "\\gamma^0_{xy}\\\\[3pt]")
+    print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
+          "\\gamma_{xy}\\\\[3pt]")
     print("            "
-          "\\kappa^0_x\\\\[3pt] \\kappa^0_y\\\\[3pt] \\kappa^0_{xy}")
+          "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}")
     for t in range(6):
         s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}" \
