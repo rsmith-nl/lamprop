@@ -90,7 +90,7 @@ def _engprop(l):
 def _matrices(l):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
     print("  \\vbox{")
-    print("    \\vbox{\\small\\textbf{Stiffness matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
     print("        \\end{array}\\right\\} = ")
@@ -108,7 +108,7 @@ def _matrices(l):
           "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\}\\]")
     print("    }")
-    print("    \\vbox{\\small\\textbf{Compliance matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
           "\\gamma_{xy}\\\\[3pt]")

@@ -173,11 +173,11 @@ def _matrices(l):
             "&gamma;<sub>xy</sub>", "&kappa;<sub>x</sub>",
             "&kappa;<sub>y</sub>", "&kappa;<sub>xy</sub>"]
     print('        <tr>')
-    print('          <!-- second row, stiffness matrix -->')
+    print('          <!-- second row, stiffness or ABD matrix -->')
     print('          <td colspan="2">')
     print('            <table border="1" frame="vsides" '
           'rules="groups" cellpadding="5%%">')
-    print('              <caption><strong>Stiffness matrix</strong>'
+    print('              <caption><strong>Stiffness (ABD) matrix</strong>'
           '</caption>')
     print('              <colgroup span="1"></colgroup>')
     print('              <colgroup span="1"></colgroup>')
@@ -211,11 +211,11 @@ def _matrices(l):
     print('          </td>')
     print('        </tr>')
     print('        <tr>')
-    print('          <!-- third row, compliance matrix -->')
+    print('          <!-- third row, compliance or abd matrix -->')
     print('          <td colspan="2">')
     print('            <table border="1" frame="vsides" '
           'rules="groups" cellpadding="5%">')
-    print('              <caption><strong>Compliance matrix</strong>'
+    print('              <caption><strong>Compliance (abd) matrix</strong>'
           '</caption>')
     print('              <colgroup span="1"></colgroup>')
     print('              <colgroup span="1"></colgroup>')
