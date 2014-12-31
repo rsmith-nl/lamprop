@@ -32,10 +32,8 @@ systems, PDF versions are included in the distribution.
 Requirements
 ------------
 
-This program requires Python (version 2.7.x), and the numpy module
-(version 1.5 or later).
-
-It might work with Python3 but at this time I cannot test that.
+This program requires Python (version 3), and the numpy module (version 1.5 or
+later). This version was developed and tested using Python 3.4.
 
 
 Installation
