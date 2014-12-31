@@ -6,8 +6,6 @@
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
 of the data file format."""
 
-from __future__ import print_function, division
-
 __version__ = '$Revision$'[11:-2]
 
 _lic = '''lamprop {}

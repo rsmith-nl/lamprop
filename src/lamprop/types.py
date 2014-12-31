@@ -72,7 +72,6 @@ The following references used in coding this module:
 }
 """
 
-from __future__ import print_function, division
 from collections import namedtuple
 import numpy as np
 import math

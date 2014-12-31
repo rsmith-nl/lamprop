@@ -1,6 +1,4 @@
 # vim:fileencoding=utf-8
-#
-# Copyright © 2014 R.F. Smith. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
 # Modified: $Date$
 #
@@ -27,7 +25,6 @@
 
 """Parser for lamprop files"""
 
-from __future__ import print_function, division
 from lamprop.types import Fiber, Resin, Lamina, Laminate
 
 __version__ = '$Revision$'[11:-2]

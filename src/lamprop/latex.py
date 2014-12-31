@@ -25,8 +25,6 @@
 
 "LaTeX output routines for lamprop."
 
-from __future__ import division, print_function
-
 __version__ = '$Revision$'[11:-2]
 
 
