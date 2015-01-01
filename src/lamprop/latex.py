@@ -97,7 +97,7 @@ def _matrices(l):
                 if num == 0.0:
                     nums = '0'
                 else:
-                    nums, exp = "{:> 9.3e}".format(mat[t, m]).split('e')
+                    nums, exp = "{:> 10.4e}".format(mat[t, m]).split('e')
                     exp = int(exp)
                     if exp != 0:
                         nums += '\\times 10^{{{}}}'.format(exp)

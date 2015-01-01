@@ -1,6 +1,5 @@
 # vim:fileencoding=utf-8
-#
-# Copyright © 2014 R.F. Smith. All rights reserved.
+# Copyright © 2014-2015 R.F. Smith. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
 # Modified: $Date$
 #

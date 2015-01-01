@@ -1,5 +1,5 @@
 # vim:fileencoding=utf-8
-# Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
 #
 # Redistribution and use in source and binary forms, with or without
@@ -165,6 +165,20 @@ def _engprop(l):
 
 def _matrices(l):
     '''Prints the ABD and abd matrices as HTML tables.'''
+    def pr(mat, row):
+        """Print a row from a matrix"""
+        numl = []
+        for m in range(6):
+            num = mat[row, m]
+            if num == 0.0:
+                nums = '0'
+            else:
+                nums, exp = "{:> 10.4e}".format(num).split('e')
+                exp = int(exp)
+                if exp != 0:
+                    nums += '&times;10<sup>{}</sup>'.format(exp)
+            numl.append(nums)
+        print('          <td>' + '</td><td>'.join(numl) + '</td>')
     fstr = ["N<sub>x</sub>", "N<sub>y</sub>", "N<sub>xy</sub>",
             "M<sub>x</sub>", "M<sub>y</sub>", "M<sub>xy</sub>"]
     dstr = ["&epsilon;<sub>x</sub>", "&epsilon;<sub>y</sub>",
@@ -186,22 +200,14 @@ def _matrices(l):
     print('                <tr>')
     print('                  <td>{}</td>'.format(fstr[0]))
     print('                  <td rowspan="6">=</td>')
-    s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print(s.format(l.ABD[0, 0], l.ABD[0, 1], l.ABD[0, 2]))
-    s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print(s.format(l.ABD[0, 3], l.ABD[0, 4], l.ABD[0, 5]))
+    pr(l.ABD, 0)
     print('                  <td rowspan="6">&times;</td>')
     print('                  <td>{}</td>'.format(dstr[0]))
     print('                </tr>')
     for n in range(1, 6):
         print('                <tr>')
         print('                  <td>{}</td>'.format(fstr[n]))
-        s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2]))
-        s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5]))
+        pr(l.ABD, n)
         print('                  <td>{}</td>'.format(dstr[n]))
         print('                </tr>')
     print('              </tbody>')
@@ -224,22 +230,14 @@ def _matrices(l):
     print('                <tr>')
     print('                  <td>{}</td>'.format(dstr[0]))
     print('                  <td rowspan="6">=</td>')
-    s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 0], l.abd[0, 1], l.abd[0, 2]))
-    s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 3], l.abd[0, 4], l.abd[0, 5]))
+    pr(l.abd, 0)
     print('                  <td rowspan="6">&times;</td>')
     print('                  <td>{}</td>'.format(fstr[0]))
     print('                </tr>')
     for n in range(1, 6):
         print('                <tr>')
         print('                  <td>{}</td>'.format(dstr[n]))
-        s = "                  " \
-            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-        print(s.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2]))
-        s = "                  " \
-            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-        print(s.format(l.abd[n, 3], l.abd[n, 4], l.abd[n, 5]))
+        pr(l.abd, n)
         print('                  <td>{}</td>'.format(fstr[n]))
         print('                </tr>')
     print('              </tbody>')
