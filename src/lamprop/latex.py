@@ -1,5 +1,5 @@
 # vim:fileencoding=utf-8
-# Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # $Date$
 #
 # Redistribution and use in source and binary forms, with or without
@@ -87,17 +87,29 @@ def _engprop(l):
 
 def _matrices(l):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
+    def pm(mat):
+        """Print the contents of a matrix.
+        """
+        for t in range(6):
+            numl = []
+            for m in range(6):
+                num = mat[t, m]
+                if num == 0.0:
+                    nums = '0'
+                else:
+                    nums, exp = "{:> 9.3e}".format(mat[t, m]).split('e')
+                    exp = int(exp)
+                    if exp != 0:
+                        nums += '\\times 10^{{{}}}'.format(exp)
+                numl.append(nums)
+            print('          ' + ' & '.join(numl) + r'\\')
     print("  \\vbox{")
     print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
     print("        \\end{array}\\right\\} = ")
     print("      \\left|\\begin{array}{cccccc}")
-    for t in range(6):
-        s = "          {:6.0f} & {:6.0f} & {:6.0f} & {:6.0f}" \
-            " & {:6.0f} & {:6.0f}\\\\"
-        print(s.format(l.ABD[t, 0], l.ABD[t, 1], l.ABD[t, 2],
-                       l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5]))
+    pm(l.ABD)
     print("          \\end{array}\\right| \\times")
     print("        \\left\\{\\begin{array}{c}")
     print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
@@ -113,11 +125,7 @@ def _matrices(l):
     print("            "
           "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}")
-    for t in range(6):
-        s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}" \
-            " & {:6.3g} & {:6.3g}\\\\"
-        print(s.format(l.abd[t, 0], l.abd[t, 1], l.abd[t, 2],
-                       l.abd[t, 3], l.abd[t, 4], l.abd[t, 5]))
+    pm(l.abd)
     print("          \\end{array}\\right|\\times")
     print("        \\left\\{\\begin{array}{c}")
     print("            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
