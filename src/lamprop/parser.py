@@ -25,7 +25,7 @@
 
 """Parser for lamprop files"""
 
-from lamprop.types import Fiber, Resin, Lamina, Laminate
+from lamprop.lptypes import Fiber, Resin, lamina, laminate
 
 __version__ = '$Revision$'[11:-2]
 
@@ -104,11 +104,11 @@ def parse(filename):
                 s = "Error: unknown fiber '{}' on line {}. Skipping line."
                 msg.append(s.format(values[0], numl))
                 continue
-            layers.append(Lamina(*values))
+            layers.append(lamina(*values))
         if not layers:
             msg.append('Error: empty laminate {}. Skipping'.format(name))
             continue
-        laminates.append(Laminate(name, layers))
+        laminates.append(laminate(name, layers))
     return (laminates, msg)
 
 
@@ -117,6 +117,19 @@ def _num(val):
 
     :param val: string to test.
     :returns: True val is a number, false otherwise.
+
+    >>> _num(1)
+    True
+    >>> _num(3.14)
+    True
+    >>> _num('2')
+    True
+    >>> _num('3.14')
+    True
+    >>> _num('3.14f')
+    False
+    >>> _num('f00')
+    False
     """
     try:
         float(val)
@@ -132,7 +145,10 @@ def _f(line, number):
 
     :param line: text line to parse
     :param number: line number in the original file.
-    :returns: a types.Fiber
+    :returns: a lptypes.Fiber
+
+    >>> _f('f: 230000  0.30  -0.41e-6 1.76 T300', None)
+    Fiber(E1=230000.0, ν12=0.3, α1=-4.1e-07, ρ=1.76, name='T300', line=None)
     """
     test = line.split()
     if _num(test[5]):  # old format
@@ -159,6 +175,9 @@ def _r(line, number):
     :param line: string to parse
     :param number: line number in the original file.
     :returns: a types.Resin
+
+    >>> _r('r: 2900 0.36 41.4e-6 1.15 Epikote04908', None)
+    Resin(E=2900.0, ν=0.36, α=4.14e-05, ρ=1.15, name='Epikote04908', line=None)
     """
     items = line.split(None, 5)
     try:
@@ -213,3 +232,7 @@ def _rmdup(lst, name):
             msg.append(s.format(name, i.name, i.line))
             del(lst[n])
     return msg
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

@@ -72,7 +72,7 @@ def _engprop(l):
     for ln, la in enumerate(l.layers):
         print('                <tr>')
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
-        print(s.format(ln, la.weight, la.angle))
+        print(s.format(ln, la.fiber_weight, la.angle))
         s = '                  <td>{:4.2f}</td><td align="left">{}</td>'
         print(s.format(la.vf, la.fiber.name))
         print('                </tr>')
@@ -108,17 +108,17 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>density</td><td>{:.3g}</td>"
-    print(s.format(l.density))
+    print(s.format(l.ρ))
     print('                  <td align="left">g/cm&sup3;</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>weight</td><td>{:.0f}</td>"
-    print(s.format(l.weight+l.rc))
+    print(s.format(l.fiber_weight+l.resin_weight, l.resin_weight))
     print('                  <td align="left">g/m&sup2;</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>resin</td><td>{:.0f}</td>"
-    print(s.format(l.rc))
+    print(s.format(l.resin_weight))
     print('                  <td align="left">g/m&sup2;</td>')
     print('                </tr>')
     print('              </tbody>')
@@ -139,22 +139,22 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>xy</sub></td><td>{:g}</td>"
-    print(s.format(l.Vxy))
+    print(s.format(l.νxy))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>yx</sub></td><td>{:g}</td>"
-    print(s.format(l.Vyx))
+    print(s.format(l.νyx))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>x</sub></td><td>{:g}</td>"
-    print(s.format(l.cte_x))
+    print(s.format(l.αx))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>y</sub></td><td>{:g}</td>"
-    print(s.format(l.cte_y))
+    print(s.format(l.αy))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('              </tbody>')

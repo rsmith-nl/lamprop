@@ -55,7 +55,7 @@ def _engprop(l):
     print("      \\midrule")
     for ln, la in enumerate(l.layers):
         s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
-        print(s.format(ln, la.weight, la.angle, la.vf, la.fiber.name))
+        print(s.format(ln, la.fiber_weight, la.angle, la.vf, la.fiber.name))
     print("      \\bottomrule")
     print("    \\end{tabular}\\hspace{0.02\\textwidth}")
     print("    \\begin{tabular}[t]{rrl}")
@@ -67,19 +67,20 @@ def _engprop(l):
     print("      $\\mathrm{{v_f}}$ & {:4.2f} &-\\\\".format(l.vf))
     print("      $\\mathrm{{w_f}}$ & {:4.2f} &-\\\\".format(l.wf))
     print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
-    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.density))
-    print("      weight & {:.0f} & g/m$^2$\\\\".format(l.weight+l.rc))
-    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.rc))
+    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ))
+    s = "      weight & {:.0f} & g/m$^2$\\\\"
+    print(s.format(l.fiber_weight+l.resin_weight))
+    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.resin_weight))
     print("      \\midrule")
     print("      $\\mathrm{{E_x}}$ & {:8.0f} & MPa\\\\".format(l.Ex))
     print("      $\\mathrm{{E_y}}$ & {:8.0f} & MPa\\\\".format(l.Ey))
     print("      $\\mathrm{{G_{{xy}}}}$ & {:8.0f} & MPa\\\\".format(l.Gxy))
-    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.Vxy))
-    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.Vyx))
+    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.νxy))
+    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.νyx))
     s = "      $\\mathrm{{\\alpha_x}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.cte_x))
+    print(s.format(l.αx))
     s = "      $\\mathrm{{\\alpha_y}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.cte_y))
+    print(s.format(l.αy))
     print("      \\bottomrule")
     print("    \\end{tabular}")
     print("  }\\vspace{5mm}")

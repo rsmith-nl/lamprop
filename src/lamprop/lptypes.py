@@ -87,14 +87,14 @@ Lamina = namedtuple('Lamina', ['fiber', 'resin', 'fiber_weight', 'angle',
 Laminate = namedtuple('Laminate', ['name', 'layers', 'thickness',
                                    'fiber_weight', 'ρ', 'vf', 'resin_weight',
                                    'ABD', 'abd', 'Ex', 'Ey', 'Gxy', 'νxy',
-                                   'νyx', 'αx', 'αy'])
+                                   'νyx', 'αx', 'αy', 'wf'])
 
 
-def lamina(resin, fiber, fiber_weight, angle, vf):
+def lamina(fiber, resin, fiber_weight, angle, vf):
     """Create a Lamina from the properties of the resin and fiber.
 
-    :param resin: the Resin to be used in this lamina
     :param fiber: the Fiber to be used in this lamina
+    :param resin: the Resin to be used in this lamina
     :param fiber_weight: area weight of the fiber in g/m²
     :param angle: angle from the 0-axis in degrees counterclockwise
     :param vf: fiber volume fraction
@@ -174,10 +174,10 @@ def laminate(name, layers):
     if not layers:
         raise ValueError('No layers!')
     thickness = sum([l.thickness for l in layers])
-    fw = sum([l.wf for l in layers])
+    fw = sum([l.fiber_weight for l in layers])
     ρ = sum([l.ρ*l.thickness for l in layers])/thickness
     vf = sum([l.vf*l.thickness for l in layers])/thickness
-    rw = sum([l.rw for l in layers])
+    rw = sum([l.resin_weight for l in layers])
     wf = fw/(fw + rw)
     # Set z-values for lamina.
     zs = -thickness/2
@@ -187,7 +187,7 @@ def laminate(name, layers):
         lz2.append((ze*ze-zs*zs)/2)
         lz3.append((ze*ze*ze-zs*zs*zs)/3)
         zs = ze
-    Nt_x, Nt_y, Nt_xy = 0.0, 0.0, 0.0
+    Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = np.zeros((6, 6))
     for l, z2, z3 in zip(layers, lz2, lz3):
         # first row
@@ -242,17 +242,16 @@ def laminate(name, layers):
         for j in range(6):
             if math.fabs(ABD[i, j]) < 1e-7:
                 ABD[i, j] = 0.0
-    self._ABD = ABD
-    self._abd = np.linalg.inv(ABD)
+    abd = np.linalg.inv(ABD)
     # Calculate the engineering properties.
     # Nettles:1994, p. 34 e.v.
     dABD = np.linalg.det(ABD)
     dt1 = np.linalg.det(ABD[1:6, 1:6])
-    Ex = (dABD / (dt1 * self.thickness))
+    Ex = (dABD / (dt1 * thickness))
     dt2 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 1, 1))
-    Ey = (dABD / (dt2 * self.thickness))
+    Ey = (dABD / (dt2 * thickness))
     dt3 = np.linalg.det(np.delete(np.delete(ABD, 2, 0), 2, 1))
-    Gxy = (dABD / (dt3 * self.thickness))
+    Gxy = (dABD / (dt3 * thickness))
     dt4 = np.linalg.det(np.delete(np.delete(ABD, 0, 0), 1, 1))
     dt5 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 0, 1))
     νxy = dt4 / dt1
@@ -261,10 +260,10 @@ def laminate(name, layers):
     # Calculate the coefficients of thermal expansion.
     # Technically only valid for a symmetric laminate!
     # Hyer:1998, p. 451, (11.86)
-    αx = self.abd[0, 0]*Ntx + self.abd[0, 1]*Nty + self.abd[0, 2]*Ntxy
-    αy = self.abd[1, 0]*Ntx + self.abd[1, 1]*Nty + self.abd[1, 2]*Ntxy
-    return Laminate(name, tuple(layers), thickness, fiber_weight, ρ, vf,
-                    resin_weight, ABD, abd, Ex, Ey, Gxy, νxy, νyx, αx, αy)
+    αx = abd[0, 0]*Ntx + abd[0, 1]*Nty + abd[0, 2]*Ntxy
+    αy = abd[1, 0]*Ntx + abd[1, 1]*Nty + abd[1, 2]*Ntxy
+    return Laminate(name, tuple(layers), thickness, fw, ρ, vf,
+                    rw, ABD, abd, Ex, Ey, Gxy, νxy, νyx, αx, αy, wf)
 
 
 if __name__ == "__main__":
