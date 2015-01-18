@@ -106,7 +106,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     Fiber(E1=230000, ν12=0.3, α1=-4.1e-07, ρ=1.76, name='T300', line=None)
     >>> r
     Resin(E=2900, ν=0.36, α=4.14e-05, ρ=1.15, name='Epikote04908', line=None)
-    >>> l = lamina(r, f, 100, 0, 0.5)
+    >>> l = lamina(f, r, 100, 0, 0.5)
     >>> l.E1, l.E2, l.G12, l.ν12, l.αx, l.αy, l.ρ
     (116450.0, 8700, 4350.0, 0.3, 1.1060541004723054e-07, 4.14e-05, 1.455)
     >>> l.Q11, l.Q12, l.Q16, l.Q22, l.Q26, l.Q66

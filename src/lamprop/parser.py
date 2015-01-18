@@ -117,19 +117,6 @@ def _num(val):
 
     :param val: string to test.
     :returns: True val is a number, false otherwise.
-
-    >>> _num(1)
-    True
-    >>> _num(3.14)
-    True
-    >>> _num('2')
-    True
-    >>> _num('3.14')
-    True
-    >>> _num('3.14f')
-    False
-    >>> _num('f00')
-    False
     """
     try:
         float(val)
@@ -146,9 +133,6 @@ def _f(line, number):
     :param line: text line to parse
     :param number: line number in the original file.
     :returns: a lptypes.Fiber
-
-    >>> _f('f: 230000  0.30  -0.41e-6 1.76 T300', None)
-    Fiber(E1=230000.0, ν12=0.3, α1=-4.1e-07, ρ=1.76, name='T300', line=None)
     """
     test = line.split()
     if _num(test[5]):  # old format
@@ -232,7 +216,3 @@ def _rmdup(lst, name):
             msg.append(s.format(name, i.name, i.line))
             del(lst[n])
     return msg
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
