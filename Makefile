@@ -8,7 +8,7 @@ BINDIR=$(PREFIX)/bin
 # Leave these two as they are.
 SUBDIR=doc
 VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
-DISTFILES=README.txt
+DISTFILES=README.rst
 
 # Default target.
 all: lamprop
