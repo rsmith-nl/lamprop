@@ -27,7 +27,7 @@
 
 __version__ = '$Revision$'[11:-2]
 
-from sys import getdefaultencoding
+import sys
 
 _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm³",
       "laminate weight: {0:.0f} g/m², resin consumption: {1:.0f} g/m²",
@@ -35,7 +35,7 @@ _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm³",
       "α_x = {0:9.4g} K⁻¹, α_y = {1:9.4g} K⁻¹"]
 
 # Platforms that don't support UTF-8 get ASCII text.
-if getdefaultencoding() != 'utf-8':
+if sys.stdout.encoding.lower() != 'utf-8':
     _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
           "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
           "v_xy = {0:7.5f}", "v_yx = {0:7.5f}",
