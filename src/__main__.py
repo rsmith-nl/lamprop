@@ -38,6 +38,7 @@ from lamprop.parser import parse
 import lamprop.text as text
 import lamprop.latex as latex
 import lamprop.html as html
+import lamprop.rtf as rtf
 
 
 class LicenseAction(argparse.Action):
@@ -53,6 +54,8 @@ def main(argv):
     group.add_argument('-l', '--latex', action='store_true',
                        help="LaTeX output")
     group.add_argument('-H', '--html', action='store_true', help="HTML output")
+    group.add_argument('-r', '--rtf', action='store_true',
+                       help="Rich Text Format output")
     s = "produce only the layers and engineering properties"
     opts.add_argument('-e', '--eng', action='store_true', help=s)
     opts.add_argument('-m', '--mat', action='store_true',
@@ -84,6 +87,8 @@ def main(argv):
         out = latex.out
     elif args.html:
         out = html.out
+    elif args.rtf:
+        out = rtf.out
     for f in args.files:
         # Process the files.
         laminates, messages = parse(f)
