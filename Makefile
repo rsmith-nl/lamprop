@@ -11,7 +11,7 @@ VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
 DISTFILES=README.rst
 
 # Default target.
-all: lamprop
+all: lamprop ${SUBDIR}
 
 lamprop: src/__main__.py src/lamprop/*.py
 	cd src; zip -q ../foo.zip __main__.py lamprop/*.py
@@ -19,6 +19,9 @@ lamprop: src/__main__.py src/lamprop/*.py
 	cat foo.zip >>lamprop
 	chmod a+x lamprop
 	rm -f foo.zip
+
+${SUBDIR}::
+	cd ${.TARGET}; make ${.TARGETS}
 
 # Install lamprop and its documentation.
 install: lamprop
@@ -37,7 +40,7 @@ install: lamprop
 # Remove an installed lamprop completely
 uninstall::
 	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
-	    $(MANDIR)/man5/lamprop.5*
+	$(MANDIR)/man5/lamprop.5*
 
 clean: ${SUBDIR}
 	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
