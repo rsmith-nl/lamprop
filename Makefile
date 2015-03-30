@@ -43,7 +43,7 @@ uninstall::
 	$(MANDIR)/man5/lamprop.5*
 
 clean: ${SUBDIR}
-	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
+	rm -rf lamprop dist backup-*.tar* src/lamprop/*.pyc
 
 # EOF.
 # The specifications below are for the maintainer only.
