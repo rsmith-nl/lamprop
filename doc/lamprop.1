@@ -3,7 +3,7 @@
 .\" By: R.F. Smith <rsmith@xs4all.nl>
 .\" $Date$
 .\"
-.Dd March 3, 2015
+.Dd March 31, 2015
 .Dt LAMPROP 1 CON
 .Os
 .Sh NAME
@@ -14,6 +14,7 @@
 .Op Fl h | Fl -help
 .Op Fl l | Fl -latex
 .Op Fl H | Fl -html
+.Op Fl r | Fl -rtf
 .Op Fl e | Fl -eng
 .Op Fl m| Fl -mat
 .Op Fl L| Fl -license
@@ -25,7 +26,7 @@ This manual page documents
 .Ql $Revision$
 of the
 .Nm
-program, a program to calculate mechanical and thermal properties of
+program, a program to calculate mechanical stiffness and thermal properties of
 fiber-reinforced composite laminates.
 .Pp
 The following options are available:
@@ -49,6 +50,9 @@ tags, but both
 and
 .Xr firefox 1
 will render it properly without them.
+.It Fl r Fl -rtf
+Output the generated properties in Rich Text Format. This can be read by
+several wordprocessors.
 .It Fl e Fl -eng
 Produce the layers and engineering properties.
 .It Fl m Fl -mat
