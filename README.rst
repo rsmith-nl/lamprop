@@ -39,12 +39,43 @@ later). This version was developed and tested using Python 3.4.
 Installation
 ------------
 
-On UNIX-like platforms, run `make install` as root. This will install
-the lamprop script itself in /usr/local/bin, and the manual pages in
-/usr/local/man/man1 and /usr/local/man/man5. You can change these paths
-by editing the Makefile and changing the definitions of PREFIX, MANDIR and
-BINDIR.
+UNIX-like operating systems
++++++++++++++++++++++++++++
 
-On windows, copy the ‘lamprop’ script to a directory in your PATH (e.g.
+On UNIX-like platforms, run ``make install`` as root. This will install the
+``lamprop`` script itself in ``/usr/local/bin``, and the manual pages in
+``/usr/local/man/man1`` and ``/usr/local/man/man5``. You can change these
+paths by editing the Makefile and changing the definitions of PREFIX, MANDIR
+and BINDIR.
+
+MS Windows
+++++++++++
+
+Note that the installation and configuration of Python on ms-windows is
+somewhat involved and outside the scope of this README! Since this code
+requires the numpy extension, I would suggest to install one od the pre-built
+distributions for ms-windows; Anaconda Python or Enthought Canopy.
+
+On ms-windows, copy the ‘lamprop’ script to a directory in your PATH (e.g.
 the ‘Scripts’ subdirectory of your Python install) and rename it to
-‘lamprop.py’.
+‘lamprop.py’. You can then call it from a cmd.exe window, if the “.py”
+extension is associated with a filetype, and the filetype has an appropriate
+action defined.  If trying to run lamprop.py gives an error, try executing the
+following commands in a cmd.exe window::
+
+    assoc .py=Python.File
+    ftype Python.File="C:\Anaconda3\python.exe" "%1" %*
+
+Note that ``C:\Anaconda3`` is just an example! You should of course substitute the
+real path to your python.exe.
+
+Note that in Anaconda Python up to and including version 2.1 there is an error
+in the file “anaconda.bat” in ``C:\Anaconda3\Scripts`` or ``C:\Anaconda3\Scripts``.
+The line::
+
+    set PATH="%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
+
+should be changed to::
+
+    set "PATH=%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
+
