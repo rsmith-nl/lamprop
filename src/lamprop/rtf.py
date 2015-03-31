@@ -90,9 +90,9 @@ def _matrices(l, printheader):
         m = matstr.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2],
                           l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5])
         print(m.replace('e+00', ''))
-    print("\\pard\\sa200\\par\nCompliance (abd) matrix:\\par")
+    print("\\pard\\sa200 Compliance (abd) matrix:\\par")
     for n in range(6):
         m = matstr.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2],
                           l.abd[n, 3], l.abd[n, 4], l.abd[n, 5])
         print(m.replace('e+00', ''))
-    print("\\par")
+    print(r"\pard\sa200\sl276\slmult1\par")
