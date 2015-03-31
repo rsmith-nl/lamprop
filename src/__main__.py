@@ -47,6 +47,10 @@ class LicenseAction(argparse.Action):
         sys.exit()
 
 
+def noop():
+    pass
+
+
 def main(argv):
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
@@ -83,12 +87,17 @@ def main(argv):
         sys.exit(1)
     # Set the output method.
     out = text.out
+    header = noop
+    footer = noop
     if args.latex:
         out = latex.out
     elif args.html:
         out = html.out
     elif args.rtf:
+        header = rtf.header
         out = rtf.out
+        footer = rtf.footer
+    header()
     for f in args.files:
         # Process the files.
         laminates, messages = parse(f)
@@ -99,6 +108,7 @@ def main(argv):
                 print('\033[33m', m, '\033[0m', file=sys.stderr, sep='')
         for curlam in laminates:
             out(curlam, args.eng, args.mat)
+    footer()
 
 if __name__ == '__main__':
     main(sys.argv[1:])

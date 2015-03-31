@@ -30,16 +30,28 @@ __version__ = '$Revision$'[11:-2]
 import sys
 
 
-def out(lam, eng, mat):
-    """Rich Text Format main output function."""
+def header():
+    """File header for RTF file.
+    :returns: @todo
+    """
     hdr = r"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\froman\fcharset0 " \
           r"Times New Roman;}{\f1\fnil\fcharset0 GreekC;}" \
           r"{\f2\fnil\fcharset0 Times New Roman;}}\fs20"
     print(hdr)  # RTF header
+
+
+def out(lam, eng, mat):
+    """Rich Text Format main output function."""
     if eng:
         _engprop(lam)
     if mat:
         _matrices(lam, not eng)
+    print(r'\page')
+
+
+def footer():
+    """File footer for RTF.
+    """
     print('}')  # Closing brace
 
 
