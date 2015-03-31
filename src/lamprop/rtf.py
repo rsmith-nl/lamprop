@@ -60,7 +60,7 @@ def _engprop(l):
     print(rhdr)
     thdr = r"num\cell weight\cell angle\cell vf\cell fiber\cell\row"
     print(thdr)
-    s = "{0}\\cell {1:g}\\cell {3:g}\\cell {3:g}\\cell {4}\\cell\\row"
+    s = "{0}\\cell {1:g}\\cell {2:g}\\cell {3:g}\\cell {4}\\cell\\row"
     for ln, la in enumerate(l.layers):
         print(rhdr)
         print(s.format(ln+1, la.fiber_weight, la.angle, la.vf, la.fiber.name))
