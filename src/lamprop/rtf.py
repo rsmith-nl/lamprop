@@ -34,7 +34,7 @@ def out(lam, eng, mat):
     """Rich Text Format main output function."""
     hdr = r"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\froman\fcharset0 " \
           r"Times New Roman;}{\f1\fnil\fcharset0 GreekC;}" \
-          r"{\f2\fnil\fcharset0 Times New Roman;}}"
+          r"{\f2\fnil\fcharset0 Times New Roman;}}\fs20"
     print(hdr)  # RTF header
     if eng:
         _engprop(lam)
@@ -84,7 +84,7 @@ def _matrices(l, printheader):
              "\\trbrdrr\\brdrs\\brdrw10 \\trpaddl108\\trpaddr108\\trpaddfl3" \
              "\\trpaddfr3 \\clbrdrl\\brdrw10\\brdrs \\cellx1427\\cellx2962" \
              "\\cellx4497\\cellx6032\\cellx7568\\clbrdrr\\brdrw10\\brdrs " \
-             "\\cellx9104\\pard\\intbl\\fs22 {0:.4e}\\cell {1:.4e}\\cell " \
+             "\\cellx9104\\pard\\intbl {0:.4e}\\cell {1:.4e}\\cell " \
              "{2:.4e}\\cell {3:.4e}\\cell {4:.4e}\\cell {5:.4e}\cell\\row"
     for n in range(6):
         m = matstr.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2],
