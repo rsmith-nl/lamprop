@@ -43,7 +43,9 @@ uninstall::
 	$(MANDIR)/man5/lamprop.5*
 
 clean: ${SUBDIR}
-	rm -rf lamprop dist backup-*.tar* src/lamprop/*.pyc
+	rm -rf lamprop dist backup-*.tar*
+	find . -type f -name '*.pyc' -delete
+	find . -type d -name __pycache__ -delete
 
 # EOF.
 # The specifications below are for the maintainer only.
@@ -70,15 +72,10 @@ dist: ${SUBDIR} lamprop
 	rm -rf dist/lamprop-${VER}
 
 check:: .IGNORE
-	flake8 src/__main__.py src/lamprop/*.py
+	pep8-3.4 src/__main__.py src/lamprop/*.py test/test*.py
 
 refresh::
 	.git/hooks/post-commit
 
-test: lamprop
-	./lamprop -e test/hyer.lam >test/hyer.txt
-	-diff --unified=0 test/hyer-1.3.5.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.0.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.1.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.2.txt test/hyer.txt
-	rm -f test/hyer.txt
+tests:
+	cd test; nosetests-3.4 -v

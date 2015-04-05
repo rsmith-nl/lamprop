@@ -99,18 +99,6 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     :param angle: angle from the 0-axis in degrees counterclockwise
     :param vf: fiber volume fraction
     :returns: a Lamina
-
-    >>> f = Fiber(230000, 0.30, -0.41e-6, 1.76, 'T300', None)
-    >>> r = Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908', None)
-    >>> f
-    Fiber(E1=230000, ν12=0.3, α1=-4.1e-07, ρ=1.76, name='T300', line=None)
-    >>> r
-    Resin(E=2900, ν=0.36, α=4.14e-05, ρ=1.15, name='Epikote04908', line=None)
-    >>> l = lamina(f, r, 100, 0, 0.5)
-    >>> l.E1, l.E2, l.G12, l.ν12, l.αx, l.αy, l.ρ
-    (116450.0, 8700, 4350.0, 0.3, 1.1060541004723054e-07, 4.14e-05, 1.455)
-    >>> l.Q11, l.Q12, l.Q16, l.Q22, l.Q26, l.Q66
-    (117238.3004659929, 2627.6682199763113, 0.0, 8758.894066587705, 0.0, 4350.0)
     """
     if not isinstance(fiber, Fiber):
         raise ValueError('fiber must be a type Fiber')
@@ -264,8 +252,3 @@ def laminate(name, layers):
     αy = abd[1, 0]*Ntx + abd[1, 1]*Nty + abd[1, 2]*Ntxy
     return Laminate(name, tuple(layers), thickness, fw, ρ, vf,
                     rw, ABD, abd, Ex, Ey, Gxy, νxy, νyx, αx, αy, wf)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
