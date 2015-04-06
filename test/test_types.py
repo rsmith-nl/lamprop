@@ -11,6 +11,7 @@
 Run with: nosetests-3.4 -v test_types.py
 """
 
+from shutil import rmtree
 import os
 import sys
 
@@ -104,3 +105,7 @@ def test_qi():
     assert 0.20992 < pw.νyx < 0.21012
     assert 5.521e-06 < pw.αx < 5.541e-06
     assert 5.521e-06 < pw.αy < 5.541e-06
+
+
+def teardown():
+    rmtree('__pycache__')
