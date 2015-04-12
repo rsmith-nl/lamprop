@@ -44,15 +44,16 @@ def parse(filename):
         msg.append("Error: cannot read '{}'.".format(filename))
         return ([], msg)
     data = [ln.strip() for ln in data]
+    # Filter out lines with directives.
     directives = [(num, ln) for num, ln in enumerate(data)
-                  if len(ln) > 2 and ln[1] is ':']
+                  if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
     fibers = [_f(ln, num) for num, ln in directives if ln[0] is 'f']
     fdict = {fiber.name: fiber for fiber in fibers}
     msg += _rmdup(fibers, 'fibers')
     resins = [_r(ln, num) for num, ln in directives if ln[0] is 'r']
     rdict = {resin.name: resin for resin in resins}
     msg += _rmdup(resins, 'resins')
-    directives = [(num, ln) for num, ln in directives if ln[0] in 'tml']
+    directives = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
     tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
     if not tindices:
         msg.append("Error: no laminates found in '{}'".format(filename))
@@ -63,6 +64,7 @@ def parse(filename):
     laminates = []
     lamnames = []
     for lam in laminatedata:
+        symmetric = False
         numt, t = lam[0]
         numm, m = lam[1]
         name = t[2:].strip()
@@ -90,6 +92,9 @@ def parse(filename):
             msg.append(s.format(mname, numm))
             continue
         layers = []
+        if lam[-1][1].startswith('s'):
+            symmetric = True
+            del lam[-1]
         for numl, l in lam[2:]:
             if l[0] is not 'l':
                 s = "Warning: unexpected '{}:' on line {}. Skipping line."
@@ -108,6 +113,10 @@ def parse(filename):
         if not layers:
             msg.append('Error: empty laminate {}. Skipping'.format(name))
             continue
+        if symmetric:
+            extra = layers.copy()
+            extra.reverse()
+            layers += extra
         laminates.append(laminate(name, layers))
     return (laminates, msg)
 
