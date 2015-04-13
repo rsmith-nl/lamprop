@@ -33,6 +33,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.'''.format(__version__)
 
 import argparse
+import logging
 import sys
 from lamprop.parser import parse
 import lamprop.text as text
@@ -52,6 +53,7 @@ def noop():
 
 
 def main(argv):
+    logging.basicConfig(level=logging.WARNING)
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
@@ -100,12 +102,7 @@ def main(argv):
     header()
     for f in args.files:
         # Process the files.
-        laminates, messages = parse(f)
-        for m in messages:
-            if m.startswith('Error'):
-                print('\033[31m', m, '\033[0m', file=sys.stderr, sep='')
-            else:
-                print('\033[33m', m, '\033[0m', file=sys.stderr, sep='')
+        laminates = parse(f)
         for curlam in laminates:
             out(curlam, args.eng, args.mat)
     footer()
