@@ -100,10 +100,6 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     :param vf: fiber volume fraction
     :returns: a Lamina
     """
-    if not isinstance(fiber, Fiber):
-        raise ValueError('fiber must be a type Fiber')
-    if not isinstance(resin, Resin):
-        raise ValueError('resin must be a type Resin')
     fiber_weight = float(fiber_weight)
     if fiber_weight < 0:
         raise ValueError('fiber_weight cannot be <0!')
