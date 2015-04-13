@@ -111,7 +111,7 @@ def parse(filename):
                 continue
             layers.append(lamina(*values))
         if not layers:
-            msg.warning('Empty laminate {}. Skipping'.format(name))
+            msg.warning("Empty laminate '{}'. Skipping".format(name))
             continue
         if symmetric:
             extra = layers.copy()
