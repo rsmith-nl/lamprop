@@ -75,8 +75,8 @@ def main(argv):
     group.add_argument('-v', '--version', action='version',
                        version=__version__)
     opts.add_argument('--log', default='warning',
-                      choices=['debug', 'warning', 'error'],
-                      help='logging level')
+                      choices=['info', 'debug', 'warning', 'error'],
+                      help="logging level (defaults to 'debug')")
     opts.add_argument("files", metavar='file', nargs='*',
                       help="one or more files to process")
     args = opts.parse_args(argv)
@@ -109,7 +109,7 @@ def main(argv):
         footer = rtf.footer
     header()
     for f in args.files:
-        # Process the files.
+        logging.info("processing file '{}'".format(f))
         laminates = parse(f)
         for curlam in laminates:
             out(curlam, args.eng, args.mat)

@@ -48,17 +48,22 @@ def parse(filename):
     # Filter out lines with directives.
     directives = [(num, ln) for num, ln in enumerate(data)
                   if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
+    msg.info("found {} directives in '{}'".format(len(directives), filename))
     fibers = [_f(ln, num, msg) for num, ln in directives if ln[0] is 'f']
     _rmdup(fibers, 'fibers', msg)
+    msg.info("found {} fibers in '{}'".format(len(fibers), filename))
     fdict = {fiber.name: fiber for fiber in fibers}
     resins = [_r(ln, num, msg) for num, ln in directives if ln[0] is 'r']
     _rmdup(resins, 'resins', msg)
+    msg.info("found {} resins in '{}'".format(len(resins), filename))
     rdict = {resin.name: resin for resin in resins}
     directives = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
     tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
     if not tindices:
         msg.error("no laminates found in '{}'".format(filename))
         return []
+    else:
+        msg.info("found {} laminates in '{}'".format(len(tindices), filename))
     tindices.append(len(directives))
     pairs = zip(tindices, tindices[1:])
     laminatedata = [directives[start:stop] for start, stop in pairs]
@@ -70,12 +75,12 @@ def parse(filename):
         numm, m = lam[1]
         name = t[2:].strip()
         if name in lamnames:
-            s = "Laminate '{}' on line {} already exists. Skipping laminate."
+            s = "laminate '{}' on line {} already exists. Skipping laminate."
             msg.warning(s.format(name, numt))
             continue
         lamnames.append(name)
         if m[0] is not 'm':
-            s = "No 'm:' on line {}. Skipping laminate."
+            s = "no 'm:' on line {}. Skipping laminate."
             msg.warning(s.format(numt+1))
             continue
         items = m.split(None, 2)
@@ -88,16 +93,17 @@ def parse(filename):
         try:
             resin = rdict[mname]
         except KeyError:
-            s = "Unknown resin '{}' on line {}. Skipping laminate."
+            s = "unknown resin '{}' on line {}. Skipping laminate."
             msg.warning(s.format(mname, numm))
             continue
         layers = []
         if lam[-1][1].startswith('s'):
             symmetric = True
+            msg.info("found symmetry directive in '{}'.".format(name))
             del lam[-1]
         for numl, l in lam[2:]:
             if l[0] is not 'l':
-                s = "Unexpected '{}:' on line {}. Skipping line."
+                s = "unexpected '{}:' on line {}. Skipping line."
                 msg.warning(s.format(l[0], numl))
                 continue
             else:
@@ -106,12 +112,12 @@ def parse(filename):
                 fiber = fdict[values[0]]
                 values[0] = fiber
             except KeyError:
-                s = "Unknown fiber '{}' on line {}. Skipping line."
+                s = "unknown fiber '{}' on line {}. Skipping line."
                 msg.warning(s.format(values[0], numl))
                 continue
             layers.append(lamina(*values))
         if not layers:
-            msg.warning("Empty laminate '{}'. Skipping".format(name))
+            msg.warning("empty laminate '{}'. Skipping".format(name))
             continue
         if symmetric:
             extra = layers.copy()
@@ -147,6 +153,7 @@ def _f(line, number, log):
     test = line.split()
     try:
         if _num(test[5]):  # old format
+            log.info("old style fiber on line {}".format(number))
             items = line.split(None, 8)
             indices = [1, 3, 5, 7, 8]
         else:
@@ -156,7 +163,7 @@ def _f(line, number, log):
         values.append(items[indices[4]])
         values.append(number)
     except (ValueError, IndexError) as e:
-        log.error('Parsing a fiber on line {}; {}'.format(number, e))
+        log.error('parsing a fiber on line {}; {}.'.format(number, e))
         return None
     return Fiber(*values)
 
@@ -177,7 +184,7 @@ def _r(line, number, log):
         values.append(items[5])
         values.append(number)
     except ValueError as e:
-        log.error('Parsing a resin on line {}; {}'.format(number, e))
+        log.error('parsing a resin on line {}; {}.'.format(number, e))
         return None
     return Resin(*values)
 
@@ -199,7 +206,7 @@ def _l(line, number, resin, vf, log):
         vf = float(items[3])
     except ValueError:
         if vf is None:
-            s = 'No vf in laminate line {}, and no global vf.'
+            s = 'no vf in laminate line {}, and no global vf.'
             s = s.format(line)
             msg.error(s)
             raise ValueError(s)
