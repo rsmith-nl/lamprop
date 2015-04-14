@@ -33,6 +33,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.'''.format(__version__)
 
 import argparse
+import logging
 import sys
 from lamprop.parser import parse
 import lamprop.text as text
@@ -56,22 +57,31 @@ def main(argv):
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
     group.add_argument('-l', '--latex', action='store_true',
-                       help="LaTeX output")
-    group.add_argument('-H', '--html', action='store_true', help="HTML output")
+                       help="generate LaTeX output "
+                            "(the default is plain text)")
+    group.add_argument('-H', '--html', action='store_true',
+                       help="generate HTML output")
     group.add_argument('-r', '--rtf', action='store_true',
-                       help="Rich Text Format output")
-    s = "produce only the layers and engineering properties"
-    opts.add_argument('-e', '--eng', action='store_true', help=s)
-    opts.add_argument('-m', '--mat', action='store_true',
-                      help="produce only the ABD and abd matrices")
+                       help="generate Rich Text Format output")
+    group = opts.add_mutually_exclusive_group()
+    group.add_argument('-e', '--eng', action='store_true',
+                       help="output only the layers and "
+                            "engineering properties")
+    group.add_argument('-m', '--mat', action='store_true',
+                       help="output only the ABD and abd matrices")
     group = opts.add_mutually_exclusive_group()
     group.add_argument('-L', '--license', action=LicenseAction, nargs=0,
                        help="print the license")
     group.add_argument('-v', '--version', action='version',
                        version=__version__)
+    opts.add_argument('--log', default='warning',
+                      choices=['info', 'debug', 'warning', 'error'],
+                      help="logging level (defaults to 'debug')")
     opts.add_argument("files", metavar='file', nargs='*',
                       help="one or more files to process")
     args = opts.parse_args(argv)
+    logging.basicConfig(level=getattr(logging, args.log.upper(), None),
+                        format='%(levelname)s: %(message)s')
     del opts, group
     if args.mat is False and args.eng is False:
         args.eng = True
@@ -99,13 +109,8 @@ def main(argv):
         footer = rtf.footer
     header()
     for f in args.files:
-        # Process the files.
-        laminates, messages = parse(f)
-        for m in messages:
-            if m.startswith('Error'):
-                print('\033[31m', m, '\033[0m', file=sys.stderr, sep='')
-            else:
-                print('\033[33m', m, '\033[0m', file=sys.stderr, sep='')
+        logging.info("processing file '{}'".format(f))
+        laminates = parse(f)
         for curlam in laminates:
             out(curlam, args.eng, args.mat)
     footer()
