@@ -2,7 +2,7 @@ The fibers and resin used in this example are taken from M. W. Hyer's
 "Stress Analysis of Fiber-Reinforced Materials" pp. 89 & 90. The densities
 are estimates.
 
-You can process this file with '../lamprop.py hyer.lam >hyer.txt' 
+You can process this file with '../lamprop.py hyer.lam >hyer.txt'
 
 Fiber definition
    E1     v12  alpha1   rho  naam
@@ -26,8 +26,7 @@ moduli in the fiber directions, but a very low shear modulus.
 m: 0.5 Hyer's resin
 l: 100  0 Hyer's carbon fiber
 l: 100 90 Hyer's carbon fiber
-l: 100 90 Hyer's carbon fiber
-l: 100  0 Hyer's carbon fiber
+s:
 
 t: [+45/-45]s laminate
 The same laminate, rotated 45 degrees. Now the shear modulus is very high,
@@ -35,8 +34,7 @@ but the extensional moduli are very low.
 m: 0.5 Hyer's resin
 l: 100  45 Hyer's carbon fiber
 l: 100 -45 Hyer's carbon fiber
-l: 100 -45 Hyer's carbon fiber
-l: 100  45 Hyer's carbon fiber
+s:
 
 t: quasi isotropic laminate
 This is an attempt to make a laminate the has good extensional and shear
@@ -47,7 +45,4 @@ l: 200  0 Hyer's carbon fiber
 l: 200 90 Hyer's carbon fiber
 l: 100  45 Hyer's carbon fiber
 l: 100 -45 Hyer's carbon fiber
-l: 100 -45 Hyer's carbon fiber
-l: 100  45 Hyer's carbon fiber
-l: 200 90 Hyer's carbon fiber
-l: 200  0 Hyer's carbon fiber
+s:
