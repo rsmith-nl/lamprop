@@ -35,7 +35,7 @@ Requirements
 This program requires Python (version 2.7.x), and the numpy module
 (version 1.5 or later).
 
-It might work with Python3 but at this time I cannot test that.
+The development version (from the 'develop' branch) works with Python 3.
 
 
 Installation
