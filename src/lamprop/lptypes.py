@@ -1,7 +1,6 @@
 # vim:fileencoding=utf-8
 # Copyright © 2014-2015 R.F. Smith. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Modified: $Date$
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -75,7 +74,7 @@ from collections import namedtuple
 import numpy as np
 import math
 
-__version__ = '$Revision$'[11:-2]
+__version__ = '1.6.1-develop'
 
 
 Fiber = namedtuple('Fiber', ['E1', 'ν12', 'α1', 'ρ', 'name', 'line'])

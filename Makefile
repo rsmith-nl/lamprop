@@ -7,7 +7,7 @@ BINDIR=$(PREFIX)/bin
 
 # Leave these two as they are.
 SUBDIR=doc
-VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
+VER=1.6.1-develop
 DISTFILES=README.rst
 
 # Default target.

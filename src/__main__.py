@@ -1,12 +1,11 @@
 # lamprop - main program.
 # vim:fileencoding=utf-8
-# $Date$
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
 of the data file format."""
 
-__version__ = '$Revision$'[11:-2]
+__version__ = '1.6.1-develop'
 
 _lic = '''lamprop {}
 Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.

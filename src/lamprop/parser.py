@@ -1,6 +1,5 @@
 # vim:fileencoding=utf-8
 # Created: 2014-02-21 21:35:41 +0100
-# Modified: $Date$
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +27,7 @@
 import logging
 from lamprop.lptypes import Fiber, Resin, lamina, laminate
 
-__version__ = '$Revision$'[11:-2]
+__version__ = '1.6.1-develop'
 
 
 def parse(filename):

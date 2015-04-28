@@ -1,6 +1,5 @@
 # vim:fileencoding=utf-8
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# $Date$
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +24,7 @@
 
 "HTML output routines for lamprop."
 
-__version__ = '$Revision$'[11:-2]
+__version__ = '1.6.1-develop'
 
 
 def out(lam, eng, mat):

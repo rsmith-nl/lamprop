@@ -3,8 +3,6 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# $Date$
-# $Revision$
 
 """Test for lptypes.py.
 
