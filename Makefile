@@ -1,4 +1,4 @@
-.PHONY: all install uninstall dist clean check refresh test
+.PHONY: all install uninstall dist clean check refresh test setver
 
 # Installation locations
 PREFIX=/usr/local
@@ -77,5 +77,8 @@ check:: .IGNORE
 refresh::
 	.git/hooks/post-commit
 
-tests:
+tests::
 	cd test; nosetests-3.4 -v
+
+setver::
+	sed -i '' -e "s/^__version__.*/__version__ = '${VER}'/" `find . -type f -name "*.py"`
