@@ -75,7 +75,7 @@ def main(argv):
                        version=__version__)
     opts.add_argument('--log', default='warning',
                       choices=['info', 'debug', 'warning', 'error'],
-                      help="logging level (defaults to 'debug')")
+                      help="logging level (defaults to 'warning')")
     opts.add_argument("files", metavar='file', nargs='*',
                       help="one or more files to process")
     args = opts.parse_args(argv)
