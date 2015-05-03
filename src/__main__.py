@@ -5,7 +5,7 @@
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
 of the data file format."""
 
-__version__ = '1.6.1-develop'
+__version__ = '2.0.0'
 
 _lic = '''lamprop {}
 Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.

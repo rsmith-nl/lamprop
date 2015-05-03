@@ -24,7 +24,7 @@
 
 "LaTeX output routines for lamprop."
 
-__version__ = '1.6.1-develop'
+__version__ = '2.0.0'
 
 
 def out(lam, eng, mat):

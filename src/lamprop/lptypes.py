@@ -74,7 +74,7 @@ from collections import namedtuple
 import numpy as np
 import math
 
-__version__ = '1.6.1-develop'
+__version__ = '2.0.0'
 
 
 Fiber = namedtuple('Fiber', ['E1', 'ν12', 'α1', 'ρ', 'name', 'line'])

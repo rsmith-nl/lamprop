@@ -27,7 +27,7 @@
 import logging
 from lamprop.lptypes import Fiber, Resin, lamina, laminate
 
-__version__ = '1.6.1-develop'
+__version__ = '2.0.0'
 
 
 def parse(filename):

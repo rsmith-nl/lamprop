@@ -7,7 +7,7 @@ BINDIR=$(PREFIX)/bin
 
 # Leave these two as they are.
 SUBDIR=doc
-VER=1.6.1-develop
+VER=2.0.0
 DISTFILES=README.rst
 
 # Default target.
