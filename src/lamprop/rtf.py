@@ -1,5 +1,8 @@
-# vim:fileencoding=utf-8
+# file: rtf.py
+# vim:fileencoding=utf-8:ft=python
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Created: 2015-03-28 11:53:57 +0100
+# Last modified: 2015-05-07 21:54:28 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions

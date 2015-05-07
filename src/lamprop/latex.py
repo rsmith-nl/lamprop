@@ -1,5 +1,8 @@
-# vim:fileencoding=utf-8
+# file: latex.py
+# vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Created: 2011-03-27 23:19:38 +0200
+# Last modified: 2015-05-07 21:49:26 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
