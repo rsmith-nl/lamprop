@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2015-05-07 21:44:14 +0200
+# Last modified: 2015-05-09 17:02:20 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
@@ -79,7 +79,7 @@ def main(argv):
     group.add_argument('-v', '--version', action='version',
                        version=__version__)
     opts.add_argument('--log', default='warning',
-                      choices=['info', 'debug', 'warning', 'error'],
+                      choices=['debug', 'info', 'warning', 'error'],
                       help="logging level (defaults to 'warning')")
     opts.add_argument("files", metavar='file', nargs='*',
                       help="one or more files to process")
