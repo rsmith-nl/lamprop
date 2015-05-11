@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2015-05-07 21:52:33 +0200
+# Last modified: 2015-05-11 20:07:51 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -96,28 +96,31 @@ def parse(filename):
             resin = rdict[mname]
         except KeyError:
             s = "unknown resin '{}' on line {}. Skipping laminate."
-            msg.warning(s.format(mname, numm))
+            msg.error(s.format(mname, numm))
             continue
         layers = []
         if lam[-1][1].startswith('s'):
             symmetric = True
             msg.info("found symmetry directive in '{}'.".format(name))
             del lam[-1]
-        for numl, l in lam[2:]:
-            if l[0] is not 'l':
-                s = "unexpected '{}:' on line {}. Skipping line."
-                msg.warning(s.format(l[0], numl))
-                continue
-            else:
-                values = _l(l, numl, resin, vf, msg)
-            try:
-                fiber = fdict[values[0]]
-                values[0] = fiber
-            except KeyError:
-                s = "unknown fiber '{}' on line {}. Skipping line."
-                msg.warning(s.format(values[0], numl))
-                continue
-            layers.append(lamina(*values))
+        try:
+            for numl, l in lam[2:]:
+                if l[0] is not 'l':
+                    s = "unexpected '{}:' on line {}. Skipping laminate."
+                    raise ValueError(s.format(l[0], numl))
+                else:
+                    values = _l(l, numl, resin, vf, msg)
+                try:
+                    fiber = fdict[values[0]]
+                    values[0] = fiber
+                except KeyError:
+                    s = "unknown fiber '{}' on line {}. Skipping laminate."
+                    raise ValueError(s.format(values[0], numl))
+                    continue
+                layers.append(lamina(*values))
+        except ValueError as e:
+            msg.error(e)
+            continue
         if not layers:
             msg.warning("empty laminate '{}'. Skipping".format(name))
             continue
