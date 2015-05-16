@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2015-05-09 17:02:20 +0200
+# Last modified: 2015-05-16 17:10:53 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
@@ -39,11 +39,7 @@ SUCH DAMAGE.'''.format(__version__)
 import argparse
 import logging
 import sys
-from lamprop.parser import parse
-import lamprop.text as text
-import lamprop.latex as latex
-import lamprop.html as html
-import lamprop.rtf as rtf
+import lamprop as lp
 
 
 class LicenseAction(argparse.Action):
@@ -100,21 +96,21 @@ def main(argv):
     if len(args.files) == 0:
         sys.exit(1)
     # Set the output method.
-    out = text.out
+    out = lp.text_output
     header = noop
     footer = noop
     if args.latex:
-        out = latex.out
+        out = lp.latex_output
     elif args.html:
-        out = html.out
+        out = lp.html_output
     elif args.rtf:
-        header = rtf.header
-        out = rtf.out
-        footer = rtf.footer
+        header = lp.rtf_header
+        out = lp.rtf_output
+        footer = lp.rtf_footer
     header()
     for f in args.files:
         logging.info("processing file '{}'".format(f))
-        laminates = parse(f)
+        laminates = lp.parse(f)
         for curlam in laminates:
             out(curlam, args.eng, args.mat)
     footer()

@@ -1,8 +1,8 @@
-# file: lptypes.py
+# file: types.py
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2015-05-07 21:51:37 +0200
+# Last modified: 2015-05-16 17:03:00 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions

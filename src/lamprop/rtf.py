@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-03-28 11:53:57 +0100
-# Last modified: 2015-05-07 21:54:28 +0200
+# Last modified: 2015-05-16 16:59:55 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,9 +27,8 @@
 
 """Rich Text Format output routines for lamprop."""
 
-__version__ = '2.0.0'
-
 import sys
+from .version import __version__
 
 
 def header():

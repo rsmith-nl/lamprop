@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2015-05-07 21:49:26 +0200
+# Last modified: 2015-05-16 16:59:39 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
 
 "LaTeX output routines for lamprop."
 
-__version__ = '2.0.0'
+from .version import __version__
 
 
 def out(lam, eng, mat):

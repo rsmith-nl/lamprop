@@ -1,9 +1,9 @@
 # vim:fileencoding=utf-8:ft=python
-# file: __init__.py
+# file: version.py
 #
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2015-05-16 17:12:01 +0200
+# Created: 2015-05-16 16:40:16 +0200
+# Last modified: 2015-05-16 17:01:23 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,12 +25,4 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .html import out as html_output
-from .latex import out as latex_output
-from .parser import parse
-from .rtf import footer as rtf_footer
-from .rtf import header as rtf_header
-from .rtf import out as rtf_output
-from .text import out as text_output
-from .types import Fiber, Resin, lamina, laminate
-from .version import __version__
+__version__ = '2.0.0'
