@@ -15,3 +15,5 @@ lamprop.5.pdf: lamprop.5
 
 clean::
 	rm -f *.ps *.pdf
+
+dist::

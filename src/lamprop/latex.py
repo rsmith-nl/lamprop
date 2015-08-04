@@ -1,6 +1,8 @@
-# vim:fileencoding=utf-8
-# Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# $Date$
+# file: latex.py
+# vim:fileencoding=utf-8:ft=python
+# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Created: 2011-03-27 23:19:38 +0200
+# Last modified: 2015-05-16 16:59:39 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,9 +27,7 @@
 
 "LaTeX output routines for lamprop."
 
-from __future__ import division, print_function
-
-__version__ = '$Revision$'[11:-2]
+from .version import __version__
 
 
 def out(lam, eng, mat):
@@ -57,7 +57,7 @@ def _engprop(l):
     print("      \\midrule")
     for ln, la in enumerate(l.layers):
         s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
-        print(s.format(ln, la.weight, la.angle, la.vf, la.fiber.name))
+        print(s.format(ln, la.fiber_weight, la.angle, la.vf, la.fiber.name))
     print("      \\bottomrule")
     print("    \\end{tabular}\\hspace{0.02\\textwidth}")
     print("    \\begin{tabular}[t]{rrl}")
@@ -69,19 +69,20 @@ def _engprop(l):
     print("      $\\mathrm{{v_f}}$ & {:4.2f} &-\\\\".format(l.vf))
     print("      $\\mathrm{{w_f}}$ & {:4.2f} &-\\\\".format(l.wf))
     print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
-    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.density))
-    print("      weight & {:.0f} & g/m$^2$\\\\".format(l.weight+l.rc))
-    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.rc))
+    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ))
+    s = "      weight & {:.0f} & g/m$^2$\\\\"
+    print(s.format(l.fiber_weight+l.resin_weight))
+    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.resin_weight))
     print("      \\midrule")
     print("      $\\mathrm{{E_x}}$ & {:8.0f} & MPa\\\\".format(l.Ex))
     print("      $\\mathrm{{E_y}}$ & {:8.0f} & MPa\\\\".format(l.Ey))
     print("      $\\mathrm{{G_{{xy}}}}$ & {:8.0f} & MPa\\\\".format(l.Gxy))
-    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.Vxy))
-    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.Vyx))
+    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.νxy))
+    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.νyx))
     s = "      $\\mathrm{{\\alpha_x}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.cte_x))
+    print(s.format(l.αx))
     s = "      $\\mathrm{{\\alpha_y}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.cte_y))
+    print(s.format(l.αy))
     print("      \\bottomrule")
     print("    \\end{tabular}")
     print("  }\\vspace{5mm}")
@@ -89,17 +90,29 @@ def _engprop(l):
 
 def _matrices(l):
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
+    def pm(mat):
+        """Print the contents of a matrix.
+        """
+        for t in range(6):
+            numl = []
+            for m in range(6):
+                num = mat[t, m]
+                if num == 0.0:
+                    nums = '0'
+                else:
+                    nums, exp = "{:> 10.4e}".format(mat[t, m]).split('e')
+                    exp = int(exp)
+                    if exp != 0:
+                        nums += '\\times 10^{{{}}}'.format(exp)
+                numl.append(nums)
+            print('          ' + ' & '.join(numl) + r'\\')
     print("  \\vbox{")
-    print("    \\vbox{\\small\\textbf{Stiffness matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
     print("        \\end{array}\\right\\} = ")
     print("      \\left|\\begin{array}{cccccc}")
-    for t in range(6):
-        s = "          {:6.0f} & {:6.0f} & {:6.0f} & {:6.0f}" \
-            " & {:6.0f} & {:6.0f}\\\\"
-        print(s.format(l.ABD[t, 0], l.ABD[t, 1], l.ABD[t, 2],
-                       l.ABD[t, 3], l.ABD[t, 4], l.ABD[t, 5]))
+    pm(l.ABD)
     print("          \\end{array}\\right| \\times")
     print("        \\left\\{\\begin{array}{c}")
     print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
@@ -108,18 +121,14 @@ def _matrices(l):
           "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\}\\]")
     print("    }")
-    print("    \\vbox{\\small\\textbf{Compliance matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
           "\\gamma_{xy}\\\\[3pt]")
     print("            "
           "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}")
-    for t in range(6):
-        s = "          {:6.3g} & {:6.3g} & {:6.3g} & {:6.3g}" \
-            " & {:6.3g} & {:6.3g}\\\\"
-        print(s.format(l.abd[t, 0], l.abd[t, 1], l.abd[t, 2],
-                       l.abd[t, 3], l.abd[t, 4], l.abd[t, 5]))
+    pm(l.abd)
     print("          \\end{array}\\right|\\times")
     print("        \\left\\{\\begin{array}{c}")
     print("            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")

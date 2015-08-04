@@ -2,7 +2,6 @@ MANIFEST
 *.pyc
 __pycache__
 *~
-lamprop
 build/*
 dist/*
 backup-*.tar.gz

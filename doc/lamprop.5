@@ -3,19 +3,17 @@
 .\" By: R.F. Smith <rsmith@xs4all.nl>
 .\" $Date$
 .\"
-.Dd February 24, 2014
+.Dd April 12, 2015
 .Dt LAMPROP 5 CON
 .Os
 .Sh NAME
 .Nm lamprop
-.Nd This manpage documents the file format used by
-.Ql $Revision$
-of the
+.Nd This manpage documents the file format used by the
 .Nm
 program.
 .Sh DESCRIPTION
 The file format is very simple. Functional lines have
-either 'f', 'r', 't', 'm' or 'l' as the first non-whitespace character. This
+either 'f', 'r', 't', 'm', 'l' or 's' as the first non-whitespace character. This
 character must immediately be followed by a colon ':'. All other lines are
 seen as comments and disregarded.
 .Pp
@@ -90,6 +88,11 @@ Optionally the layer can have a different fiber volume fraction.
 The name of the fiber used in this layer. This fiber must have been
 declared previously with an 'f:' line.
 .El
+.Pp
+The last line in a laminate definition can be an 's:' line, where 's' stands
+for "symmetry". This signifies that all the lamina before it are to be added
+again in reverse order, making a symmetric laminate stack. An 's:' line in any
+other position is an error.
 .Sh EXAMPLES
 The following is a sample input file for
 .Nm .
@@ -108,8 +111,7 @@ moduli in the fiber directions, but a very low shear modulus.
 m: 0.5 Hyer's resin
 l: 100  0 Hyer's carbon fiber
 l: 100 90 Hyer's carbon fiber
-l: 100 90 Hyer's carbon fiber
-l: 100  0 Hyer's carbon fiber
+s:
 .Ed
 .Pp
 Below are some typical values used by the author for different kinds of

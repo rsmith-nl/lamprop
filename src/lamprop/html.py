@@ -1,6 +1,8 @@
-# vim:fileencoding=utf-8
-# Copyright © 2011-2014 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
-# $Date$
+# file: html.py
+# vim:fileencoding=utf-8:ft=python
+# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Created: 2011-03-28 22:38:23 +0200
+# Last modified: 2015-05-16 16:59:27 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,9 +27,7 @@
 
 "HTML output routines for lamprop."
 
-from __future__ import print_function
-
-__version__ = '$Revision$'[11:-2]
+from .version import __version__
 
 
 def out(lam, eng, mat):
@@ -74,7 +74,7 @@ def _engprop(l):
     for ln, la in enumerate(l.layers):
         print('                <tr>')
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
-        print(s.format(ln, la.weight, la.angle))
+        print(s.format(ln, la.fiber_weight, la.angle))
         s = '                  <td>{:4.2f}</td><td align="left">{}</td>'
         print(s.format(la.vf, la.fiber.name))
         print('                </tr>')
@@ -110,17 +110,17 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>density</td><td>{:.3g}</td>"
-    print(s.format(l.density))
+    print(s.format(l.ρ))
     print('                  <td align="left">g/cm&sup3;</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>weight</td><td>{:.0f}</td>"
-    print(s.format(l.weight+l.rc))
+    print(s.format(l.fiber_weight+l.resin_weight, l.resin_weight))
     print('                  <td align="left">g/m&sup2;</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>resin</td><td>{:.0f}</td>"
-    print(s.format(l.rc))
+    print(s.format(l.resin_weight))
     print('                  <td align="left">g/m&sup2;</td>')
     print('                </tr>')
     print('              </tbody>')
@@ -141,22 +141,22 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>xy</sub></td><td>{:g}</td>"
-    print(s.format(l.Vxy))
+    print(s.format(l.νxy))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>yx</sub></td><td>{:g}</td>"
-    print(s.format(l.Vyx))
+    print(s.format(l.νyx))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>x</sub></td><td>{:g}</td>"
-    print(s.format(l.cte_x))
+    print(s.format(l.αx))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>y</sub></td><td>{:g}</td>"
-    print(s.format(l.cte_y))
+    print(s.format(l.αy))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('              </tbody>')
@@ -167,17 +167,31 @@ def _engprop(l):
 
 def _matrices(l):
     '''Prints the ABD and abd matrices as HTML tables.'''
+    def pr(mat, row):
+        """Print a row from a matrix"""
+        numl = []
+        for m in range(6):
+            num = mat[row, m]
+            if num == 0.0:
+                nums = '0'
+            else:
+                nums, exp = "{:> 10.4e}".format(num).split('e')
+                exp = int(exp)
+                if exp != 0:
+                    nums += '&times;10<sup>{}</sup>'.format(exp)
+            numl.append(nums)
+        print('          <td>' + '</td><td>'.join(numl) + '</td>')
     fstr = ["N<sub>x</sub>", "N<sub>y</sub>", "N<sub>xy</sub>",
             "M<sub>x</sub>", "M<sub>y</sub>", "M<sub>xy</sub>"]
     dstr = ["&epsilon;<sub>x</sub>", "&epsilon;<sub>y</sub>",
             "&gamma;<sub>xy</sub>", "&kappa;<sub>x</sub>",
             "&kappa;<sub>y</sub>", "&kappa;<sub>xy</sub>"]
     print('        <tr>')
-    print('          <!-- second row, stiffness matrix -->')
+    print('          <!-- second row, stiffness or ABD matrix -->')
     print('          <td colspan="2">')
     print('            <table border="1" frame="vsides" '
           'rules="groups" cellpadding="5%%">')
-    print('              <caption><strong>Stiffness matrix</strong>'
+    print('              <caption><strong>Stiffness (ABD) matrix</strong>'
           '</caption>')
     print('              <colgroup span="1"></colgroup>')
     print('              <colgroup span="1"></colgroup>')
@@ -188,22 +202,14 @@ def _matrices(l):
     print('                <tr>')
     print('                  <td>{}</td>'.format(fstr[0]))
     print('                  <td rowspan="6">=</td>')
-    s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print(s.format(l.ABD[0, 0], l.ABD[0, 1], l.ABD[0, 2]))
-    s = "                  <td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-    print(s.format(l.ABD[0, 3], l.ABD[0, 4], l.ABD[0, 5]))
+    pr(l.ABD, 0)
     print('                  <td rowspan="6">&times;</td>')
     print('                  <td>{}</td>'.format(dstr[0]))
     print('                </tr>')
     for n in range(1, 6):
         print('                <tr>')
         print('                  <td>{}</td>'.format(fstr[n]))
-        s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2]))
-        s = "                  " \
-            "<td>{:6.0f}</td><td>{:6.0f}</td><td>{:6.0f}</td>"
-        print(s.format(l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5]))
+        pr(l.ABD, n)
         print('                  <td>{}</td>'.format(dstr[n]))
         print('                </tr>')
     print('              </tbody>')
@@ -211,11 +217,11 @@ def _matrices(l):
     print('          </td>')
     print('        </tr>')
     print('        <tr>')
-    print('          <!-- third row, compliance matrix -->')
+    print('          <!-- third row, compliance or abd matrix -->')
     print('          <td colspan="2">')
     print('            <table border="1" frame="vsides" '
           'rules="groups" cellpadding="5%">')
-    print('              <caption><strong>Compliance matrix</strong>'
+    print('              <caption><strong>Compliance (abd) matrix</strong>'
           '</caption>')
     print('              <colgroup span="1"></colgroup>')
     print('              <colgroup span="1"></colgroup>')
@@ -226,22 +232,14 @@ def _matrices(l):
     print('                <tr>')
     print('                  <td>{}</td>'.format(dstr[0]))
     print('                  <td rowspan="6">=</td>')
-    s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 0], l.abd[0, 1], l.abd[0, 2]))
-    s = "                  <td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-    print(s.format(l.abd[0, 3], l.abd[0, 4], l.abd[0, 5]))
+    pr(l.abd, 0)
     print('                  <td rowspan="6">&times;</td>')
     print('                  <td>{}</td>'.format(fstr[0]))
     print('                </tr>')
     for n in range(1, 6):
         print('                <tr>')
         print('                  <td>{}</td>'.format(dstr[n]))
-        s = "                  " \
-            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-        print(s.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2]))
-        s = "                  " \
-            "<td>{:6.3g}</td><td>{:6.3g}</td><td>{:6.3g}</td>"
-        print(s.format(l.abd[n, 3], l.abd[n, 4], l.abd[n, 5]))
+        pr(l.abd, n)
         print('                  <td>{}</td>'.format(fstr[n]))
         print('                </tr>')
     print('              </tbody>')

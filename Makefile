@@ -1,4 +1,4 @@
-.PHONY: all install uninstall dist clean check refresh test
+.PHONY: all install uninstall dist clean check refresh test setver
 
 # Installation locations
 PREFIX=/usr/local
@@ -7,18 +7,21 @@ BINDIR=$(PREFIX)/bin
 
 # Leave these two as they are.
 SUBDIR=doc
-VER!=grep Revision src/__main__.py | cut -d ' ' -f 4
-DISTFILES=README.txt
+VER=2.0.0
+DISTFILES=README.rst
 
 # Default target.
-all: lamprop
+all: lamprop ${SUBDIR}
 
 lamprop: src/__main__.py src/lamprop/*.py
 	cd src; zip -q ../foo.zip __main__.py lamprop/*.py
-	echo '#!/usr/bin/env python' >lamprop
+	echo '#!/usr/bin/env python3' >lamprop
 	cat foo.zip >>lamprop
 	chmod a+x lamprop
 	rm -f foo.zip
+
+${SUBDIR}::
+	cd ${.TARGET}; make ${.TARGETS}
 
 # Install lamprop and its documentation.
 install: lamprop
@@ -37,10 +40,12 @@ install: lamprop
 # Remove an installed lamprop completely
 uninstall::
 	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
-	    $(MANDIR)/man5/lamprop.5*
+	$(MANDIR)/man5/lamprop.5*
 
 clean: ${SUBDIR}
-	rm -rf lamprop dist backup-*.tar.gz src/lamprop/*.pyc
+	rm -rf lamprop dist backup-*.tar*
+	find . -type f -name '*.pyc' -delete
+	find . -type d -name __pycache__ -delete
 
 # EOF.
 # The specifications below are for the maintainer only.
@@ -67,15 +72,13 @@ dist: ${SUBDIR} lamprop
 	rm -rf dist/lamprop-${VER}
 
 check:: .IGNORE
-	flake8 src/__main__.py src/lamprop/*.py
+	pep8-3.4 src/__main__.py src/lamprop/*.py test/test*.py
 
 refresh::
 	.git/hooks/post-commit
 
-test: lamprop
-	./lamprop -e test/hyer.lam >test/hyer.txt
-	-diff --unified=0 test/hyer-1.3.5.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.0.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.1.txt test/hyer.txt
-	-diff --unified=0 test/hyer-1.4.2.txt test/hyer.txt
-	rm -f test/hyer.txt
+tests::
+	cd test; nosetests-3.4 -v
+
+setver::
+	sed -i '' -e "s/^__version__.*/__version__ = '${VER}'/" `find . -type f -name "*.py"`
