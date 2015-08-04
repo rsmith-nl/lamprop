@@ -13,12 +13,10 @@ from shutil import rmtree
 import os
 import sys
 
-bp = os.path.dirname(os.path.realpath('.')).split(os.sep)
-print('base path:', bp)
-modpath = os.sep.join(bp + ['src', 'lamprop'])
-sys.path.append(modpath)
+fp = os.path.dirname(os.path.dirname(os.path.abspath('__file__')))
+sys.path.insert(0, os.sep.join([fp, 'src']))
 
-from lptypes import Fiber, Resin, lamina, laminate
+from lamprop.types import Fiber, Resin, lamina, laminate
 
 hf = Fiber(233000, 0.2, -0.54e-6, 1.76, "Hyer's carbon fiber", None)
 hr = Resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin", None)
