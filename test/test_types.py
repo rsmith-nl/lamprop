@@ -13,8 +13,7 @@ from shutil import rmtree
 import os
 import sys
 
-fp = os.path.dirname(os.path.dirname(os.path.abspath('__file__')))
-sys.path.insert(0, os.sep.join([fp, 'src']))
+sys.path.insert(1, '../src')
 
 from lamprop.types import Fiber, Resin, lamina, laminate
 

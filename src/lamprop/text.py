@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2015-05-16 18:02:55 +0200
+# Last modified: 2015-08-23 12:42:08 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -36,7 +36,8 @@ _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm³",
       "α_x = {0:9.4g} K⁻¹, α_y = {1:9.4g} K⁻¹"]
 
 # Platforms that don't support UTF-8 get ASCII text.
-if sys.stdout.encoding.lower() != 'utf-8':
+enc = sys.stdout.encoding
+if not enc or enc.lower() != 'utf-8':
     _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
           "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
           "v_xy = {0:7.5f}", "v_yx = {0:7.5f}",
