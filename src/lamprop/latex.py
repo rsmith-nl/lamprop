@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2015-05-16 16:59:39 +0200
+# Last modified: 2015-09-12 12:41:25 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -55,7 +55,7 @@ def _engprop(l):
     print("      Layer & Weight & Angle & vf & Fiber type\\\\")
     print("            & [g/m$^2$] & [$\\circ$] & [-]\\\\")
     print("      \\midrule")
-    for ln, la in enumerate(l.layers):
+    for ln, la in enumerate(l.layers, start=1):
         s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
         print(s.format(ln, la.fiber_weight, la.angle, la.vf, la.fiber.name))
     print("      \\bottomrule")

@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-03-28 11:53:57 +0100
-# Last modified: 2015-05-16 16:59:55 +0200
+# Last modified: 2015-09-12 12:42:44 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -74,7 +74,7 @@ def _engprop(l):
     thdr = r"num\cell weight\cell angle\cell vf\cell fiber\cell\row"
     print(thdr)
     s = "{0}\\cell {1:g}\\cell {2:g}\\cell {3:g}\\cell {4}\\cell\\row"
-    for ln, la in enumerate(l.layers):
+    for ln, la in enumerate(l.layers, start=1):
         print(rhdr)
         print(s.format(ln+1, la.fiber_weight, la.angle, la.vf, la.fiber.name))
     print("\\pard E_x  = {0:.0f} MPa\\par".format(l.Ex))
