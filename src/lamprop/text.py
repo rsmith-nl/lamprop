@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2015-08-23 12:42:08 +0200
+# Last modified: 2015-09-12 12:41:55 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -62,9 +62,9 @@ def _engprop(l):
     print(s.format(l.vf*100, l.wf*100))
     print(_t[1].format(l.fiber_weight+l.resin_weight, l.resin_weight))
     print("num weight angle   vf fiber")
-    for ln, la in enumerate(l.layers):
+    for ln, la in enumerate(l.layers, start=1):
         s = "{0:3} {1:6g} {2:5g} {3:4g} {4}"
-        print(s.format(ln+1, la.fiber_weight, la.angle, la.vf, la.fiber.name))
+        print(s.format(ln, la.fiber_weight, la.angle, la.vf, la.fiber.name))
     print("E_x  = {0:.0f} MPa".format(l.Ex))
     print("E_y  = {0:.0f} MPa".format(l.Ey))
     print("G_xy = {0:.0f} MPa".format(l.Gxy))

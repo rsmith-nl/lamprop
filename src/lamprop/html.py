@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2015-05-16 16:59:27 +0200
+# Last modified: 2015-09-12 12:40:56 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -71,7 +71,7 @@ def _engprop(l):
     print('                </tr>')
     print('              </thead>')
     print('              <tbody align="right">')
-    for ln, la in enumerate(l.layers):
+    for ln, la in enumerate(l.layers, start=1):
         print('                <tr>')
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
         print(s.format(ln, la.fiber_weight, la.angle))
