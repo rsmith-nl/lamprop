@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2015-09-12 12:41:25 +0200
+# Last modified: 2015-09-23 23:10:47 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -107,7 +107,7 @@ def _matrices(l):
                 numl.append(nums)
             print('          ' + ' & '.join(numl) + r'\\')
     print("  \\vbox{")
-    print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\[-5mm]")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
     print("        \\end{array}\\right\\} = ")
@@ -121,7 +121,7 @@ def _matrices(l):
           "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
     print("          \\end{array}\\right\\}\\]")
     print("    }")
-    print("    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\")
+    print("    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\[-5mm]")
     print("      \\tiny\\[\\left\\{\\begin{array}{c}")
     print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
           "\\gamma_{xy}\\\\[3pt]")

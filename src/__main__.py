@@ -4,14 +4,18 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2015-08-23 12:47:26 +0200
+# Last modified: 2015-09-23 23:21:37 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
 of the data file format."""
 
-__version__ = '2.0.1'
+import argparse
+import logging
+import sys
+import lamprop as lp
 
+__version__ = lp.__version__
 _lic = '''lamprop {}
 Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
@@ -35,11 +39,6 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.'''.format(__version__)
-
-import argparse
-import logging
-import sys
-import lamprop as lp
 
 
 class LicenseAction(argparse.Action):
