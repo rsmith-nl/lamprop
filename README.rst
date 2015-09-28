@@ -33,7 +33,7 @@ Requirements
 ------------
 
 This program requires Python (version 3), and the numpy module (version 1.5 or
-later). This version was developed and tested using Python 3.4.
+later). This version was developed and tested using Python 3.4 and 3.5.
 
 
 Installation
