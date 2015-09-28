@@ -1,8 +1,8 @@
 # file: types.py
-# vim:fileencoding=utf-8:ft=python
+# vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2015-05-16 17:03:00 +0200
+# Last modified: 2015-09-28 22:46:12 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -75,8 +75,6 @@ The following references used in coding this module:
 from collections import namedtuple
 import numpy as np
 import math
-
-__version__ = '2.0.0'
 
 
 Fiber = namedtuple('Fiber', ['E1', 'ν12', 'α1', 'ρ', 'name', 'line'])

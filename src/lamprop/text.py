@@ -1,8 +1,8 @@
 # file: text.py
-# vim:fileencoding=utf-8:ft=python
+# vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2015-09-12 12:41:55 +0200
+# Last modified: 2015-09-28 22:48:25 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions

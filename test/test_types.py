@@ -1,12 +1,13 @@
 # file: test_types.py
-# vim:fileencoding=utf-8:ft=python
+# vim:fileencoding=utf-8:ft=python:fdm=indent
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
+# Last modified: 2015-09-28 23:03:20 +0200
 
 """Test for lptypes.py.
 
-Run with: nosetests-3.4 -v test_types.py
+Run with: nosetests-3.5 -v test_types.py
 """
 
 from shutil import rmtree
