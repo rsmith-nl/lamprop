@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2015-09-28 22:47:25 +0200
+# Last modified: 2015-09-29 23:17:31 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,7 +35,9 @@ def out(lam, eng, mat):
     print("\\begin{table}[!htbp]")
     print("  \\renewcommand{\\arraystretch}{1.2}")
     txt = "  \\caption{{\\label{{tab:{0}}}properties of {0}}}"
-    print(txt.format(lam.name))
+    # Raw underscores in LaTeX text mode produce “Missing $” errors.
+    texlname = lam.name.replace('_', '\_')
+    print(txt.format(texlname))
     print("  \\centering\\footnotesize{\\rule{0pt}{10pt}")
     print("  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__))
     if eng:
@@ -57,7 +59,8 @@ def _engprop(l):
     print("      \\midrule")
     for ln, la in enumerate(l.layers, start=1):
         s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
-        print(s.format(ln, la.fiber_weight, la.angle, la.vf, la.fiber.name))
+        texfname = la.fiber.name.replace('_', '\_')
+        print(s.format(ln, la.fiber_weight, la.angle, la.vf, texfname))
     print("      \\bottomrule")
     print("    \\end{tabular}\\hspace{0.02\\textwidth}")
     print("    \\begin{tabular}[t]{rrl}")
