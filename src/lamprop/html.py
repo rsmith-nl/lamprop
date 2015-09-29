@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2015-09-28 22:47:12 +0200
+# Last modified: 2015-09-29 13:59:20 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,6 +32,13 @@ from .version import __version__
 
 def out(lam, eng, mat):
     '''HTML main output function.'''
+    print('<!DOCTYPE html>')
+    print('<html lang="en-US">')
+    print('  <head>')
+    print('    <meta charset="UTF-8">')
+    print('    <meta name="description" contents="lamprop output">')
+    print('  </head>')
+    print('  <body>')
     print('    <!-- outer table -->')
     print('    <table cellpadding="10%">')
     s = "      <caption><strong>Properties of {}</strong></caption>"
@@ -48,6 +55,8 @@ def out(lam, eng, mat):
     print('      </tbody>')
     print('    </table>')
     print('    <hr />')
+    print('  </body>')
+    print('</html>')
 
 
 def _engprop(l):
