@@ -79,3 +79,32 @@ should be changed to::
 
     set "PATH=%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
 
+Vim
++++
+
+In the ``tools`` subdirectory you will find a vim_ syntax file for lamprop
+files. If you want to use it, copy ``lamprop.vim`` to ``~/.vim/syntax``, and
+set the filetype of your lamprop files to ``lamprop``.
+
+.. _vim: http://www.vim.org
+
+You can set the filetype by adding a modeline to your lamprop files:
+
+.. code-block:: vim
+
+    vim:ft=lamprop
+
+This requires that modeline support is enabled. You should have the following
+line in your ``vimrc``:
+
+.. code-block:: vim
+
+    set modeline
+
+Alternatively, if you use the ``.lam`` extension for your lamprop files you
+can use an autocommand in your ``vimrc``;
+
+.. code-block:: vim
+
+    autocmd BufNewFile,BufRead *.lam set filetype=lamprop
+
