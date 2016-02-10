@@ -1,8 +1,8 @@
 # file: lptypes.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
-# Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# vim:fileencoding=utf-8:ft=python
+# Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2015-09-28 22:47:52 +0200
+# Last modified: 2016-02-10 01:00:49 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,7 +39,7 @@ def parse(filename):
     """
     msg = logging.getLogger('parser')
     try:
-        with open(filename, 'r') as df:
+        with open(filename, encoding='utf-8') as df:
             data = df.readlines()
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
@@ -211,7 +211,7 @@ def _l(line, number, resin, vf, log):
         if vf is None:
             s = 'no vf in laminate line {}, and no global vf.'
             s = s.format(line)
-            msg.error(s)
+            log.error(s)
             raise ValueError(s)
         items = line.split(None, 3)
     values = [items[-1], resin]
