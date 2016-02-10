@@ -2,8 +2,9 @@ MANIFEST
 *.pyc
 __pycache__
 *~
-build/*
-dist/*
+build/
+dist/
+.ropeproject/
 backup-*.tar.gz
 lamprop.?.ps
 lamprop.?.pdf
