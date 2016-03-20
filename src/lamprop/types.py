@@ -1,8 +1,8 @@
 # file: types.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2015-09-28 22:46:12 +0200
+# Last modified: 2016-03-20 13:09:57 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -73,9 +73,8 @@ The following references used in coding this module:
 """
 
 from collections import namedtuple
-import numpy as np
 import math
-
+import numpy as np
 
 Fiber = namedtuple('Fiber', ['E1', 'ν12', 'α1', 'ρ', 'name', 'line'])
 Resin = namedtuple('Resin', ['E', 'ν', 'α', 'ρ', 'name', 'line'])
@@ -89,15 +88,18 @@ Laminate = namedtuple('Laminate', ['name', 'layers', 'thickness',
                                    'νyx', 'αx', 'αy', 'wf'])
 
 
-def lamina(fiber, resin, fiber_weight, angle, vf):
+def lamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
     """Create a Lamina from the properties of the resin and fiber.
 
-    :param fiber: the Fiber to be used in this lamina
-    :param resin: the Resin to be used in this lamina
-    :param fiber_weight: area weight of the fiber in g/m²
-    :param angle: angle from the 0-axis in degrees counterclockwise
-    :param vf: fiber volume fraction
-    :returns: a Lamina
+    Arguments:
+        fiber: The Fiber to be used in this lamina.
+        resin: The Resin to be used in this lamina.
+        fiber_weight: Area weight of the fiber in g/m².
+        angle: Angle from the 0-axis in degrees counterclockwise.
+        vf: Fiber volume fraction.
+
+    Returns:
+        A Lamina object.
     """
     fiber_weight = float(fiber_weight)
     if fiber_weight < 0:
@@ -107,8 +109,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         vf = vf/100.0
     elif not 0.0 <= vf <= 1.0:
         raise ValueError('vf must be in the ranges 0.0-1.0 or 1.0-100.0')
-    vm = (1.0 - vf)  # Volume fraction of resin material
-    # [gr/m²]/[gr/cm³] = [cm³/m²] = 1/10000 [cm³/cm²] = 1/1000 [mm]
+    vm = (1.0 - vf)
     fiber_thickness = fiber_weight/(fiber.ρ*1000)
     thickness = fiber_thickness*(1+vm/vf)
     resin_weight = thickness*vm*resin.ρ*1000  # Resin [g/m²]
@@ -147,12 +148,14 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
                   Q_12, Q_16, Q_22, Q_26, Q_66, ρ)
 
 
-def laminate(name, layers):
+def laminate(name, layers):  # {{{1
     """Create a Laminate from a list of Lamina
 
-    :param name: name of the laminate
-    :param layers: list of Lamina
-    :returns: a Laminate
+    Arguments:
+        name: Name of the laminate.
+        layers: List of Lamina.
+    Returns:
+        A Laminate object.
     """
     if not layers:
         raise ValueError('No layers!')

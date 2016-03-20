@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-02-10 01:00:49 +0100
+# Last modified: 2016-03-20 13:16:53 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,8 +34,11 @@ from .types import Fiber, Resin, lamina, laminate
 def parse(filename):
     """Parses a lamprop file.
 
-    :param filename: The name of the file to parse.
-    :returns: A list of laminates.
+    Arguments:
+        filename: The name of the file to parse.
+
+    Returns:
+        A list of laminates.
     """
     msg = logging.getLogger('parser')
     try:
@@ -131,10 +134,13 @@ def parse(filename):
 
 
 def _num(val):
-    """Test if a value is a number
+    """Test if a string is a floating point number
 
-    :param val: string to test.
-    :returns: True val is a number, false otherwise.
+    Arguments:
+        val: The string to test.
+
+    Returns:
+        True if val is floating point a number, False otherwise.
     """
     try:
         float(val)
@@ -148,10 +154,12 @@ def _f(line, number, log):
 
     f: <E1> <Poisson's ratio 1,2> <CTE1> <density> <name>
 
-    :param line: text line to parse
-    :param number: line number in the original file.
-    :param log: Logger instance.
-    :returns: a lptypes.Fiber
+    Arguments:
+        line: Text line to parse.
+        number: Line number in the original file.
+        log: Logger instance.
+
+    Returns: A lptypes.Fiber object.
     """
     test = line.split()
     try:
@@ -176,10 +184,13 @@ def _r(line, number, log):
 
     r: <Ematrix> <Poisson's ratio> <CTE> <density> <name>
 
-    :param line: string to parse
-    :param number: line number in the original file.
-    :param log: Logger instance.
-    :returns: a types.Resin
+    Arguments:
+        line: String to parse.
+        number: Line number in the original file.
+        log: Logger instance.
+
+    Returns:
+        A types.Resin object.
     """
     items = line.split(None, 5)
     try:
@@ -197,12 +208,15 @@ def _l(line, number, resin, vf, log):
 
     l: <weight> <angle> [<vf>] <fiber name>
 
-    :param line: string to parse
-    :param number: line number in the original file.
-    :param resin: the resin type to use
-    :param vf: global fiber volume fraction
-    :param log: A Logger instance to report failures.
-    :returns: a tuple to initialize a Lamina
+    Arguments:
+        line: String to parse.
+        number: Line number in the original file.
+        resin: The resin type to use.
+        vf: Global fiber volume fraction.
+        log: A Logger instance to report failures.
+
+    Returns:
+        A tuple to initialize a Lamina.
     """
     items = line.split(None, 4)
     try:
@@ -223,8 +237,9 @@ def _l(line, number, resin, vf, log):
 def _rmdup(lst, name, log):
     """Remove duplicate or empty Fibers or Resins from the supplied list.
 
-    :param lst: List to search through.
-    :param name: Name of the thing we're searching for
+    Arguments:
+        lst: List to search through and modify.
+        name: Name of the thing we're searching for.
     """
     names = []
     for n, i in enumerate(lst):
