@@ -56,14 +56,17 @@ somewhat involved and outside the scope of this README! Since this code
 requires the numpy extension, I would suggest to install one od the pre-built
 distributions for ms-windows; Anaconda Python or Enthought Canopy.
 
-On ms-windows, copy the ‘lamprop’ script to a directory in your PATH (e.g.
+On ms-windows, run ``python3 build.py`` in the directory where you have
+unpacked the distribution or where you cloned the repository.
+
+Copy the ‘lamprop’ script to a directory in your PATH (e.g.
 the ‘Scripts’ subdirectory of your Python install) and rename it to
-‘lamprop.py’. You can then call it from a cmd.exe window, if the “.py”
+‘lamprop.pyz’. You can then call it from a cmd.exe window, if the “.pyz”
 extension is associated with a filetype, and the filetype has an appropriate
-action defined.  If trying to run lamprop.py gives an error, try executing the
+action defined.  If trying to run lamprop.pyz gives an error, try executing the
 following commands in a cmd.exe window::
 
-    assoc .py=Python.File
+    assoc .pyz=Python.File
     ftype Python.File="C:\Anaconda3\python.exe" "%1" %*
 
 Note that ``C:\Anaconda3`` is just an example! You should of course substitute the
@@ -78,6 +81,7 @@ The line::
 should be changed to::
 
     set "PATH=%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
+
 
 Vim
 +++

@@ -13,11 +13,7 @@ DISTFILES=README.rst
 all: lamprop ${SUBDIR}
 
 lamprop: src/__main__.py src/lamprop/*.py
-	cd src; zip -q ../foo.zip __main__.py lamprop/*.py
-	echo '#!/usr/bin/env python3' >lamprop
-	cat foo.zip >>lamprop
-	chmod a+x lamprop
-	rm -f foo.zip
+	python3 build.py
 
 ${SUBDIR}::
 	cd ${.TARGET}; make ${.TARGETS}
