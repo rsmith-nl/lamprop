@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2015-09-29 23:17:31 +0200
+# Last modified: 2016-04-11 22:10:55 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -49,7 +49,6 @@ def out(lam, eng, mat):
 
 def _engprop(l):
     '''Prints the engineering properties as a LaTeX table.'''
-    print("  \\parbox{\\textwidth}{\\centering")
     print("    \\begin{tabular}[t]{rcrrl}")
     print("      \\multicolumn{4}{c}{\\small"
           "\\textbf{Laminate stacking}}\\\\[0.1em]")
@@ -88,7 +87,6 @@ def _engprop(l):
     print(s.format(l.αy))
     print("      \\bottomrule")
     print("    \\end{tabular}")
-    print("  }\\vspace{5mm}")
 
 
 def _matrices(l):
