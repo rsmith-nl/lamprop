@@ -1,8 +1,8 @@
-# file: lptypes.py
+# file: parser.py
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-03-20 13:16:53 +0100
+# Last modified: 2016-05-29 13:24:33 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,13 +43,12 @@ def parse(filename):
     msg = logging.getLogger('parser')
     try:
         with open(filename, encoding='utf-8') as df:
-            data = df.readlines()
+            data = [ln.strip() for ln in df]
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
         return []
-    data = [ln.strip() for ln in data]
     # Filter out lines with directives.
-    directives = [(num, ln) for num, ln in enumerate(data)
+    directives = [(num, ln) for num, ln in enumerate(data, start=1)
                   if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
     fibers = [_f(ln, num, msg) for num, ln in directives if ln[0] is 'f']
