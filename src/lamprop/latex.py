@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2016-04-11 22:10:55 +0200
+# Last modified: 2016-05-29 20:27:10 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -71,7 +71,7 @@ def _engprop(l):
     print("      $\\mathrm{{v_f}}$ & {:4.2f} &-\\\\".format(l.vf))
     print("      $\\mathrm{{w_f}}$ & {:4.2f} &-\\\\".format(l.wf))
     print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
-    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ))
+    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.density))
     s = "      weight & {:.0f} & g/m$^2$\\\\"
     print(s.format(l.fiber_weight+l.resin_weight))
     print("      resin & {:.0f} & g/m$^2$\\\\".format(l.resin_weight))
@@ -79,12 +79,12 @@ def _engprop(l):
     print("      $\\mathrm{{E_x}}$ & {:8.0f} & MPa\\\\".format(l.Ex))
     print("      $\\mathrm{{E_y}}$ & {:8.0f} & MPa\\\\".format(l.Ey))
     print("      $\\mathrm{{G_{{xy}}}}$ & {:8.0f} & MPa\\\\".format(l.Gxy))
-    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.νxy))
-    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.νyx))
+    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.nuxy))
+    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.nuyx))
     s = "      $\\mathrm{{\\alpha_x}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.αx))
+    print(s.format(l.alphax))
     s = "      $\\mathrm{{\\alpha_y}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.αy))
+    print(s.format(l.alphay))
     print("      \\bottomrule")
     print("    \\end{tabular}")
 

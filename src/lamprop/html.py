@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2015-09-29 13:59:20 +0200
+# Last modified: 2016-05-29 20:29:35 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -119,7 +119,7 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>density</td><td>{:.3g}</td>"
-    print(s.format(l.ρ))
+    print(s.format(l.density))
     print('                  <td align="left">g/cm&sup3;</td>')
     print('                </tr>')
     print('                <tr>')
@@ -150,22 +150,22 @@ def _engprop(l):
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>xy</sub></td><td>{:g}</td>"
-    print(s.format(l.νxy))
+    print(s.format(l.nuxy))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&nu;<sub>yx</sub></td><td>{:g}</td>"
-    print(s.format(l.νyx))
+    print(s.format(l.nuyx))
     print('                  <td align="left">-</td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>x</sub></td><td>{:g}</td>"
-    print(s.format(l.αx))
+    print(s.format(l.alphax))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>&alpha;<sub>y</sub></td><td>{:g}</td>"
-    print(s.format(l.αy))
+    print(s.format(l.alphay))
     print('                  <td align="left">K<sup>-1</sup></td>')
     print('                </tr>')
     print('              </tbody>')

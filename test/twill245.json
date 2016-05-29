@@ -1,0 +1,20 @@
+{
+    "fibers": [
+        {"E1": 230000, "nu12": 0.2, "alpha1": -0.41e-6, "rho": 1.76, "name": "T300"}
+    ],
+    "resins": [
+        {"E": 2900, "nu": 0.29, "alpha": 40e-6, "rho": 1.15, "name": "EPR 4908"}
+    ],
+    "laminates": [
+        {
+            "name": "twill245",
+            "vf": 0.45,
+            "matrix": "EPR 4908",
+            "symmetric": false,
+            "lamina": [
+                {"weight": 122.5, "angle": 0, "fiber": "T300"},
+                {"weight": 122.5, "angle": 0, "vf": 0.5, "fiber": "T300"}
+            ]
+         }
+    ]
+}
