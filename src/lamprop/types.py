@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-05-29 17:49:43 +0200
+# Last modified: 2016-06-01 23:52:09 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -76,9 +76,9 @@ from collections import namedtuple
 import math
 import numpy as np
 
-Fiber = namedtuple('Fiber', ['E1', 'nu12', 'alpha1', 'density', 'name'])
+Fiber = namedtuple('Fiber', 'E1 nu12 alpha1 density name')
 
-Resin = namedtuple('Resin', ['E', 'nu', 'alpha', 'density', 'name'])
+Resin = namedtuple('Resin', 'E nu alpha density name')
 
 Lamina = namedtuple('Lamina', ['fiber', 'resin', 'fiber_weight', 'angle', 'vf',
                                'thickness', 'resin_weight', 'E1', 'E2', 'G12',
@@ -92,7 +92,7 @@ Laminate = namedtuple('Laminate', ['name', 'layers', 'thickness',
                                    'wf'])
 
 
-def lamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
+def mklamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
     """Create a Lamina from the properties of the resin and fiber.
 
     Arguments:
@@ -152,7 +152,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
                   Q_12, Q_16, Q_22, Q_26, Q_66, density)
 
 
-def laminate(name, layers):  # {{{1
+def mklaminate(name, layers):  # {{{1
     """Create a Laminate from a list of Lamina
 
     Arguments:

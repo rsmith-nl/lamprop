@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-05-29 20:21:32 +0200
+# Last modified: 2016-06-01 23:58:45 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,103 +29,58 @@
 
 import json
 import logging
-from .types import Fiber, Resin, lamina, laminate
+from .types import Fiber, Resin, mklamina, mklaminate
 
 msg = logging.getLogger('parser')
 
 
 def parse(filename):
-    """Parses a lamprop file.
+    """Parses a lamprop JSON file.
 
     Arguments:
         filename: The name of the file to parse.
 
     Returns:
-        A list of laminates.
+        A dict of Fibers, a dict of Resins and a dict of Laminates, keyed by
+        name.
     """
     try:
         with open(filename, encoding='utf-8') as df:
             data = json.load(df)
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
-        return [], [], []
+        return {}, {}, {}
     fdict = _find('fibers', data, Fiber, filename)
     rdict = _find('resins', data, Resin, filename)
     ldict = {}
     laminatedata = data['laminates']
     if not laminatedata:
         return fdict, rdict, ldict
-#    directives = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
-#    tindices = [i for i, (_, ln) in enumerate(directives) if ln[0] is 't']
-#    if not tindices:
-#        msg.error("no laminates found in '{}'".format(filename))
-#        return []
-#    else:
-#        msg.info("found {} laminates in '{}'".format(len(tindices), filename))
-#    tindices.append(len(directives))
-#    pairs = zip(tindices, tindices[1:])
-#    laminatedata = [directives[start:stop] for start, stop in pairs]
-#    laminates = []
-#    lamnames = []
-#    for lam in laminatedata:
-#        symmetric = False
-#        numt, t = lam[0]
-#        numm, m = lam[1]
-#        name = t[2:].strip()
-#        if name in lamnames:
-#            s = "laminate '{}' on line {} already exists. Skipping laminate."
-#            msg.warning(s.format(name, numt))
-#            continue
-#        lamnames.append(name)
-#        if m[0] is not 'm':
-#            s = "no 'm:' on line {}. Skipping laminate."
-#            msg.warning(s.format(numt+1))
-#            continue
-#        items = m.split(None, 2)
-#        try:
-#            vf = float(items[1])
-#            mname = items[2]
-#        except ValueError:
-#            vf = None
-#            mname = items[1]
-#        try:
-#            resin = rdict[mname]
-#        except KeyError:
-#            s = "unknown resin '{}' on line {}. Skipping laminate."
-#            msg.error(s.format(mname, numm))
-#            continue
-#        layers = []
-#        if lam[-1][1].startswith('s'):
-#            symmetric = True
-#            msg.info("found symmetry directive in '{}'.".format(name))
-#            del lam[-1]
-#        try:
-#            for numl, l in lam[2:]:
-#                if l[0] is not 'l':
-#                    s = "unexpected '{}:' on line {}. Skipping laminate."
-#                    raise ValueError(s.format(l[0], numl))
-#                else:
-#                    values = _l(l, numl, resin, vf, msg)
-#                try:
-#                    fiber = fdict[values[0]]
-#                    values[0] = fiber
-#                except KeyError:
-#                    s = "unknown fiber '{}' on line {}. Skipping laminate."
-#                    raise ValueError(s.format(values[0], numl))
-#                    continue
-#                layers.append(lamina(*values))
-#        except ValueError as e:
-#            msg.error(e)
-#            continue
-#        if not layers:
-#            msg.warning("empty laminate '{}'. Skipping".format(name))
-#            continue
-#        if symmetric:
-#            extra = layers.copy()
-#            extra.reverse()
-#            layers += extra
-#        laminates.append(laminate(name, layers))
-#    return laminates
+    for lam in laminatedata:
+        for j in ('matrix', 'name', 'vf', 'lamina'):
+            if j not in lam:
+                msg.error('no {} in laminate, skipping'.format(j))
+                continue
+        commonvf = lam['vf']
+        try:
+            r = rdict[lam['matrix']]
+        except KeyError:
+            msg.error('unknown resin {}'.format(lam['matrix']))
+            continue
+        llist = []
+        for la in lam['lamina']:
+            try:
+                f = fdict[la['fiber']]
+            except KeyError:
+                msg.error('unknown fiber {}'.format(la['fiber']))
+                continue
+            vf = commonvf
+            if 'vf' in la:
+                vf = la['vf']
+            llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
+        if llist:
+            ldict[lam['name']] = mklaminate(lam['name'], llist)
+    return fdict, rdict, ldict
 
 
 def _find(ident, data, totype, name):
@@ -139,9 +94,10 @@ def _find(ident, data, totype, name):
         try:
             found.append(totype(**f))
         except TypeError as e:
-            msg.warning(err.fmt(ident[:-1].capitalize(), str(e).split(':')[1]))
+            msg.warning(err.format(ident[:-1].capitalize(),
+                                   str(e).split(':')[1]))
     _rmdup(found, ident)
-    msg.info(m.format(len(found), name))
+    msg.info(m.format(len(found), ident, name))
     return {j.name: j for j in found}
 
 
