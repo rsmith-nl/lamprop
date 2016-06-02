@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 11:05:29 +0200
+# Last modified: 2016-06-02 11:46:08 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,6 +27,7 @@
 
 """Parser for lamprop files in JSON format"""
 
+from collections import OrderedDict
 import json
 import logging
 from .types import Fiber, Resin, mklamina, mklaminate
@@ -46,13 +47,16 @@ def fromjson(filename):
     """
     try:
         with open(filename, encoding='utf-8') as df:
-            data = json.load(df)
+            data = json.load(df, object_pairs_hook=OrderedDict)
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
         return {}, {}, {}
+    except json.JSONDecodeError:
+        msg.error("invalid json file '{}'.".format(filename))
+        return {}, {}, {}
     fdict = _find('fibers', data, Fiber, filename)
     rdict = _find('resins', data, Resin, filename)
-    ldict = {}
+    ldict = OrderedDict()
     laminatedata = data['laminates']
     if not laminatedata:
         return fdict, rdict, ldict
@@ -114,33 +118,14 @@ def _find(ident, data, totype, name):
     """
     err = '{} missing {}'
     m = "found {} {} in '{}'"
-    found = []
+    found = OrderedDict()
     for f in data[ident]:
         try:
-            found.append(totype(**f))
+            v = totype(**f)
+            if v.name not in found:
+                found[v.name] = v
         except TypeError as e:
             msg.warning(err.format(ident[:-1].capitalize(),
                                    str(e).split(':')[1]))
-    _rmdup(found, ident)
     msg.info(m.format(len(found), ident, name))
-    return {j.name: j for j in found}
-
-
-def _rmdup(lst, name):
-    """Remove duplicate or empty Fibers or Resins from the supplied list.
-
-    Arguments:
-        lst: List to search through and modify.
-        name: Name of the thing we're searching for.
-    """
-    names = []
-    for n, i in enumerate(lst):
-        if i is None:
-            del(lst[n])
-            continue
-        if i.name not in names:
-            names.append(i.name)
-        else:
-            s = "{} '{}' at line {} is a duplicate, will be ignored."
-            msg.warning(s.format(name, i.name, i.line))
-            del(lst[n])
+    return found

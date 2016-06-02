@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2016-06-02 11:04:54 +0200
+# Last modified: 2016-06-02 11:09:25 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
@@ -109,6 +109,9 @@ def main(argv):
     header()
     # Process the files
     for f in args.files:
+        if not f.lower().endswith('.json'):
+            logging.warning("This version of lamprop only accepts JSON files.")
+            continue
         logging.info("processing file '{}'".format(f))
         _, _, ldict = lp.fromjson(f)
         for curlam in ldict.values():

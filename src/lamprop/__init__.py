@@ -3,7 +3,7 @@
 #
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2016-06-01 23:31:24 +0200
+# Last modified: 2016-06-02 11:10:11 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
 
 from .html import out as html_output
 from .latex import out as latex_output
-from .parser import parse
+from .parser import fromjson
 from .rtf import footer as rtf_footer
 from .rtf import header as rtf_header
 from .rtf import out as rtf_output
