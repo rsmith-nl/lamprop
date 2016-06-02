@@ -3,7 +3,7 @@
 //
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // Created: 2016-06-02 15:51:55 +0200
-// Last modified: 2016-06-02 16:55:40 +0200
+// Last modified: 2016-06-02 17:13:37 +0200
 {
     "fibers": [
         /* Carbon */
@@ -19,6 +19,8 @@
             "name": "torayca T700SC"},
         {"E1": 235000, "nu12": 0.25, "alpha1": -0.5e-6, "density": 1.79,
             "name": "pyrofil TR30S"},
+        {"E1": 240000, "nu12": 0.25, "alpha1": -0.12e-6, "density": 1.82,
+            "name": "pyrofil TR50S"},
         {"E1": 640000, "nu12": 0.234, "alpha1": -1.47e-6, "density": 2.12,
             "name": "dialead K63712"},
         {"E1": 790000, "nu12": 0.23, "alpha1": -1.2e-6, "density": 2.15,
@@ -43,6 +45,8 @@
         // Synthetics
         {"E1": 270000, "nu12": 0.25, "alpha1": -6.0e-6, "density": 1.56,
             "name": "zylon"},
+        {"E1": 140000, "nu12": 0.33, "alpha1": 5e-6, "density": 0.975,
+            "name": "dyneema"},
         {"E1": 124000, "nu12": 0.3, "alpha1": -2e-6, "density": 1.44,
             "name": "aramide49"}
     ],
