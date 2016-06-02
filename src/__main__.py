@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2016-06-02 11:09:25 +0200
+# Last modified: 2016-06-02 17:43:55 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
@@ -52,7 +52,42 @@ def noop():
 
 
 def main(argv):
-    # Process the command-line arguments
+    args = process_arguments(argv)
+    # No files given to process.
+    if len(args.files) == 0:
+        sys.exit(1)
+    # Set the output method.
+    out = lp.text_output
+    header = noop
+    footer = noop
+    if args.latex:
+        out = lp.latex_output
+    elif args.html:
+        out = lp.html_output
+    elif args.rtf:
+        header = lp.rtf_header
+        out = lp.rtf_output
+        footer = lp.rtf_footer
+    header()
+    # Process the files
+    for f in args.files:
+        if not f.lower().endswith('.json'):
+            logging.warning("This version of lamprop only accepts JSON files.")
+            continue
+        logging.info("processing file '{}'".format(f))
+        try:
+            with open(f, encoding='utf-8') as df:
+                data = df.read()
+        except IOError:
+            logging.error("cannot read '{}'.".format(f))
+        _, _, ldict = lp.fromjson(data, f)
+        for curlam in ldict.values():
+            out(curlam, args.eng, args.mat)
+    footer()
+
+
+def process_arguments(argv):
+    """Process the command line arguments."""
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
     group.add_argument('-l', '--latex', action='store_true',
@@ -81,7 +116,6 @@ def main(argv):
     args = opts.parse_args(argv)
     logging.basicConfig(level=getattr(logging, args.log.upper(), None),
                         format='%(levelname)s: %(message)s')
-    del opts, group
     if args.mat is False and args.eng is False:
         args.eng = True
         args.mat = True
@@ -91,32 +125,8 @@ def main(argv):
         args.mat = False
     else:
         args.eng = False
-    # No files given to process.
-    if len(args.files) == 0:
-        sys.exit(1)
-    # Set the output method.
-    out = lp.text_output
-    header = noop
-    footer = noop
-    if args.latex:
-        out = lp.latex_output
-    elif args.html:
-        out = lp.html_output
-    elif args.rtf:
-        header = lp.rtf_header
-        out = lp.rtf_output
-        footer = lp.rtf_footer
-    header()
-    # Process the files
-    for f in args.files:
-        if not f.lower().endswith('.json'):
-            logging.warning("This version of lamprop only accepts JSON files.")
-            continue
-        logging.info("processing file '{}'".format(f))
-        _, _, ldict = lp.fromjson(f)
-        for curlam in ldict.values():
-            out(curlam, args.eng, args.mat)
-    footer()
+    return args
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

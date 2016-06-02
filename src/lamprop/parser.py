@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 16:55:22 +0200
+# Last modified: 2016-06-02 17:44:18 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -36,17 +36,18 @@ from .types import Fiber, Resin, mklamina, mklaminate
 msg = logging.getLogger('parser')
 
 
-def fromjson(filename):
+def fromjson(text, filename):
     """Parses a lamprop JSON file.
 
     Arguments:
-        filename: The name of the file to parse.
+        text: Text to parse.
+        filename: Origin of the text.
 
     Returns:
         A dict of Fibers, a dict of Resins and a dict of Laminates, keyed by
         name.
     """
-    data = _stripcomments(filename)
+    data = _stripcomments(text, filename)
     fdict = _find('fibers', data, Fiber, filename)
     rdict = _find('resins', data, Resin, filename)
     ldict = OrderedDict()
@@ -81,20 +82,16 @@ def fromjson(filename):
     return fdict, rdict, ldict
 
 
-def _stripcomments(filename):
+def _stripcomments(data, filename):
     """Read a JSON file, stripping out the '//' comments before parsing.
 
     Arguments:
-        filename: name of the file to parse
+        data: Contents of the file.
+        filename: Name of the file.
 
     Returns:
         Dictionary containing the data
     """
-    try:
-        with open(filename, encoding='utf-8') as df:
-            data = df.read()
-    except IOError:
-        msg.error("cannot read '{}'.".format(filename))
     clean = re.sub('//.*$|/\*[^\*]*\*/', '\n', data, flags=re.MULTILINE)
     try:
         return json.loads(clean, object_pairs_hook=OrderedDict)
