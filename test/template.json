@@ -1,0 +1,91 @@
+// file: template.json
+// vim:fileencoding=utf-8:ft=json
+//
+// Author: R.F. Smith <rsmith@xs4all.nl>
+// Created: 2016-06-02 15:51:55 +0200
+// Last modified: 2016-06-02 16:55:40 +0200
+{
+    "fibers": [
+        /* Carbon */
+        {"E1": 238000, "nu12": 0.25, "alpha1": -0.1e-6, "density": 1.76,
+            "name": "tenax HTA"},
+        {"E1": 240000, "nu12": 0.25, "alpha1": -0.1e-6, "density": 1.77,
+            "name": "tenax HTS"},
+        {"E1": 240000, "nu12": 0.25, "alpha1": -0.12e-6, "density": 1.78,
+            "name": "tenax STS40"},
+        {"E1": 230000, "nu12": 0.27, "alpha1": -0.41e-6, "density": 1.76,
+            "name": "toracya T300"},
+        {"E1": 230000, "nu12": 0.27, "alpha1": -0.38e-6, "density": 1.80,
+            "name": "torayca T700SC"},
+        {"E1": 235000, "nu12": 0.25, "alpha1": -0.5e-6, "density": 1.79,
+            "name": "pyrofil TR30S"},
+        {"E1": 640000, "nu12": 0.234, "alpha1": -1.47e-6, "density": 2.12,
+            "name": "dialead K63712"},
+        {"E1": 790000, "nu12": 0.23, "alpha1": -1.2e-6, "density": 2.15,
+            "name": "dialead K63A12"},
+        {"E1": 294000, "nu12": 0.27, "alpha1": -0.60e-6, "density": 1.76,
+            "name": "torayca T800S"},
+        {"E1": 900000, "nu12": 0.234, "alpha1": -1.47e-6, "density": 2.20,
+            "name": "dialead K13C2U"},
+        {"E1": 339000, "nu12": 0.27, "alpha1": -0.73e-6, "density": 1.75,
+            "name": "M35J"},
+        {"E1": 436000, "nu12": 0.234, "alpha1": -0.9e-6, "density": 1.84,
+            "name": "M46J"},
+        {"E1": 242000, "nu12": 0.27, "alpha1": -0.6e-6, "density": 1.81,
+            "name": "panex PX35UD"},
+        {"E1": 780000, "nu12": 0.27, "alpha1": -1.5e-6, "density": 2.17,
+            "name": "granoc XN-80"},
+        // Glass
+        {"E1": 73000, "nu12": 0.33, "alpha1": 5.3e-6, "density": 2.60,
+            "name": "e-glas"},
+        {"E1": 80000, "nu12": 0.33, "alpha1": 5e-6, "density": 2.62,
+            "name": "advantex E-CR"},
+        // Synthetics
+        {"E1": 270000, "nu12": 0.25, "alpha1": -6.0e-6, "density": 1.56,
+            "name": "zylon"},
+        {"E1": 124000, "nu12": 0.3, "alpha1": -2e-6, "density": 1.44,
+            "name": "aramide49"}
+    ],
+    "resins": [
+        // Epoxy
+        {"E": 2900, "nu": 0.25, "alpha": 40e-6, "density": 1.15,
+            "name": "EPR04908"},
+        // Polyesters
+        {"E": 4300, "nu": 0.36, "alpha": 40e-6, "density": 1.19,
+            "name": "palatal P4-01"},
+        {"E": 4000, "nu": 0.36, "alpha": 40e-6, "density": 1.22,
+            "name": "synolite 2155-N-1"},
+        {"E": 4100, "nu": 0.36, "alpha": 40e-6, "density": 1.2,
+            "name": "distitron 3501LS1"},
+        // DCPD
+        {"E": 3800, "nu": 0.36, "alpha": 40e-6, "density": 1.165,
+            "name": "synolite 1967-G-6"},
+        // Vinylesters
+        {"E": 3600, "nu": 0.36, "alpha": 55e-6, "density": 1.145,
+            "name": "atlac 430"},
+        {"E": 3500, "nu": 0.36, "alpha": 51.5e-6, "density": 1.1,
+            "name": "atlac 590"}
+    ],
+    "laminates": [
+        {
+            "name": "plain weave",
+            "vf": 0.5,
+            "matrix": "palatal P4-01",
+            "symmetric": true,
+            "lamina": [
+                {"weight": 100, "angle": 0, "fiber": "e-glas"},
+                {"weight": 100, "angle": 90, "fiber": "e-glas"}
+            ]
+         },
+         {
+            "name": "quasi isotropic CSM450",
+            "vf": 0.3,
+            "matrix": "distitron 3501LS1",
+            "lamina": [
+                {"weight": 150, "angle": 0, "fiber": "e-glas"},
+                {"weight": 150, "angle": 60, "fiber": "e-glas"},
+                {"weight": 150, "angle": -60, "fiber": "e-glas"}
+            ]
+         }
+    ]
+}
