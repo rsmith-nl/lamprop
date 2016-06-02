@@ -1,0 +1,33 @@
+// file: atlac590.json
+// vim:fileencoding=utf-8:ft=json
+//
+// Author: R.F. Smith <rsmith@xs4all.nl>
+// Created: 2016-06-02 20:36:23 +0200
+// Last modified: 2016-06-02 22:31:08 +0200
+//
+// Eigenschappen van een laminaat zoals weergegeven in de data-sheet van Atlac 590
+{
+    "fibers": [
+        // Glass
+        {"E1": 70000, "nu12": 0.33, "alpha1": 5.3e-6, "density": 2.54,
+            "name": "e-glas"}
+    ],
+    "resins": [
+        // Vinylesters
+        {"E": 3500, "nu": 0.36, "alpha": 51.5e-6, "density": 1.1,
+            "name": "atlac 590"}
+    ],
+    "laminates": [
+        {
+            "name": "atlac 430, M710",
+            "vf": 0.183,
+            "matrix": "atlac 590",
+            "lamina": [
+                {"weight": 150, "angle": 0, "fiber": "e-glas"},
+                {"weight": 150, "angle": 60, "fiber": "e-glas"},
+                {"weight": 150, "angle": -60, "fiber": "e-glas"}
+            ],
+            "symmetric": true
+         }
+    ]
+}
