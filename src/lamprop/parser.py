@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 15:10:56 +0200
+# Last modified: 2016-06-02 16:55:22 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -95,7 +95,7 @@ def _stripcomments(filename):
             data = df.read()
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
-    clean = re.sub('//.*$', '\n', data, flags=re.MULTILINE)
+    clean = re.sub('//.*$|/\*[^\*]*\*/', '\n', data, flags=re.MULTILINE)
     try:
         return json.loads(clean, object_pairs_hook=OrderedDict)
     except json.JSONDecodeError:
