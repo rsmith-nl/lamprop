@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 17:44:18 +0200
+# Last modified: 2016-06-02 20:45:49 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -77,6 +77,8 @@ def fromjson(text, filename):
                 vf = la['vf']
             llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
         if llist:
+            if 'symmetric' in lam and lam['symmetric']:
+                llist = llist + list(reversed(llist))
             lname = lam['name']
             ldict[lname] = mklaminate(lname, llist)
     return fdict, rdict, ldict
