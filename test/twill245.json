@@ -1,3 +1,9 @@
+// file: twill245.json
+// vim:fileencoding=utf-8:ft=json
+//
+// Author: R.F. Smith <rsmith@xs4all.nl>
+// Created: 2016-06-02 14:30:49 +0200
+// Last modified: 2016-06-02 14:59:09 +0200
 {
     "fibers": [
         {"E1": 230000, "nu12": 0.2, "alpha1": -0.41e-6, "density": 1.76, "name": "T300"}

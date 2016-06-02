@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 11:46:08 +0200
+# Last modified: 2016-06-02 15:10:56 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,6 +30,7 @@
 from collections import OrderedDict
 import json
 import logging
+import re
 from .types import Fiber, Resin, mklamina, mklaminate
 
 msg = logging.getLogger('parser')
@@ -45,15 +46,7 @@ def fromjson(filename):
         A dict of Fibers, a dict of Resins and a dict of Laminates, keyed by
         name.
     """
-    try:
-        with open(filename, encoding='utf-8') as df:
-            data = json.load(df, object_pairs_hook=OrderedDict)
-    except IOError:
-        msg.error("cannot read '{}'.".format(filename))
-        return {}, {}, {}
-    except json.JSONDecodeError:
-        msg.error("invalid json file '{}'.".format(filename))
-        return {}, {}, {}
+    data = _stripcomments(filename)
     fdict = _find('fibers', data, Fiber, filename)
     rdict = _find('resins', data, Resin, filename)
     ldict = OrderedDict()
@@ -86,6 +79,28 @@ def fromjson(filename):
             lname = lam['name']
             ldict[lname] = mklaminate(lname, llist)
     return fdict, rdict, ldict
+
+
+def _stripcomments(filename):
+    """Read a JSON file, stripping out the '//' comments before parsing.
+
+    Arguments:
+        filename: name of the file to parse
+
+    Returns:
+        Dictionary containing the data
+    """
+    try:
+        with open(filename, encoding='utf-8') as df:
+            data = df.read()
+    except IOError:
+        msg.error("cannot read '{}'.".format(filename))
+    clean = re.sub('//.*$', '\n', data, flags=re.MULTILINE)
+    try:
+        return json.loads(clean, object_pairs_hook=OrderedDict)
+    except json.JSONDecodeError:
+        msg.error("invalid json file '{}'.".format(filename))
+        return {}
 
 
 def _chklam(ld):
