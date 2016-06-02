@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-01 23:58:45 +0200
+# Last modified: 2016-06-02 11:05:29 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,7 +34,7 @@ from .types import Fiber, Resin, mklamina, mklaminate
 msg = logging.getLogger('parser')
 
 
-def parse(filename):
+def fromjson(filename):
     """Parses a lamprop JSON file.
 
     Arguments:
@@ -57,35 +57,60 @@ def parse(filename):
     if not laminatedata:
         return fdict, rdict, ldict
     for lam in laminatedata:
-        for j in ('matrix', 'name', 'vf', 'lamina'):
-            if j not in lam:
-                msg.error('no {} in laminate, skipping'.format(j))
-                continue
+        if not _chklam(lam):
+            continue
         commonvf = lam['vf']
+        mname = lam['matrix']
         try:
-            r = rdict[lam['matrix']]
+            r = rdict[mname]
         except KeyError:
-            msg.error('unknown resin {}'.format(lam['matrix']))
+            msg.error('unknown resin {}, skipping laminate'.format(mname))
             continue
         llist = []
         for la in lam['lamina']:
+            fname = la['fiber']
             try:
-                f = fdict[la['fiber']]
+                f = fdict[fname]
             except KeyError:
-                msg.error('unknown fiber {}'.format(la['fiber']))
+                msg.error('unknown fiber {}, skipping lamina'.format(fname))
                 continue
             vf = commonvf
             if 'vf' in la:
                 vf = la['vf']
             llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
         if llist:
-            ldict[lam['name']] = mklaminate(lam['name'], llist)
+            lname = lam['name']
+            ldict[lname] = mklaminate(lname, llist)
     return fdict, rdict, ldict
+
+
+def _chklam(ld):
+    """Verify if the ld dict has the required keys
+
+    Arguments:
+        ld: laminate dictionary
+
+    Returns:
+        True or False
+    """
+    for j in ('matrix', 'name', 'vf', 'lamina'):
+        if j not in ld:
+            msg.error('no {} in laminate, skipping'.format(j))
+            return False
+    return True
 
 
 def _find(ident, data, totype, name):
     """Find Fibers or Resins in the data.
-    Returns a dictionary keyed to the name of the Fiber or Resin.
+
+    Arguments:
+        ident: String containing the key to look for
+        data: A dictionary to look into
+        totype: A type to cast the data to
+        name: The name of the file from which data came.
+
+    Returns:
+        A dictionary keyed to the name of the Fiber or Resin.
     """
     err = '{} missing {}'
     m = "found {} {} in '{}'"
