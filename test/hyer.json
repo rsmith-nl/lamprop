@@ -1,0 +1,54 @@
+{
+    "fibers": [
+        {"E1": 230000, "nu12": 0.2, "alpha1": -0.54e-6, "density": 1.76,
+         "name": "Hyer's carbon fiber"}
+    ],
+    "resins": [
+        {"E": 4620, "nu": 0.36, "alpha": 41.4e-6, "density": 1.1, "name": "Hyer's resin"}
+    ],
+    "laminates": [
+        {
+            "name": "unidirectional laminate",
+            "vf": 0.5,
+            "matrix": "Hyer's resin",
+            "lamina": [
+                {"weight": 100, "angle": 0, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": 0, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": 0, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": 0, "fiber": "Hyer's carbon fiber"}
+            ]
+        },
+        {
+            "name": "[0/90]s laminate",
+            "vf": 0.5,
+            "matrix": "Hyer's resin",
+            "lamina": [
+                {"weight": 100, "angle": 0, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": 90, "fiber": "Hyer's carbon fiber"}
+            ],
+            "symmetric": true
+        },
+        {
+            "name": "[+45/-45]s laminate",
+            "vf": 0.5,
+            "matrix": "Hyer's resin",
+            "lamina": [
+                {"weight": 100, "angle": 45, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": -45, "fiber": "Hyer's carbon fiber"}
+            ],
+            "symmetric": true
+        },
+        {
+            "name": "quasi isotropic laminate",
+            "vf": 0.5,
+            "matrix": "Hyer's resin",
+            "lamina": [
+                {"weight": 200, "angle": 0, "fiber": "Hyer's carbon fiber"},
+                {"weight": 200, "angle": 90, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": 45, "fiber": "Hyer's carbon fiber"},
+                {"weight": 100, "angle": -45, "fiber": "Hyer's carbon fiber"}
+            ],
+            "symmetric": true
+        }
+    ]
+}
