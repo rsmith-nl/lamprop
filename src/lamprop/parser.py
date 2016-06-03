@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-02 20:45:49 +0200
+# Last modified: 2016-06-04 00:24:22 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -55,32 +55,25 @@ def fromjson(text, filename):
     if not laminatedata:
         return fdict, rdict, ldict
     for lam in laminatedata:
-        if not _chklam(lam):
-            continue
-        commonvf = lam['vf']
-        mname = lam['matrix']
         try:
+            commonvf = lam['vf']
+            mname = lam['matrix']
             r = rdict[mname]
-        except KeyError:
-            msg.error('unknown resin {}, skipping laminate'.format(mname))
-            continue
-        llist = []
-        for la in lam['lamina']:
-            fname = la['fiber']
-            try:
+            llist = []
+            for la in lam['lamina']:
+                fname = la['fiber']
                 f = fdict[fname]
-            except KeyError:
-                msg.error('unknown fiber {}, skipping lamina'.format(fname))
-                continue
-            vf = commonvf
-            if 'vf' in la:
-                vf = la['vf']
-            llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
-        if llist:
-            if 'symmetric' in lam and lam['symmetric']:
-                llist = llist + list(reversed(llist))
-            lname = lam['name']
-            ldict[lname] = mklaminate(lname, llist)
+                vf = commonvf
+                if 'vf' in la:
+                    vf = la['vf']
+                llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
+            if llist:
+                if 'symmetric' in lam and lam['symmetric']:
+                    llist = llist + list(reversed(llist))
+                lname = lam['name']
+                ldict[lname] = mklaminate(lname, llist)
+        except KeyError as ke:
+            msg.warning('{} not found, skipping laminate'.format(ke))
     return fdict, rdict, ldict
 
 
@@ -102,22 +95,6 @@ def _stripcomments(data, filename):
         return {}
 
 
-def _chklam(ld):
-    """Verify if the ld dict has the required keys
-
-    Arguments:
-        ld: laminate dictionary
-
-    Returns:
-        True or False
-    """
-    for j in ('matrix', 'name', 'vf', 'lamina'):
-        if j not in ld:
-            msg.error('no {} in laminate, skipping'.format(j))
-            return False
-    return True
-
-
 def _find(ident, data, totype, name):
     """Find Fibers or Resins in the data.
 
@@ -130,7 +107,6 @@ def _find(ident, data, totype, name):
     Returns:
         A dictionary keyed to the name of the Fiber or Resin.
     """
-    err = '{} missing {}'
     m = "found {} {} in '{}'"
     found = OrderedDict()
     for f in data[ident]:
@@ -138,8 +114,8 @@ def _find(ident, data, totype, name):
             v = totype(**f)
             if v.name not in found:
                 found[v.name] = v
-        except TypeError as e:
-            msg.warning(err.format(ident[:-1].capitalize(),
-                                   str(e).split(':')[1]))
+        except TypeError as te:
+            miss = str(te).split(':')[1][1:]
+            msg.warning('{} missing {}'.format(ident[:-1], miss))
     msg.info(m.format(len(found), ident, name))
     return found
