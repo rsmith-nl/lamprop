@@ -14,7 +14,7 @@ equations and formulas can be readily found in the available composite
 literature) the calculation is time-consuming and error-prone when done by
 hand.
 
-This program can _not_ calculate the strength of composite laminates;
+This program can *not* calculate the strength of composite laminates;
 because there are many different failure modes, strengths of composite
 laminates cannot readily be calculated from the strengths of the separate
 materials that form the laminate. These strengths have to be determined
@@ -33,7 +33,7 @@ for several reasons;
 
 * Future extensibility. The old format was hard to extend without breaking
   backwards compatibility.
-* More tolerant. This program doesn't care if dictionaries contain extra data,
+* More tolerant. This program doesn't care if objects contain extra data,
   nor do they care about the sequence in which the data is given.
 * Self documenting. The old format is very compact but without comments it it
   hard to understand what the numbers actually mean.
@@ -58,7 +58,7 @@ functionality of ``lamprop``.
 Running ``python3 build.py`` from the root of the source tree will create
 a new zipped file.
 
-On UNIX-like platforms, running ``make`` does that for you.
+On UNIX-like platforms, running ``make`` does the same.
 
 
 Installation
@@ -78,15 +78,18 @@ MS Windows
 
 Note that the installation and configuration of Python on ms-windows is
 somewhat involved and outside the scope of this README! Since this code
-requires the numpy extension, I would suggest to install one od the pre-built
-distributions for ms-windows; Anaconda Python or Enthought Canopy.
+requires the numpy extension, I would suggest to install one of the pre-built
+distributions for ms-windows; `Anaconda Python`_ or `Enthought Canopy`_.
+
+.. _Anaconda Python: https://www.continuum.io/downloads
+.. _Enthought Canopy: https://www.enthought.com/products/canopy/
 
 On ms-windows, run ``python3 build.py`` in the directory where you have
 unpacked the distribution or where you cloned the repository.
 
-Copy the ‘lamprop’ script to a directory in your PATH (e.g.
+Copy the ``lamprop`` script to a directory in your PATH (e.g.
 the ‘Scripts’ subdirectory of your Python install) and rename it to
-‘lamprop.pyz’. You can then call it from a cmd.exe window, if the “.pyz”
+``lamprop.pyz``. You can then call it from a cmd.exe window, if the ``.pyz``
 extension is associated with a filetype, and the filetype has an appropriate
 action defined.  If trying to run lamprop.pyz gives an error, try executing the
 following commands in a cmd.exe window::
