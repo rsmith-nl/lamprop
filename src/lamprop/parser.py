@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-04 00:24:22 +0200
+# Last modified: 2016-06-04 08:14:02 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@ from collections import OrderedDict
 import json
 import logging
 import re
-from .types import Fiber, Resin, mklamina, mklaminate
+from .types import mkfiber, mkresin, mklamina, mklaminate
 
 msg = logging.getLogger('parser')
 
@@ -48,8 +48,8 @@ def fromjson(text, filename):
         name.
     """
     data = _stripcomments(text, filename)
-    fdict = _find('fibers', data, Fiber, filename)
-    rdict = _find('resins', data, Resin, filename)
+    fdict = _find('fibers', data, mkfiber, filename)
+    rdict = _find('resins', data, mkresin, filename)
     ldict = OrderedDict()
     laminatedata = data['laminates']
     if not laminatedata:
@@ -74,6 +74,8 @@ def fromjson(text, filename):
                 ldict[lname] = mklaminate(lname, llist)
         except KeyError as ke:
             msg.warning('{} not found, skipping laminate'.format(ke))
+        except ValueError as ve:
+            msg.warning(ve)
     return fdict, rdict, ldict
 
 
@@ -101,7 +103,7 @@ def _find(ident, data, totype, name):
     Arguments:
         ident: String containing the key to look for
         data: A dictionary to look into
-        totype: A type to cast the data to
+        totype: A function to create a type
         name: The name of the file from which data came.
 
     Returns:
@@ -117,5 +119,7 @@ def _find(ident, data, totype, name):
         except TypeError as te:
             miss = str(te).split(':')[1][1:]
             msg.warning('{} missing {}'.format(ident[:-1], miss))
+        except ValueError as ve:
+            msg.warning('in {}; {}'.format(ident[:-1], ve))
     msg.info(m.format(len(found), ident, name))
     return found

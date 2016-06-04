@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-06-01 23:52:09 +0200
+# Last modified: 2016-06-04 08:04:16 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -92,6 +92,30 @@ Laminate = namedtuple('Laminate', ['name', 'layers', 'thickness',
                                    'wf'])
 
 
+def mkfiber(E1, nu12, alpha1, density, name):
+    E1 = float(E1)
+    nu12 = float(nu12)
+    alpha1 = float(alpha1)
+    density = float(density)
+    if E1 <= 0:
+        raise ValueError('E1 must be > 0')
+    if density <= 0:
+        raise ValueError('fiber density must be > 0')
+    return Fiber(E1, nu12, alpha1, density, name)
+
+
+def mkresin(E, nu, alpha, density, name):
+    E = float(E)
+    nu = float(nu)
+    alpha = float(alpha)
+    density = float(density)
+    if E <= 0:
+        raise ValueError('E must be > 0')
+    if density <= 0:
+        raise ValueError('resin density must be > 0')
+    return Resin(E, nu, alpha, density, name)
+
+
 def mklamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
     """Create a Lamina from the properties of the resin and fiber.
 
@@ -106,8 +130,8 @@ def mklamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
         A Lamina object.
     """
     fiber_weight = float(fiber_weight)
-    if fiber_weight < 0:
-        raise ValueError('fiber_weight cannot be <0!')
+    if fiber_weight <= 0:
+        raise ValueError('fiber weight cannot be <=0!')
     vf = float(vf)
     if 1.0 < vf <= 100.0:
         vf = vf/100.0
@@ -121,7 +145,7 @@ def mklamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
     E2 = 3*resin.E  # Tsai:1992, p. 3-13
     G12 = E2/2  # Tsai:1992, p. 3-13
     nu12 = 0.3  # Tsai:1992, p. 3-13
-    a = math.radians(angle)
+    a = math.radians(float(angle))
     m, n = math.cos(a), math.sin(a)
     # The powers of the sine and cosine are often used later.
     m2 = m*m
@@ -148,8 +172,8 @@ def mklamina(fiber, resin, fiber_weight, angle, vf):  # {{{1
     Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
     density = fiber.density*vf+resin.density*vm
     return Lamina(fiber, resin, fiber_weight, angle, vf, thickness,
-                  resin_weight, E1, E2, G12, nu12, alphax, alphay, alphaxy, Q_11,
-                  Q_12, Q_16, Q_22, Q_26, Q_66, density)
+                  resin_weight, E1, E2, G12, nu12, alphax, alphay, alphaxy,
+                  Q_11, Q_12, Q_16, Q_22, Q_26, Q_66, density)
 
 
 def mklaminate(name, layers):  # {{{1
