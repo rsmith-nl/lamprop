@@ -28,12 +28,37 @@ lamprop.5 respectively. If you install this program on UNIX-like systems with
 'make install', these will be installed automatically. For users of other
 systems, PDF versions are included in the distribution.
 
+As of version 3, the data file format has been changed to JSON. This was done
+for several reasons;
+
+* Future extensibility. The old format was hard to extend without breaking
+  backwards compatibility.
+* More tolerant. This program doesn't care if dictionaries contain extra data,
+  nor do they care about the sequence in which the data is given.
+* Self documenting. The old format is very compact but without comments it it
+  hard to understand what the numbers actually mean.
+* Easier to parse. The parsing function was long and complex. Parsing is now
+  a lot simpler.
+
 
 Requirements
 ------------
 
 This program requires Python (version 3), and the numpy module (version 1.5 or
 later). This version was developed and tested using Python 3.4 and 3.5.
+
+
+Building
+--------
+
+This program is installed as a single file, but it is actually a zipped
+collection of files, including the module that implements most of the
+functionality of ``lamprop``.
+
+Running ``python3 build.py`` from the root of the source tree will create
+a new zipped file.
+
+On UNIX-like platforms, running ``make`` does that for you.
 
 
 Installation
@@ -81,34 +106,4 @@ The line::
 should be changed to::
 
     set "PATH=%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
-
-
-Vim
-+++
-
-In the ``tools`` subdirectory you will find a vim_ syntax file for lamprop
-files. If you want to use it, copy ``lamprop.vim`` to ``~/.vim/syntax``, and
-set the filetype of your lamprop files to ``lamprop``.
-
-.. _vim: http://www.vim.org
-
-You can set the filetype by adding a modeline to your lamprop files:
-
-.. code-block:: vim
-
-    vim:ft=lamprop
-
-This requires that modeline support is enabled. You should have the following
-line in your ``vimrc``:
-
-.. code-block:: vim
-
-    set modeline
-
-Alternatively, if you use the ``.lam`` extension for your lamprop files you
-can use an autocommand in your ``vimrc``;
-
-.. code-block:: vim
-
-    autocmd BufNewFile,BufRead *.lam set filetype=lamprop
 
