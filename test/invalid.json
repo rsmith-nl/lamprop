@@ -1,9 +1,11 @@
 // file: invalid.json
 // vim:fileencoding=utf-8:ft=json
 //
+// Invalid data for testing.
+//
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // Created: 2016-06-04 01:18:52 +0200
-// Last modified: 2016-06-04 01:23:38 +0200
+// Last modified: 2016-06-04 10:01:37 +0200
 {
     "fibers": [
         {"E1": 230000, "nu12": 0.2, "alpha1": -0.54e-6, "density": 1.76,
@@ -18,10 +20,10 @@
     "laminates": [
         {
             "name": "invalid vf",
-            "vf": 2,
+            "vf": 101,
             "matrix": "Hyer's resin",
             "lamina": [
-                {"weight": 0, "angle": 0, "fiber": "Hyer's carbon fiber"}
+                {"weight": 10, "angle": 0, "fiber": "Hyer's carbon fiber"}
             ]
         },
         {

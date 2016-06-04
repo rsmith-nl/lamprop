@@ -1,11 +1,21 @@
+// file: incomplete.json
+// vim:fileencoding=utf-8:ft=json
+//
+// Incomplete data for testing.
+//
+// Author: R.F. Smith <rsmith@xs4all.nl>
+// Created: 2016-06-03 23:56:20 +0200
+// Last modified: 2016-06-04 10:00:15 +0200
 {
     "fibers": [
         {"E1": 230000, "nu12": 0.2, "alpha1": -0.54e-6, "density": 1.76,
          "name": "Hyer's carbon fiber"},
+        // Missing alpha1
         {"E1": 230000, "nu12": 0.2, "density": 1.76, "name": "incomplete"}
     ],
     "resins": [
         {"E": 4620, "nu": 0.36, "alpha": 41.4e-6, "density": 1.1, "name": "Hyer's resin"},
+        // missing alpha and density.
         {"E": 4620, "nu": 0.36, "name": "incomplete"}
     ],
     "laminates": [
@@ -33,18 +43,6 @@
             "name": "missing matrix",
             "vf": 0.5,
             "lamina": [
-                {"weight": 100, "angle": 45, "fiber": "Hyer's carbon fiber"},
-                {"weight": 100, "angle": -45, "fiber": "Hyer's carbon fiber"}
-            ],
-            "symmetric": true
-        },
-        {
-            "name": "quasi isotropic laminate",
-            "vf": 0.5,
-            "matrix": "Hyer's resin",
-            "lamina": [
-                {"weight": 200, "angle": 0, "fiber": "Hyer's carbon fiber"},
-                {"weight": 200, "angle": 90, "fiber": "Hyer's carbon fiber"},
                 {"weight": 100, "angle": 45, "fiber": "Hyer's carbon fiber"},
                 {"weight": 100, "angle": -45, "fiber": "Hyer's carbon fiber"}
             ],
