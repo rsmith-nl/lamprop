@@ -1,9 +1,9 @@
-.\" -*- nroff -*-
 .\" lamprop.1
+.\" vim:ft=nroff
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" $Date$
+.\" Last modified: 2016-06-04 13:47:58 +0200
 .\"
-.Dd March 31, 2015
+.Dd June 4, 2016
 .Dt LAMPROP 1 CON
 .Os
 .Sh NAME
@@ -19,6 +19,7 @@
 .Op Fl m| Fl -mat
 .Op Fl L| Fl -license
 .Op Fl v| Fl -version
+.Op Fl --log Ns = Ns Ar {debug|info|warning|error}
 .Op Ar
 .\" [-h] [-l | -H] [-e] [-m] [-L | -v] [file [file ...]]
 .Sh DESCRIPTION
@@ -59,6 +60,18 @@ Produce the ABD and abd matrices.
 Print the license and exit.
 .It Fl v Fl -version
 Show program's version number and exit
+.It Fl --log
+Determines how much logging information to display.
+.Bl -tag -width "warning" -compact -offset indent
+.It debug
+All messages.
+.It info
+Information, warnings and errors
+.It warning
+Warnings and errors. This is the default setting.
+.It error
+Only report errors.
+.El
 .El
 .Pp
 It reads the composition of the laminates from one or more input files. The
@@ -159,33 +172,11 @@ These values are written to the standard output, in the form specified by the
 output options. The default is plain text output.
 .Sh EXIT STATUS
 .Ex -std
-.Sh DIAGNOSTICS
-.Bl -tag -width foo -compact
-.It Error: cannot read <name>.
-The file
-.Em filename
-could not be opened for reading. This could be e.g because the file doesn't exist
-or if the user doesn't have access rights to the file.
-.It Error: no laminates found in <name>.
-There were no 't:'-lines found in the file.
-.It Error: laminate 'name' on line 'num' already exists. Skipping laminate.
-This error occurs when you try to use the same laminate name more than once
-within a run.
-.It Error: No 'm:'-line after 't:'. Skipping laminate.
-After defining a laminate name, you must specify the resin to be used in this
-laminate.
-.It Error: Unknown resin '<name>' on line <num>. Skipping laminate.
-A resin was used that wasn't previously declared with a 'r:' line. Maybe the
-name was misspelled?
-.It Error: Unknown fiber '<name>' on line <num>. Skipping line.
-A fiber was used that wasn't previously declared with a 'f:' line. Maybe the
-name was misspelled?
-.El
 .Sh COMPATIBILITY
 This version of the
 .Nm
-program requires the Python interpreter (version 2.7) and the Numerical
-Python (numpy) extension (tested with version 1.6 and later).
+program requires the Python interpreter (version 3) and the Numerical
+Python (numpy) extension (tested with version 1.5 and later).
 .Sh SEE ALSO
 .Xr lamprop 5 ,
 .Xr python 1 ,
@@ -256,6 +247,8 @@ maintainable and shorter implementation.
 .Pp
 Additionally, the generally hard to obtain transverse fiber properties were
 replaced with properties derived from the matrix.
+.Pp
+Starting with version 3, this program uses a JSON-based data format.
 .Xr git 1
 revision control system.
 .Sh AUTHOR
@@ -265,7 +258,7 @@ software were written by
 .An Roland Smith Aq rsmith@xs4all.nl .
 .Pp
 The latest version of this program is available at:
-.Lk http://rsmith.home.xs4all.nl/software/
+.Lk https://github.com/rsmith-nl/lamprop
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
@@ -282,12 +275,12 @@ The
 .Nm
 program itself is released under the two-clause BSD license given below;
 .Pp
-Copyright \(co 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright \(co 2011-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 .Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-.Bl -tag -width "foo" -compact
+.Bl -tag -width "2." -compact
 .It 1.
 Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
