@@ -1,7 +1,7 @@
 .\" lamprop.1
 .\" vim:ft=nroff
 .\" By: R.F. Smith <rsmith@xs4all.nl>
-.\" Last modified: 2016-06-05 14:42:34 +0200
+.\" Last modified: 2016-06-05 21:49:36 +0200
 .\"
 .Dd June 4, 2016
 .Dt LAMPROP 1 CON
@@ -171,6 +171,18 @@ moment resultant has units of torque per unit of length (Nmm/mm = N). Both
 .Pp
 These values are written to the standard output, in the form specified by the
 output options. The default is plain text output.
+.Sh IMPLEMENTATION NOTES
+The formulae found in the literature for calculating laminate properties often
+require the Young's modulus of the fiber perpendicular to the length
+direction (
+.Em E2 ).
+In general this value is hard to obtain. The author has only ever
+seen it in academic literature and never in fiber documentation published by producers.
+.Pp
+In earlier versions of
+.Nm ,
+the user had to basically guess this value. Currently, a value derived from
+the modulus of the resin is used, as was first done by Tsai.
 .Sh EXIT STATUS
 .Ex -std
 .Sh COMPATIBILITY
@@ -250,8 +262,6 @@ Additionally, the generally hard to obtain transverse fiber properties were
 replaced with properties derived from the matrix.
 .Pp
 Starting with version 3, this program uses a JSON-based data format.
-.Xr git 1
-revision control system.
 .Sh AUTHOR
 This manual and the
 .Nm
@@ -260,12 +270,6 @@ software were written by
 .Pp
 The latest version of this program is available at:
 .Lk https://github.com/rsmith-nl/lamprop
-.Sh BUGS
-Some of the calculations depend on the perpendicular modulus of the
-fibers. This property is hard to find in product literature for anisotropic
-fibers like carbon and aramid. In
-.Xr lamprop 5
-some values that the author has gathered are reproduced.
 .Sh LICENSE
 To the extent possible under law, Roland Smith has waived all copyright and
 related or neighboring rights to this manual. This work is published from the
