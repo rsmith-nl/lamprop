@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=indent
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2016-05-29 20:29:35 +0200
+# Last modified: 2016-06-05 12:58:05 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,57 +29,147 @@
 
 from .version import __version__
 
+_header = """<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" contents="lamprop output">
+  </head>
+  <body>
+    <!-- outer table -->
+    <table cellpadding="10%">
+      <caption><strong>Properties of {}</strong></caption>
+      <tbody align="center">
+        <tr>
+          <td  align="center" colspan="2">created by {} {}.</td>
+        </tr>"""
+
+_footer = """      </tbody>
+    </table>
+    <hr />
+  </body>
+</html>"""
+
+_epheader = """        <!-- first row; tables -->
+        <tr>
+          <td>
+            <table border="1" frame="hsides"
+              rules="groups" cellpadding="5%">
+              <caption><strong>Laminate stacking</strong></caption>
+              <thead align="right">
+                <tr>
+                  <td>Layer</td><td>weight</td>
+                  <td>angle</td><td>vf</td><td align="left">fiber type</td>
+                </tr>
+                <tr>
+                  <td></td><td>[g/m&sup2;]</td><td>[&deg;]</td><td></td>
+                </tr>
+              </thead>
+              <tbody align="right">"""
+
+_epfooter = """              </tbody>
+            </table>
+          </td>
+          <td>
+            <table border="1" frame="hsides" rules="groups" cellpadding="5%">
+              <caption><strong>Engineering properties</strong></caption>
+              <thead align="right">
+                <tr>
+                  <td>Property</td><td>Value</td>
+                  <td align="left">Dimension</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>v<sub>f</sub></td><td>{:4.2f}</td><td align="left">-</td>
+                </tr>
+                <tr>
+                  <td>w<sub>f</sub></td><td>{:4.2f}</td><td align="left">-</td>
+                </tr>
+                <tr>
+                  <td>thickness</td><td>{:.2g}</td><td>mm</td>
+                </tr>
+                <tr>
+                  <td>density</td><td>{:.3g}</td><td>g/cm&sup3;</td>
+                </tr>
+                <tr>
+                  <td>weight</td><td>{:.0f}</td><td>g/m&sup2;</td>
+                </tr>
+                <tr>
+                  <td>resin</td><td>{:.0f}</td><td>g/m&sup2;</td>
+                </tr>
+              </tbody>
+                <tr>
+                  <td>E<sub>x</sub></td><td>{:8.0f}</td><td>MPa</td>
+                </tr>
+                <tr>
+                  <td>E<sub>y</sub></td><td>{:8.0f}</td><td>MPa</td>
+                </tr>
+                <tr>
+                  <td>G<sub>xy</sub></td><td>{:8.0f}</td><td>MPa</td>
+                </tr>
+                <tr>
+                  <td>&nu;<sub>xy</sub></td><td>{:g}</td><td>-</td>
+                </tr>
+                <tr>
+                  <td>&nu;<sub>yx</sub></td><td>{:g}</td><td>-</td>
+                </tr>
+                <tr>
+                  <td>&alpha;<sub>x</sub></td><td>{:g}</td>
+                  <td>K<sup>-1</sup></td>
+                </tr>
+                <tr>
+                  <td>&alpha;<sub>y</sub></td><td>{:g}</td>
+                  <td>K<sup>-1</sup></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>"""
+
+_mat1 = """        <tr>
+          <td colspan="2">
+            <table border="1" frame="vsides" rules="groups" cellpadding="5%">
+              <caption><strong>{}</strong></caption>
+              <colgroup span="1"></colgroup>
+              <colgroup span="1"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="1"></colgroup>
+              <colgroup span="1"></colgroup>
+              <tbody align="center">
+                <tr>
+                  <td>{}</td>
+                  <td rowspan="6">=</td>"""
+
+_mat2 = """                  <td rowspan="6">&times;</td>
+                  <td>{}</td>
+                </tr>"""
+
+_mat3 = """                <tr>
+                  <td>{}</td>"""
+
+_mat4 = """                  <td>{}</td>
+                </tr>"""
+
+_mat5 = """              </tbody>
+            </table>
+          </td>
+        </tr>"""
+
 
 def out(lam, eng, mat):
-    '''HTML main output function.'''
-    print('<!DOCTYPE html>')
-    print('<html lang="en-US">')
-    print('  <head>')
-    print('    <meta charset="UTF-8">')
-    print('    <meta name="description" contents="lamprop output">')
-    print('  </head>')
-    print('  <body>')
-    print('    <!-- outer table -->')
-    print('    <table cellpadding="10%">')
-    s = "      <caption><strong>Properties of {}</strong></caption>"
-    print(s.format(lam.name))
-    print('      <tbody align="center">')
-    print('        <tr>')
-    s = '          <td  align="center" colspan="2">created by {} {}.</td>'
-    print(s.format('lamprop', __version__))
-    print('        </tr>')
+    """HTML main output function."""
+    print(_header.format(lam.name, 'lamprop', __version__))
     if eng:
         _engprop(lam)
     if mat:
         _matrices(lam)
-    print('      </tbody>')
-    print('    </table>')
-    print('    <hr />')
-    print('  </body>')
-    print('</html>')
+    print(_footer)
 
 
 def _engprop(l):
     '''Prints the engineering properties as a HTML table.'''
-    print('        <!-- first row; tables -->')
-    print('        <tr>')
-    print('          <td>')
-    print('            <table border="1" frame="hsides"')
-    print('              rules="groups" cellpadding="5%">')
-    print('              '
-          '<caption><strong>Laminate stacking</strong></caption>')
-    print('              <thead align="right">')
-    print('                <tr>')
-    print('                  <td>Layer</td><td>weight</td>')
-    print('                  <td>angle</td><td>vf</td>'
-          '<td align="left">fiber type</td>')
-    print('                </tr>')
-    print('                <tr>')
-    print('                  <td></td><td>[g/m&sup2;]</td>'
-          '<td>[&deg;]</td><td>[%]</td>')
-    print('                </tr>')
-    print('              </thead>')
-    print('              <tbody align="right">')
+    print(_epheader)
     for ln, la in enumerate(l.layers, start=1):
         print('                <tr>')
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
@@ -87,91 +177,10 @@ def _engprop(l):
         s = '                  <td>{:4.2f}</td><td align="left">{}</td>'
         print(s.format(la.vf, la.fiber.name))
         print('                </tr>')
-    print('              </tbody>')
-    print('            </table>')
-    print('          </td>')
-    print('          <td>')
-    print('            <table border="1" frame="hsides"'
-          ' rules="groups" cellpadding="5%">')
-    print('              <caption><strong>Engineering properties '
-          '</strong></caption>')
-    print('              <thead align="right">')
-    print('                <tr>')
-    print('                  <td>Property</td><td>Value</td>')
-    print('                  <td align="left">Dimension</td>')
-    print('                </tr>')
-    print('              </thead>')
-    print('              <tbody align="right">')
-    print('                <tr>')
-    s = "                  <td>v<sub>f</sub></td>"\
-        '<td>{:4.2f}</td><td align="left">-</td>'
-    print(s.format(l.vf))
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>w<sub>f</sub></td>"\
-        '<td>{:4.2f}</td><td align="left">-</td>'
-    print(s.format(l.wf))
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>thickness</td><td>{:.3g}</td>"
-    print(s.format(l.thickness))
-    print('                  <td align="left">mm</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>density</td><td>{:.3g}</td>"
-    print(s.format(l.density))
-    print('                  <td align="left">g/cm&sup3;</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>weight</td><td>{:.0f}</td>"
-    print(s.format(l.fiber_weight+l.resin_weight, l.resin_weight))
-    print('                  <td align="left">g/m&sup2;</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>resin</td><td>{:.0f}</td>"
-    print(s.format(l.resin_weight))
-    print('                  <td align="left">g/m&sup2;</td>')
-    print('                </tr>')
-    print('              </tbody>')
-    print('                <tr>')
-    s = "                  <td>E<sub>x</sub></td><td>{:8.0f}</td>"
-    print(s.format(l.Ex))
-    print('                  <td align="left">MPa</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>E<sub>y</sub></td><td>{:8.0f}</td>"
-    print(s.format(l.Ey))
-    print('                  <td align="left">MPa</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>G<sub>xy</sub></td><td>{:8.0f}</td>"
-    print(s.format(l.Gxy))
-    print('                  <td align="left">MPa</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>&nu;<sub>xy</sub></td><td>{:g}</td>"
-    print(s.format(l.nuxy))
-    print('                  <td align="left">-</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>&nu;<sub>yx</sub></td><td>{:g}</td>"
-    print(s.format(l.nuyx))
-    print('                  <td align="left">-</td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>&alpha;<sub>x</sub></td><td>{:g}</td>"
-    print(s.format(l.alphax))
-    print('                  <td align="left">K<sup>-1</sup></td>')
-    print('                </tr>')
-    print('                <tr>')
-    s = "                  <td>&alpha;<sub>y</sub></td><td>{:g}</td>"
-    print(s.format(l.alphay))
-    print('                  <td align="left">K<sup>-1</sup></td>')
-    print('                </tr>')
-    print('              </tbody>')
-    print('            </table>')
-    print('          </td>')
-    print('        </tr>')
+    print(_epfooter.format(l.vf, l.wf, l.thickness, l.density,
+                           l.fiber_weight+l.resin_weight, l.resin_weight,
+                           l.Ex, l.Ey, l.Gxy, l.nuxy, l.nuyx, l.alphax,
+                           l.alphay))
 
 
 def _matrices(l):
@@ -195,63 +204,19 @@ def _matrices(l):
     dstr = ["&epsilon;<sub>x</sub>", "&epsilon;<sub>y</sub>",
             "&gamma;<sub>xy</sub>", "&kappa;<sub>x</sub>",
             "&kappa;<sub>y</sub>", "&kappa;<sub>xy</sub>"]
-    print('        <tr>')
-    print('          <!-- second row, stiffness or ABD matrix -->')
-    print('          <td colspan="2">')
-    print('            <table border="1" frame="vsides" '
-          'rules="groups" cellpadding="5%%">')
-    print('              <caption><strong>Stiffness (ABD) matrix</strong>'
-          '</caption>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="6"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <tbody align="center">')
-    print('                <tr>')
-    print('                  <td>{}</td>'.format(fstr[0]))
-    print('                  <td rowspan="6">=</td>')
+    print(_mat1.format('Stiffness (ABD) matrix', fstr[0]))
     pr(l.ABD, 0)
-    print('                  <td rowspan="6">&times;</td>')
-    print('                  <td>{}</td>'.format(dstr[0]))
-    print('                </tr>')
+    print(_mat2.format(dstr[0]))
     for n in range(1, 6):
-        print('                <tr>')
-        print('                  <td>{}</td>'.format(fstr[n]))
+        print(_mat3.format(fstr[n]))
         pr(l.ABD, n)
-        print('                  <td>{}</td>'.format(dstr[n]))
-        print('                </tr>')
-    print('              </tbody>')
-    print('            </table>')
-    print('          </td>')
-    print('        </tr>')
-    print('        <tr>')
-    print('          <!-- third row, compliance or abd matrix -->')
-    print('          <td colspan="2">')
-    print('            <table border="1" frame="vsides" '
-          'rules="groups" cellpadding="5%">')
-    print('              <caption><strong>Compliance (abd) matrix</strong>'
-          '</caption>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="6"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <colgroup span="1"></colgroup>')
-    print('              <tbody align="center">')
-    print('                <tr>')
-    print('                  <td>{}</td>'.format(dstr[0]))
-    print('                  <td rowspan="6">=</td>')
+        print(_mat4.format(dstr[n]))
+    print(_mat5)
+    print(_mat1.format('Compliance (abd) matrix', dstr[0]))
     pr(l.abd, 0)
-    print('                  <td rowspan="6">&times;</td>')
-    print('                  <td>{}</td>'.format(fstr[0]))
-    print('                </tr>')
+    print(_mat2.format(fstr[0]))
     for n in range(1, 6):
-        print('                <tr>')
-        print('                  <td>{}</td>'.format(dstr[n]))
+        print(_mat3.format(dstr[n]))
         pr(l.abd, n)
-        print('                  <td>{}</td>'.format(fstr[n]))
-        print('                </tr>')
-    print('              </tbody>')
-    print('            </table>')
-    print('          </td>')
-    print('        </tr>')
+        print(_mat4.format(fstr[n]))
+    print(_mat5)
