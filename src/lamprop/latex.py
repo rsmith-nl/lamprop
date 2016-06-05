@@ -1,8 +1,8 @@
 # file: latex.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2016-05-29 20:27:10 +0200
+# Last modified: 2016-06-05 14:28:32 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
 from .version import __version__
 
 
-def out(lam, eng, mat):
+def out(lam, eng, mat):  # {{{1
     '''LaTeX main output function.'''
     print("\\begin{table}[!htbp]")
     print("  \\renewcommand{\\arraystretch}{1.2}")
@@ -47,7 +47,7 @@ def out(lam, eng, mat):
     print("\\end{table}\n")
 
 
-def _engprop(l):
+def _engprop(l):  # {{{1
     '''Prints the engineering properties as a LaTeX table.'''
     print("    \\begin{tabular}[t]{rcrrl}")
     print("      \\multicolumn{4}{c}{\\small"
@@ -89,7 +89,7 @@ def _engprop(l):
     print("    \\end{tabular}")
 
 
-def _matrices(l):
+def _matrices(l):  # {{{1
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
     def pm(mat):
         """Print the contents of a matrix.

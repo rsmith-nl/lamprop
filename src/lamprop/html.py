@@ -1,8 +1,8 @@
 # file: html.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2016-06-05 14:20:56 +0200
+# Last modified: 2016-06-05 14:34:17 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -81,7 +81,7 @@ _mat4 = """<td>{}</td></tr>"""
 _mat5 = """</tbody></table></td></tr>"""
 
 
-def out(lam, eng, mat):
+def out(lam, eng, mat):  # {{{1
     """HTML main output function."""
     print(_header.format(lam.name, 'lamprop', __version__))
     if eng:
@@ -91,7 +91,7 @@ def out(lam, eng, mat):
     print(_footer)
 
 
-def _engprop(l):
+def _engprop(l):  # {{{1
     '''Prints the engineering properties as a HTML table.'''
     print(_epheader)
     for ln, la in enumerate(l.layers, start=1):
@@ -105,7 +105,7 @@ def _engprop(l):
                            l.alphay))
 
 
-def _matrices(l):
+def _matrices(l):  # {{{1
     '''Prints the ABD and abd matrices as HTML tables.'''
     def pr(mat, row):
         """Print a row from a matrix"""
