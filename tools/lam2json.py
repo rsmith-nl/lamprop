@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-06 22:21:33 +0200
-# Last modified: 2016-06-07 20:43:36 +0200
+# Last modified: 2016-06-07 23:47:48 +0200
 
 """Script to convert a lamprop version 2 `lam` file to version 3 JSON
 format."""
@@ -18,6 +18,7 @@ import re
 import sys
 
 __version__ = '0.2.0'
+es = 'invalid line {} "{}" skipped'
 
 
 def main(argv):
@@ -69,63 +70,37 @@ def process_arguments(argv):
 
 def process_file(path):
     T, M, L = 1, 2, 3
-    es = 'invalid line "{}" skipped'
     out = Od()
     with open(path) as infile:
         lines = infile.readlines()
     # Only directives
-    lines = [ln.strip() for ln in lines if len(ln) > 1 and ln[1] == ':' and
-             ln[0] in 'frtmls']
-    fl = [ln for ln in lines if ln[0] is 'f']
-    out['fibers'] = []
-    for ln in fl:
-        try:
-            _, E1, nu12, alpha1, density, name = ln.split(maxsplit=5)
-            newf = Od()
-            newf["E1"] = float(E1)
-            newf["nu12"] = float(nu12)
-            newf["alpha1"] = float(alpha1)
-            newf["density"] = float(density)
-            newf["name"] = name
-            out['fibers'].append(newf)
-        except ValueError:
-            logging.error(es.format(ln))
-    rl = [ln for ln in lines if ln[0] is 'r']
-    out['resins'] = []
-    for ln in rl:
-        try:
-            _, E, nu, alpha, density, name = ln.split(maxsplit=5)
-            newr = Od()
-            newr["E"] = float(E1)
-            newr["nu"] = float(nu)
-            newr["alpha"] = float(alpha)
-            newr["density"] = float(density)
-            newr["name"] = name
-            out['resins'].append(newr)
-        except ValueError:
-            logging.error(es.format(ln))
+    lines = [(num, ln.strip()) for num, ln in enumerate(lines, start=1)
+             if len(ln) > 1 and ln[1] == ':' and ln[0] in 'frtmls']
+    out['fibers'] = findfibers(lines)
+    out['resins'] = findresins(lines)
     state = T
     out['laminates'] = []
     laminate = Od()
-    for ln in lines:
+    for num, ln in lines:
+        comb = (state, ln[0])
         try:
-            if state == L and ln[0] == 't':
+            if comb == (L, 't'):
                 out['laminates'].append(laminate)
                 state = T
                 # no continue!
-            if state == T and ln[0] == 't':
+            if comb == (T, 't'):
                 laminate = Od()
                 laminate['name'] = ln.split(maxsplit=1)[1]
                 state = M
                 continue
-            if state == M and ln[0] == 'm':
+            if comb == (M, 'm'):
                 _, vf, rname = ln.split(maxsplit=2)
                 laminate['vf'] = float(vf)
                 laminate['matrix'] = rname
                 laminate['lamina'] = []
                 state = L
                 continue
-            if state == L and ln[0] == 'l':
+            if comb == (L, 'l'):
                 _, weight, angle, *rest = ln.split(maxsplit=4)
                 lamina = Od()
                 lamina['weight'] = float(weight)
@@ -138,15 +113,53 @@ def process_file(path):
                 lamina['fiber'] = ' '.join(rest)
                 laminate['lamina'].append(lamina)
                 continue
-            if state == L and ln[0] == 's':
+            if comb == (L, 's'):
                 laminate['symmetric'] = True
                 out['laminates'].append(laminate)
                 state = T
+                continue
+            logging.error('unexpected line {} "{}"'.format(num, ln))
         except ValueError:
             logging.error(es.format(ln))
     if 'lamina' in laminate:
         out['laminates'].append(laminate)
     return json.dumps(out, indent=2)
+
+
+def findfibers(lines):
+    fl = [ln for ln in lines if ln[1][0] is 'f']
+    rv = []
+    for num, ln in fl:
+        try:
+            _, E1, nu12, alpha1, density, name = ln.split(maxsplit=5)
+            newf = Od()
+            newf["E1"] = float(E1)
+            newf["nu12"] = float(nu12)
+            newf["alpha1"] = float(alpha1)
+            newf["density"] = float(density)
+            newf["name"] = name
+            rv.append(newf)
+        except ValueError:
+            logging.error(es.format(num, ln))
+    return rv
+
+
+def findresins(lines):
+    rl = [ln for ln in lines if ln[1][0] is 'r']
+    rv = []
+    for num, ln in rl:
+        try:
+            _, E, nu, alpha, density, name = ln.split(maxsplit=5)
+            newr = Od()
+            newr["E"] = float(E)
+            newr["nu"] = float(nu)
+            newr["alpha"] = float(alpha)
+            newr["density"] = float(density)
+            newr["name"] = name
+            rv.append(newr)
+        except ValueError:
+            logging.error(es.format(num, ln))
+    return rv
 
 
 if __name__ == '__main__':
