@@ -20,7 +20,6 @@ t: unknown_fiber
 m: 0.5 Hyer's resin
 l: 100  0 foo
 l: 100 90 bar
-s:
 
 t: unknown_resin
 m: 0.5 spam
