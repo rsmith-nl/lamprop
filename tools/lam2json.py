@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-06 22:21:33 +0200
-# Last modified: 2016-06-07 23:47:48 +0200
+# Last modified: 2016-06-08 18:00:15 +0200
 
 """Script to convert a lamprop version 2 `lam` file to version 3 JSON
 format."""
@@ -81,7 +81,7 @@ def process_file(path):
     state = T
     out['laminates'] = []
     laminate = Od()
-    for num, ln in lines:
+    for num, ln in [a for a in lines if a[1][0] in 'tmls']:
         comb = (state, ln[0])
         try:
             if comb == (L, 't'):
