@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-07 22:19:24 +0200
+# Last modified: 2016-06-08 18:06:40 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -70,6 +70,7 @@ def parse(filename):
             if state == L and ln[0] == 't':
                 laminates.append(laminate(name, llist))
                 state = T
+                llist = None
                 # no continue!
             if state == T and ln[0] == 't':
                 vf, matrix = None, None
@@ -99,11 +100,12 @@ def parse(filename):
                 llist = llist + list(reversed(llist))
                 laminates.append(laminate(name, llist))
                 state = T
+                llist = None
         except ValueError:
             logging.error('invalid line {} "{}" skipped'.format(num, ln))
         except KeyError:
             logging.error('line {} unknown "{}"'.format(num, ln))
-    if len(llist):
+    if llist:
         laminates.append(laminate(name, llist))
     return laminates
 
