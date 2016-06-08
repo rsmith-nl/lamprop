@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-08 21:59:32 +0200
+# Last modified: 2016-06-08 23:01:42 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -133,28 +133,30 @@ def _f(lines):
     Returns:
         A list of types.Fiber
     """
-    fl = [(ln, num) for num, ln in lines if ln[0] is 'f']
+    fl = [(num, ln) for num, ln in lines if ln[0] is 'f']
     rv = []
     names = []
-    for ln, num in fl:
+    for num, ln in fl:
         test = ln.split()
         try:
             if _num(test[5]):  # old format
-                msg.info("old style fiber on line {}".format(number))
+                msg.info("old style fiber on line {}".format(num))
                 items = ln.split(None, 8)
                 indices = [1, 3, 5, 7, 8]
             else:
                 items = ln.split(None, 5)
                 indices = [1, 2, 3, 4, 5]
-            values = [float(items[j]) for j in indices[:4]]
+            E1, nu12, a1, rho = [float(items[j]) for j in indices[:4]]
+            if E1 <= 0:
+                raise ValueError('E1 must be >0')
+            if rho <= 0:
+                raise ValueError('fiber density must be >0')
             name = items[indices[4]]
-            values.append(items[indices[4]])
-            values.append(num)
         except (ValueError, IndexError) as e:
-            msg.error('parsing a fiber on line {}; {}.'.format(number, e))
+            msg.error('parsing a fiber on line {}; {}.'.format(num, e))
             continue
         if name not in names:
-            rv.append(Fiber(*values))
+            rv.append(Fiber(E1, nu12, a1, rho, name, num))
             names.append(name)
         else:
             s = "fiber '{}' at line {} is a duplicate, will be ignored."
@@ -171,21 +173,25 @@ def _r(lines):
     Returns:
         A list of types.Resin
     """
-    rl = [(ln, num) for num, ln in lines if ln[0] is 'r']
+    rl = [(num, ln) for num, ln in lines if ln[0] is 'r']
     rv = []
     names = []
-    for ln, num in rl:
+    for num, ln in rl:
         items = ln.split(None, 5)
         try:
-            values = [float(j) for j in items[1:5]]
+            E, nu, a, rho = [float(j) for j in items[1:5]]
+            if E <= 0:
+                raise ValueError('E must be >0')
+            if nu <= -1 or nu >= 0.5:
+                raise ValueError('resin Poisson constant <-1 or >0.5')
+            if rho <= 0:
+                raise ValueError('resin density must be >0')
             name = items[5]
-            values.append(name)
-            values.append(num)
         except ValueError as e:
             msg.error('parsing a resin on line {}; {}.'.format(num, e))
-            return None
+            continue
         if name not in names:
-            rv.append(Resin(*values))
+            rv.append(Resin(E, nu, a, rho, name, num))
             names.append(name)
         else:
             s = "resin '{}' at line {} is a duplicate, will be ignored."
