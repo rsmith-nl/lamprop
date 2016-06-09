@@ -3,18 +3,13 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2016-06-08 22:09:07 +0200
+# Last modified: 2016-06-09 22:29:24 +0200
 
-"""Test for types.py.
+"""Test for lamprop types"""
 
-Run with: nosetests-3.5 -v test_types.py
-"""
-
-from shutil import rmtree
-import os
 import sys
 
-sys.path.insert(1, '../src')
+sys.path.insert(1, 'src')
 
 from lamprop.types import Fiber, Resin, lamina, laminate  # noqa
 
@@ -101,7 +96,3 @@ def test_qi():  # {{{1
     assert 0.20992 < pw.νyx < 0.21012
     assert 5.521e-06 < pw.αx < 5.541e-06
     assert 5.521e-06 < pw.αy < 5.541e-06
-
-
-def teardown():  # {{{1
-    rmtree('__pycache__')

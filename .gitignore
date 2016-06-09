@@ -6,6 +6,7 @@ lamprop
 build/
 dist/
 .ropeproject/
+.cache/
 backup-*.tar.gz
 lamprop.?.ps
 lamprop.?.pdf

@@ -1,20 +1,16 @@
 # file: test_parser.py
-# vim:fileencoding=utf-8:ft=python:fdm=markers
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2016-06-08 22:59:41 +0200
+# Last modified: 2016-06-09 22:28:52 +0200
 
 
-"""Test for parser.py.
+"""Test for lamprop parser."""
 
-Run with: nosetests-3.5 -v test_types.py
-"""
-
-from shutil import rmtree
 import sys
 
-sys.path.insert(1, '../src')
+sys.path.insert(1, 'src')
 
 from lamprop.parser import _f, _r  # noqa
 
@@ -51,7 +47,3 @@ def test_bad_resins():  # {{{1
                   (4, 'r: 4620 0.2 41.4e-6 -0.1 sgfout')]
     resins = _r(directives)
     assert len(resins) == 0
-
-
-def teardown():  # {{{1
-    rmtree('__pycache__')
