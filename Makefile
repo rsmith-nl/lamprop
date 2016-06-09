@@ -50,4 +50,4 @@ refresh::
 	.git/hooks/post-commit
 
 tests::
-	cd test; nosetests-3.5 -v
+	nosetests-3.5 -v -w test
