@@ -1,28 +1,29 @@
 # file: test_types.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2016-06-02 11:25:20 +0200
+# Last modified: 2016-06-09 21:29:37 +0200
 
-"""Test for lptypes.py.
+"""Test for the lamprop types."""
 
-Run with: nosetests-3.5 -v test_types.py
-"""
-
-from shutil import rmtree
-import os
+import logging
 import sys
 
-sys.path.insert(1, '../src')
+sys.path.insert(1, 'src')
 
-from lamprop.types import Fiber, Resin, mklamina, mklaminate
+from lamprop.types import Fiber, Resin, mklamina, mklaminate  # noqa
 
 hf = Fiber(233000, 0.2, -0.54e-6, 1.76, "Hyer's carbon fiber")
 hr = Resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin")
 
 
-def test_lamina():
+def setup():  # {{{1
+    logging.basicConfig(level=logging.WARNING,
+                        format='%(levelname)s: %(message)s')
+
+
+def test_lamina():  # {{{1
     f = Fiber(230000, 0.30, -0.41e-6, 1.76, 'T300')
     r = Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908')
     l = mklamina(f, r, 100, 0, 0.5)
@@ -34,7 +35,7 @@ def test_lamina():
              0.0, 4350.0))
 
 
-def test_ud():
+def test_ud():  # {{{1
     l = mklamina(hf, hr, 100, 0, 0.5)
     ud = mklaminate('ud', [l, l, l, l])
     assert 0.45 < ud.thickness < 0.46
@@ -50,7 +51,7 @@ def test_ud():
     assert 4.13e-5 < ud.alphay < 4.15e-5
 
 
-def test_plain_weave():
+def test_plain_weave():  # {{{1
     A = mklamina(hf, hr, 100, 0, 0.5)
     B = mklamina(hf, hr, 100, 90, 0.5)
     pw = mklaminate('pw', [A, B, B, A])
@@ -67,7 +68,7 @@ def test_plain_weave():
     assert 5.521e-06 < pw.alphay < 5.541e-06
 
 
-def test_pm45():
+def test_pm45():  # {{{1
     A = mklamina(hf, hr, 100, 45, 0.5)
     B = mklamina(hf, hr, 100, -45, 0.5)
     pw = mklaminate('pw', [A, B, B, A])
@@ -84,7 +85,7 @@ def test_pm45():
     assert 5.521e-06 < pw.alphay < 5.541e-06
 
 
-def test_qi():
+def test_qi():  # {{{1
     A = mklamina(hf, hr, 200, 0, 0.5)
     B = mklamina(hf, hr, 200, 90, 0.5)
     C = mklamina(hf, hr, 100, 45, 0.5)
@@ -101,7 +102,3 @@ def test_qi():
     assert 0.20992 < pw.nuyx < 0.21012
     assert 5.521e-06 < pw.alphax < 5.541e-06
     assert 5.521e-06 < pw.alphay < 5.541e-06
-
-
-def teardown():
-    rmtree('__pycache__')

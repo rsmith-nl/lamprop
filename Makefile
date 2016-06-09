@@ -50,4 +50,4 @@ refresh::
 	.git/hooks/post-commit
 
 tests::
-	nosetests-3.5 -v -w test
+	py.test-3.5 -v .

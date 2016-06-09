@@ -3,21 +3,23 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-09 19:44:58 +0200
-# Last modified: 2016-06-09 20:36:12 +0200
+# Last modified: 2016-06-09 21:29:24 +0200
 
-"""Tests for the lamprop parser.
+"""Tests for the lamprop parser."""
 
-Run with: nosetests-3.5 -v test_parser.py
-"""
-
-from shutil import rmtree
 import json
+import logging
 import sys
 
-sys.path.insert(1, '../src')
+sys.path.insert(1, 'src')
 
-from lamprop.types import mkresin, mkfiber
-from lamprop.parser import _find
+from lamprop.types import mkresin, mkfiber  # noqa
+from lamprop.parser import _find  # noqa
+
+
+def setup():  # {{{1
+    logging.basicConfig(level=logging.WARNING,
+                        format='%(levelname)s: %(message)s')
 
 
 def test_good_resins():  # {{{1
@@ -68,7 +70,3 @@ def test_bad_fibers():  # {{{1
     assert len(read['fibers']) == 3
     fibers = _find('fibers',  read, mkfiber, 'data')
     assert len(fibers) == 0
-
-
-def teardown():  # {{{1
-    rmtree('__pycache__')

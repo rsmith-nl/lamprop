@@ -5,6 +5,7 @@ __pycache__
 lamprop
 build/
 dist/
+.cache/
 .ropeproject/
 backup-*.tar.gz
 lamprop.?.ps
