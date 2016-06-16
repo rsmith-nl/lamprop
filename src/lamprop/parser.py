@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-04 08:14:02 +0200
+# Last modified: 2016-06-16 23:47:37 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@ from collections import OrderedDict
 import json
 import logging
 import re
-from .types import mkfiber, mkresin, mklamina, mklaminate
+from .types import Fiber, Resin, Lamina, Laminate
 
 msg = logging.getLogger('parser')
 
@@ -48,8 +48,8 @@ def fromjson(text, filename):
         name.
     """
     data = _stripcomments(text, filename)
-    fdict = _find('fibers', data, mkfiber, filename)
-    rdict = _find('resins', data, mkresin, filename)
+    fdict = _find('fibers', data, Fiber, filename)
+    rdict = _find('resins', data, Resin, filename)
     ldict = OrderedDict()
     laminatedata = data['laminates']
     if not laminatedata:
@@ -66,12 +66,12 @@ def fromjson(text, filename):
                 vf = commonvf
                 if 'vf' in la:
                     vf = la['vf']
-                llist.append(mklamina(f, r, la['weight'], la['angle'], vf))
+                llist.append(Lamina(f, r, la['weight'], la['angle'], vf))
             if llist:
                 if 'symmetric' in lam and lam['symmetric']:
                     llist = llist + list(reversed(llist))
                 lname = lam['name']
-                ldict[lname] = mklaminate(lname, llist)
+                ldict[lname] = Laminate(lname, llist)
         except KeyError as ke:
             msg.warning('{} not found, skipping laminate'.format(ke))
         except ValueError as ve:
