@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-06-16 23:50:49 +0200
+# Last modified: 2016-06-18 08:07:38 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -78,6 +78,17 @@ import numpy as np
 
 
 class Fiber(tuple):
+    """
+    Immutable object representing the properties of a fiber.
+
+    Arguments/properties of a Fiber:
+        E1: Young's modulus in the direction of the fiber in MPa.
+            Must be >0.
+        nu12: Poisson's constant between length and radial directions.
+        alpha1: CTE in the length of the fiber in K⁻¹
+        density: Specific gravity of the fiber in g/cm³. Must be >0.
+        name: String containing the name of the fiber. Must not be empty.
+    """
     def __new__(self, E1, nu12, alpha1, density, name):
         E1 = float(E1)
         nu12 = float(nu12)
@@ -99,6 +110,16 @@ Fiber.name = property(operator.itemgetter(4))
 
 
 class Resin(tuple):
+    """
+    Immutable object representing the properties of a matrix.
+
+    Arguments/properties of a Resin:
+        E: Young's modulus in MPa. Must be >0.
+        nu: Poisson's constant.
+        alpha: CTE in K⁻¹
+        density: Specific gravity of the resin in g/cm³. Must be >0.
+        name: String containing the name of the resin. Must not be empty.
+    """
     def __new__(self, E, nu, alpha, density, name):
         E = float(E)
         nu = float(nu)
@@ -120,6 +141,37 @@ Resin.name = property(operator.itemgetter(4))
 
 
 class Lamina(tuple):
+    """
+    Immutable object representing the properties of a unidirectional
+    composite layer.
+
+    Arguments/properties of a Lamina:
+        fiber: The Fiber in the lamina
+        resin: The Resin binding the lamina
+        fiber_weight: The amount of Fibers in g/m².
+        angle: Orientation of the layer in degrees counterclockwise from the
+               x-axis.
+        vf: Fiber volume fraction.
+
+    Additional properties:
+        thickness: Thickness of the lamina in mm.
+        resin_weight: The amount of Resin in g/m².
+        E1: Young's modulus of the lamina in the fiber direction in MPa.
+        E2: Young's modulus of the lamina perpendicular to the fiber direction
+            in MPa.
+        G12: In-plane shear modulus in MPa.
+        nu12: in-plane Poisson's constant.
+        alphax: CTE in x direction in K⁻¹.
+        alphay: CTE in y direction in K⁻¹.
+        alphaxy: CTE in shear.
+        Q11: Lamina stiffness matrix component.
+        Q12: Lamina stiffness matrix component.
+        Q16: Lamina stiffness matrix component.
+        Q22: Lamina stiffness matrix component.
+        Q26: Lamina stiffness matrix component.
+        Q66: Lamina stiffness matrix component.
+        density: Specific gravity of the lamina in g/cm³.
+    """
     def __new__(self, fiber, resin, fiber_weight, angle, vf):
         fiber_weight = float(fiber_weight)
         if fiber_weight <= 0:
@@ -193,9 +245,38 @@ Lamina.density = property(operator.itemgetter(20))
 
 
 class Laminate(tuple):
+    """
+    Immutable object containing the properties of a fiber reinforced laminate.
+
+    Arguments/properties of a laminate:
+        name: A non-empty string containing the name of the laminate
+        layers: A sequence of Lamina (will a tuple as a property).
+
+    Additional properties:
+        thickness: Thickness of the laminate in mm.
+        fiber_weight: Total area weight of fibers in g/m².
+        density: Specific gravity of the laminate in g/cm³.
+        vf: Average fiber volume fraction.
+        resin_weight: Total area weight of resin in g/m².
+        ABD: Stiffness matrix.
+        abd: Compliance matrix.
+        Ex: Young's modulus in the x-direction.
+        Ey: Young's modulus in the y-direction.
+        Gxy: In-plane shear modulus.
+        nuxy: Poisson constant.
+        nuyx: Poisson constant.
+        alphax: CTE in x-direction.
+        alphay: CTE in y-direction.
+        wf: Fiber weight fraction.
+    """
     def __new__(self, name, layers):
         if not layers:
-            raise ValueError('No layers!')
+            raise ValueError('no layers in the laminate')
+        if not isinstance(name, str):
+            raise ValueError('the name of a laminate must be a string')
+        if len(name) == 0:
+            raise ValueError('the length of the name of a laminate must be >0')
+        layers = tuple(layers)
         thickness = sum([l.thickness for l in layers])
         fw = sum([l.fiber_weight for l in layers])
         density = sum([l.density*l.thickness for l in layers])/thickness
@@ -288,7 +369,7 @@ class Laminate(tuple):
         # Hyer:1998, p. 451, (11.86)
         alphax = abd[0, 0]*Ntx + abd[0, 1]*Nty + abd[0, 2]*Ntxy
         alphay = abd[1, 0]*Ntx + abd[1, 1]*Nty + abd[1, 2]*Ntxy
-        return tuple.__new__(Laminate, (name, tuple(layers), thickness, fw,
+        return tuple.__new__(Laminate, (name, layers, thickness, fw,
                                         density, vf, rw, ABD, abd, Ex, Ey, Gxy,
                                         nuxy, nuyx, alphax, alphay, wf))
 
