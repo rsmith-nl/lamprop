@@ -3,7 +3,7 @@
 //
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // Created: 2016-06-02 14:30:49 +0200
-// Last modified: 2016-06-02 16:07:48 +0200
+// Last modified: 2016-06-18 08:10:03 +0200
 {
     "fibers": [
         {"E1": 230000, "nu12": 0.2, "alpha1": -0.41e-6, "density": 1.76,
@@ -19,6 +19,16 @@
             "vf": 0.56,
             "matrix": "EPR 4908",
             "symmetric": false,
+            "lamina": [
+                {"weight": 122.5, "angle": 0, "fiber": "T300"},
+                {"weight": 122.5, "angle": 90, "fiber": "T300"}
+            ]
+         },
+        {
+            "name": "twill245-symmetric",
+            "vf": 0.56,
+            "matrix": "EPR 4908",
+            "symmetric": true,
             "lamina": [
                 {"weight": 122.5, "angle": 0, "fiber": "T300"},
                 {"weight": 122.5, "angle": 90, "fiber": "T300"}
