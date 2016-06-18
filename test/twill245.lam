@@ -1,8 +1,12 @@
-Time-stamp: <2011-06-17 10:35:05 rsmith>
+# file: twill245.lam
+# vim:fileencoding=utf-8:ft=lamprop
+#
+# Author: R.F. Smith <rsmith@xs4all.nl>
+# Last modified: 2016-06-18 13:37:28 +0200
 
 soorten vezels
-   E1         E2       v12  G12   alpha1   alpha2 rho  naam
-f: 230000 23000 0.20 8960  -0.41e-6 9e-6    1.76 T300
+   E1     v12  alpha1   rho  naam
+f: 230000 0.20 -0.41e-6 1.76 T300
 
 
 soorten hars
@@ -14,4 +18,8 @@ m: 0.56 Epikote04908
 l: 122.5 0  T300
 l: 122.5 90 T300
 
-
+t: twill245-symmetric
+m: 0.56 Epikote04908
+l: 122.5 0  T300
+l: 122.5 90 T300
+s:
