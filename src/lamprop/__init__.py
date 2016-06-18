@@ -1,9 +1,9 @@
 # file: __init__.py
 # vim:fileencoding=utf-8:ft=python
 #
-# Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2015,2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2015-05-16 18:16:53 +0200
+# Last modified: 2016-06-18 12:50:42 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,5 +32,5 @@ from .rtf import footer as rtf_footer
 from .rtf import header as rtf_header
 from .rtf import out as rtf_output
 from .text import out as text_output
-from .types import Fiber, Resin, lamina, laminate
+from .types import Fiber, Resin, Lamina, Laminate
 from .version import __version__

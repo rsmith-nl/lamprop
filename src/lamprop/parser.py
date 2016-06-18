@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-08 23:01:42 +0200
+# Last modified: 2016-06-18 12:47:29 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
 """Parser for lamprop files"""
 
 import logging
-from .types import Fiber, Resin, lamina, laminate
+from .types import Fiber, Resin, Lamina, Laminate
 
 msg = logging.getLogger('parser')
 
@@ -66,7 +66,7 @@ def parse(filename):
     for num, ln in directives:
         try:
             if state == L and ln[0] == 't':
-                laminates.append(laminate(name, llist))
+                laminates.append(Laminate(name, llist))
                 state = T
                 llist = None
                 # no continue!
@@ -91,12 +91,12 @@ def parse(filename):
                 except ValueError:
                     pass
                 fibername = ' '.join(rest)
-                la = lamina(fdict[fibername], matrix, weight, angle, vf)
+                la = Lamina(fdict[fibername], matrix, weight, angle, vf)
                 llist.append(la)
                 continue
             if state == L and ln[0] == 's':
                 llist = llist + list(reversed(llist))
-                laminates.append(laminate(name, llist))
+                laminates.append(Laminate(name, llist))
                 state = T
                 llist = None
         except ValueError:
@@ -104,7 +104,7 @@ def parse(filename):
         except KeyError:
             logging.error('line {} unknown "{}"'.format(num, ln))
     if llist:
-        laminates.append(laminate(name, llist))
+        laminates.append(Laminate(name, llist))
     return laminates
 
 
@@ -156,7 +156,7 @@ def _f(lines):
             msg.error('parsing a fiber on line {}; {}.'.format(num, e))
             continue
         if name not in names:
-            rv.append(Fiber(E1, nu12, a1, rho, name, num))
+            rv.append(Fiber(E1, nu12, a1, rho, name))
             names.append(name)
         else:
             s = "fiber '{}' at line {} is a duplicate, will be ignored."
@@ -191,7 +191,7 @@ def _r(lines):
             msg.error('parsing a resin on line {}; {}.'.format(num, e))
             continue
         if name not in names:
-            rv.append(Resin(E, nu, a, rho, name, num))
+            rv.append(Resin(E, nu, a, rho, name))
             names.append(name)
         else:
             s = "resin '{}' at line {} is a duplicate, will be ignored."
