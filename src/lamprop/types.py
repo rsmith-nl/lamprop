@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-06-18 08:07:38 +0200
+# Last modified: 2016-06-19 23:27:45 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -277,11 +277,11 @@ class Laminate(tuple):
         if len(name) == 0:
             raise ValueError('the length of the name of a laminate must be >0')
         layers = tuple(layers)
-        thickness = sum([l.thickness for l in layers])
-        fw = sum([l.fiber_weight for l in layers])
-        density = sum([l.density*l.thickness for l in layers])/thickness
-        vf = sum([l.vf*l.thickness for l in layers])/thickness
-        rw = sum([l.resin_weight for l in layers])
+        thickness = sum(l.thickness for l in layers)
+        fw = sum(l.fiber_weight for l in layers)
+        density = sum(l.density*l.thickness for l in layers)/thickness
+        vf = sum(l.vf*l.thickness for l in layers)/thickness
+        rw = sum(l.resin_weight for l in layers)
         wf = fw/(fw + rw)
         # Set z-values for lamina.
         zs = -thickness/2
