@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-16 23:47:37 +0200
+# Last modified: 2016-06-19 23:41:47 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,8 +32,6 @@ import json
 import logging
 import re
 from .types import Fiber, Resin, Lamina, Laminate
-
-msg = logging.getLogger('parser')
 
 
 def fromjson(text, filename):
@@ -73,9 +71,9 @@ def fromjson(text, filename):
                 lname = lam['name']
                 ldict[lname] = Laminate(lname, llist)
         except KeyError as ke:
-            msg.warning('{} not found, skipping laminate'.format(ke))
+            logging.warning('{} not found, skipping laminate'.format(ke))
         except ValueError as ve:
-            msg.warning(ve)
+            logging.warning(ve)
     return fdict, rdict, ldict
 
 
@@ -93,7 +91,7 @@ def _stripcomments(data, filename):
     try:
         return json.loads(clean, object_pairs_hook=OrderedDict)
     except json.JSONDecodeError:
-        msg.error("invalid json file '{}'.".format(filename))
+        logging.error("invalid json file '{}'.".format(filename))
         return {}
 
 
@@ -118,8 +116,10 @@ def _find(ident, data, totype, name):
                 found[v.name] = v
         except TypeError as te:
             miss = str(te).split(':')[1][1:]
-            msg.warning('{} missing {}'.format(ident[:-1], miss))
+            logging.warning('{} missing {}'.format(ident[:-1], miss))
         except ValueError as ve:
-            msg.warning('in {}; {}'.format(ident[:-1], ve))
-    msg.info(m.format(len(found), ident, name))
+            logging.warning('in {}; {}'.format(ident[:-1], ve))
+    logging.info(m.format(len(found), ident, name))
+    for f in found.values():
+        logging.info(str(f))
     return found
