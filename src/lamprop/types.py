@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-06-18 12:51:28 +0200
+# Last modified: 2016-06-19 23:22:54 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -203,9 +203,9 @@ class Lamina(tuple):
         αxy = 2 * (α1 - α2) * m * n
         S11, S12 = 1/E1, -ν12/E1
         S22, S66 = 1/E2, 1/G12
-        deνm = S11*S22-S12*S12
-        Q11, Q12 = S22/deνm, -S12/deνm
-        Q22, Q66 = S11/deνm, 1/S66
+        denum = S11*S22-S12*S12
+        Q11, Q12 = S22/denum, -S12/denum
+        Q22, Q66 = S11/denum, 1/S66
         Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
         QA = Q11-Q12-2*Q66
         QB = Q12-Q22+2*Q66
