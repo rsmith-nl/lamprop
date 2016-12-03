@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-18 12:47:29 +0200
+# Last modified: 2016-12-03 15:33:26 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,9 +28,13 @@
 """Parser for lamprop files"""
 
 import logging
+import re
 from .types import Fiber, Resin, Lamina, Laminate
 
 msg = logging.getLogger('parser')
+
+_numre = r'([+-]?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)'
+_spcre = r'\s+'
 
 
 def parse(filename):
@@ -52,10 +56,10 @@ def parse(filename):
     directives = [(num, ln) for num, ln in enumerate(data, start=1)
                   if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
-    fibers = _f(directives)
+    fibers = find_components(directives, 'f:')
     msg.info("found {} fibers in '{}'".format(len(fibers), filename))
     fdict = {fiber.name: fiber for fiber in fibers}
-    resins = _r(directives)
+    resins = find_components(directives, 'r:')
     msg.info("found {} resins in '{}'".format(len(resins), filename))
     rdict = {resin.name: resin for resin in resins}
     directives = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
@@ -108,94 +112,35 @@ def parse(filename):
     return laminates
 
 
-def _num(val):
-    """Test if a string is a floating point number
+def find_components(directives, what):
+    """Finds fibers or resins.
 
     Arguments:
-        val: The string to test.
-
+        directives: A sequence of strings containing directives.
+            A directive is a line whose first non-space character is one of
+            'f', 'r', 't', 'm', 'l' or 's', and whose second character is ':'.
+        what: The key of the component to look for. 'f:' for fibers, 'r:' for
+            resins.
     Returns:
-        True if val is floating point a number, False otherwise.
+        A list of Resin or Fiber objects.
     """
-    try:
-        float(val)
-    except ValueError:
-        return False
-    return True
-
-
-def _f(lines):
-    """Parse fiber lines.
-
-    Arguments:
-        lines: A sequence of (line, number) tuples.
-
-    Returns:
-        A list of types.Fiber
-    """
-    fl = [(num, ln) for num, ln in lines if ln[0] is 'f']
+    choice = {'f:': Fiber, 'r:': Resin}
     rv = []
     names = []
-    for num, ln in fl:
-        test = ln.split()
-        try:
-            if _num(test[5]):  # old format
-                msg.info("old style fiber on line {}".format(num))
-                items = ln.split(None, 8)
-                indices = [1, 3, 5, 7, 8]
-            else:
-                items = ln.split(None, 5)
-                indices = [1, 2, 3, 4, 5]
-            E1, nu12, a1, rho = [float(items[j]) for j in indices[:4]]
-            if E1 <= 0:
-                raise ValueError('E1 must be >0')
-            if rho <= 0:
-                raise ValueError('fiber density must be >0')
-            name = items[indices[4]]
-        except (ValueError, IndexError) as e:
-            msg.error('parsing a fiber on line {}; {}.'.format(num, e))
-            continue
-        if name not in names:
-            rv.append(Fiber(E1, nu12, a1, rho, name))
-            names.append(name)
-        else:
-            s = "fiber '{}' at line {} is a duplicate, will be ignored."
-            mag.warning(s.format(name, num))
-    return rv
-
-
-def _r(lines):
-    """Parse resin lines.
-
-    Arguments:
-        lines: A sequence of (line, number) tuples.
-
-    Returns:
-        A list of types.Resin
-    """
-    rl = [(num, ln) for num, ln in lines if ln[0] is 'r']
-    rv = []
-    names = []
-    for num, ln in rl:
-        items = ln.split(None, 5)
-        try:
-            E, nu, a, rho = [float(j) for j in items[1:5]]
-            if E <= 0:
-                raise ValueError('E must be >0')
-            if nu <= -1 or nu >= 0.5:
-                raise ValueError('resin Poisson constant <-1 or >0.5')
-            if rho <= 0:
-                raise ValueError('resin density must be >0')
-            name = items[5]
-        except ValueError as e:
-            msg.error('parsing a resin on line {}; {}.'.format(num, e))
-            continue
-        if name not in names:
-            rv.append(Resin(E, nu, a, rho, name))
-            names.append(name)
-        else:
-            s = "resin '{}' at line {} is a duplicate, will be ignored."
-            mag.warning(s.format(name, num))
+    cre = _spcre.join([what, _numre, _numre, _numre, _numre, '(.*)$'])
+    for num, ln in directives:
+        match = re.fullmatch(cre, ln)
+        if match:
+            try:
+                found = choice[what](*match.groups())
+                if found.name in names:
+                    s = "line {} is a duplicate {} '{}', will be ignored."
+                    logging.warning(s.format(num, what, found.name))
+                else:
+                    rv.append(found)
+            except ValueError as e:
+                s = 'line {} is not a valid {}: {}'
+                logging.error(s.format(num, type(what).__name__, e))
     return rv
 
 
