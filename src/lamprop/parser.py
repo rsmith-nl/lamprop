@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2016-06-18 12:47:29 +0200
+# Last modified: 2017-02-13 23:55:35 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,69 +43,95 @@ def parse(filename):
         A list of laminates.
     """
     try:
-        with open(filename, encoding='utf-8') as df:
-            data = [ln.strip() for ln in df]
+        rd, fd, ld = _directives(filename)
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
-        return []
+    return []
+    fibers = _f(fd)
+    msg.info("found {} fibers in '{}'".format(len(fibers), filename))
+    fdict = {fiber.name: fiber for fiber in fibers}
+    resins = _r(rd)
+    msg.info("found {} resins in '{}'".format(len(resins), filename))
+    rdict = {resin.name: resin for resin in resins}
+    boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
+    bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
+    laminates = []
+    for a, b in bpairs:
+        current = ld[a:b]
+        lam = _laminate(current, rdict, fdict)
+        if lam:
+            laminates.append(lam)
+    msg.info("found {} laminates in '{}'".format(len(laminates), filename))
+    return laminates
+
+
+def _directives(filename):
+    """
+    Read the directives from a lamprop file.
+
+    Arguments:
+        filename: The name of the file to parse.
+
+    Returns:
+        A 3-tuple (resin directives, fiber directives, laminate directives)
+    """
+    with open(filename, encoding='utf-8') as df:
+        data = [ln.strip() for ln in df]
     # Filter out lines with directives.
     directives = [(num, ln) for num, ln in enumerate(data, start=1)
                   if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
-    fibers = _f(directives)
-    msg.info("found {} fibers in '{}'".format(len(fibers), filename))
-    fdict = {fiber.name: fiber for fiber in fibers}
-    resins = _r(directives)
-    msg.info("found {} resins in '{}'".format(len(resins), filename))
-    rdict = {resin.name: resin for resin in resins}
-    directives = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
-    T, M, L = 1, 2, 3
-    state = T
-    name, vf, matrix, llist = None, None, None, []
-    laminates = []
-    for num, ln in directives:
+    rd = [(num, ln) for num, ln in directives if ln[0] == 'r']
+    fd = [(num, ln) for num, ln in directives if ln[0] == 'f']
+    ld = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
+    return rd, fd, ld
+
+
+def _laminate(ld, resins, fibers):
+    sym = False
+    if ld[0][1].startswith('t'):
+        lname = ld[0][1][2:].strip()
+    else:
+        msg.error("No 't' directive on line {}".format(ld[0][0]))
+        return None
+    try:
+        if not ld[1][1].startswith('m'):
+            raise ValueError
+        common_vf, rname = ld[1][1][2:].split(maxsplit=1)
+        common_vf = float(common_vf)
+        if rname not in resins:
+            msg.error("Unknown resin '{}' on line {}".format(rname, ld[1][0]))
+            raise ValueError
+    except ValueError:
+        msg.error("No valid 'm' directive on line {}".format(ld[1][0]))
+        return None
+    if ld[-1][1].startswith('s'):
+        sym = True
+        del(ld[-1])
+    llist = []
+    for num, ln in ld[2:]:
+        items = ln.split(maxsplit=2)
         try:
-            if state == L and ln[0] == 't':
-                laminates.append(Laminate(name, llist))
-                state = T
-                llist = None
-                # no continue!
-            if state == T and ln[0] == 't':
-                vf, matrix = None, None
-                name = ln.split(maxsplit=1)[1]
-                state = M
-                continue
-            if state == M and ln[0] == 'm':
-                _, vf, rname = ln.split(maxsplit=2)
-                vf = float(vf)
-                matrix = rdict[rname]
-                llist = []
-                state = L
-                continue
-            if state == L and ln[0] == 'l':
-                _, weight, angle, *rest = ln.split(maxsplit=4)
-                weight, angle = float(weight), float(angle)
-                try:
-                    vf = float(rest[0])
-                    del rest[0]
-                except ValueError:
-                    pass
-                fibername = ' '.join(rest)
-                la = Lamina(fdict[fibername], matrix, weight, angle, vf)
-                llist.append(la)
-                continue
-            if state == L and ln[0] == 's':
-                llist = llist + list(reversed(llist))
-                laminates.append(Laminate(name, llist))
-                state = T
-                llist = None
+            weight, angle = float(items[0]), float(items[1])
         except ValueError:
-            logging.error('invalid line {} "{}" skipped'.format(num, ln))
-        except KeyError:
-            logging.error('line {} unknown "{}"'.format(num, ln))
-    if llist:
-        laminates.append(Laminate(name, llist))
-    return laminates
+            fs = "Cannot find fiber weight or angle on line {}"
+            msg.error(fs.format(num))
+            continue
+        try:
+            foo = items[2].split(maxsplit=1)
+            vf = float(foo[0])
+            fname = foo[1]
+        except ValueError:
+            fname = items[2]
+            vf = common_vf
+        if fname not in fibers:
+            fs = "Unknown fiber '{}' on line {}"
+            msg.error(fs.format(fname, num))
+            continue
+        llist.append(Lamina(fibers[fname], resins[rname], weight, angle, vf))
+    if sym:
+        llist = llist + list(reversed(llist))
+    return Laminate(lname, llist)
 
 
 def _num(val):
@@ -128,15 +154,14 @@ def _f(lines):
     """Parse fiber lines.
 
     Arguments:
-        lines: A sequence of (line, number) tuples.
+        lines: A sequence of (number, line) tuples describing fibers.
 
     Returns:
         A list of types.Fiber
     """
-    fl = [(num, ln) for num, ln in lines if ln[0] is 'f']
     rv = []
     names = []
-    for num, ln in fl:
+    for num, ln in lines:
         test = ln.split()
         try:
             if _num(test[5]):  # old format
@@ -160,7 +185,7 @@ def _f(lines):
             names.append(name)
         else:
             s = "fiber '{}' at line {} is a duplicate, will be ignored."
-            mag.warning(s.format(name, num))
+            msg.warning(s.format(name, num))
     return rv
 
 
@@ -195,7 +220,7 @@ def _r(lines):
             names.append(name)
         else:
             s = "resin '{}' at line {} is a duplicate, will be ignored."
-            mag.warning(s.format(name, num))
+            msg.warning(s.format(name, num))
     return rv
 
 
