@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-13 23:55:35 +0100
+# Last modified: 2017-02-14 00:16:08 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -46,7 +46,7 @@ def parse(filename):
         rd, fd, ld = _directives(filename)
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
-    return []
+        return []
     fibers = _f(fd)
     msg.info("found {} fibers in '{}'".format(len(fibers), filename))
     fdict = {fiber.name: fiber for fiber in fibers}
@@ -55,6 +55,8 @@ def parse(filename):
     rdict = {resin.name: resin for resin in resins}
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
+    msg.info("found {} possible laminates in '{}'".format(len(bpairs),
+                                                          filename))
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
@@ -92,7 +94,7 @@ def _laminate(ld, resins, fibers):
     if ld[0][1].startswith('t'):
         lname = ld[0][1][2:].strip()
     else:
-        msg.error("No 't' directive on line {}".format(ld[0][0]))
+        msg.error("no 't' directive on line {}".format(ld[0][0]))
         return None
     try:
         if not ld[1][1].startswith('m'):
@@ -100,22 +102,22 @@ def _laminate(ld, resins, fibers):
         common_vf, rname = ld[1][1][2:].split(maxsplit=1)
         common_vf = float(common_vf)
         if rname not in resins:
-            msg.error("Unknown resin '{}' on line {}".format(rname, ld[1][0]))
+            msg.error("unknown resin '{}' on line {}".format(rname, ld[1][0]))
             raise ValueError
     except ValueError:
-        msg.error("No valid 'm' directive on line {}".format(ld[1][0]))
+        msg.error("no valid 'm' directive on line {}".format(ld[1][0]))
         return None
     if ld[-1][1].startswith('s'):
         sym = True
         del(ld[-1])
     llist = []
     for num, ln in ld[2:]:
-        items = ln.split(maxsplit=2)
+        items = ln[2:].split(maxsplit=2)
         try:
             weight, angle = float(items[0]), float(items[1])
         except ValueError:
-            fs = "Cannot find fiber weight or angle on line {}"
-            msg.error(fs.format(num))
+            fs = "cannot find fiber weight or angle on line {}, '{}'"
+            msg.error(fs.format(num, ln))
             continue
         try:
             foo = items[2].split(maxsplit=1)
@@ -125,11 +127,12 @@ def _laminate(ld, resins, fibers):
             fname = items[2]
             vf = common_vf
         if fname not in fibers:
-            fs = "Unknown fiber '{}' on line {}"
+            fs = "unknown fiber '{}' on line {}"
             msg.error(fs.format(fname, num))
             continue
         llist.append(Lamina(fibers[fname], resins[rname], weight, angle, vf))
     if sym:
+        msg.info("laminate '{}' is symmetric".format(lname))
         llist = llist + list(reversed(llist))
     return Laminate(lname, llist)
 
@@ -181,6 +184,7 @@ def _f(lines):
             msg.error('parsing a fiber on line {}; {}.'.format(num, e))
             continue
         if name not in names:
+            msg.info("found fiber '{}'".format(name))
             rv.append(Fiber(E1, nu12, a1, rho, name))
             names.append(name)
         else:
@@ -198,10 +202,9 @@ def _r(lines):
     Returns:
         A list of types.Resin
     """
-    rl = [(num, ln) for num, ln in lines if ln[0] is 'r']
     rv = []
     names = []
-    for num, ln in rl:
+    for num, ln in lines:
         items = ln.split(None, 5)
         try:
             E, nu, a, rho = [float(j) for j in items[1:5]]
@@ -216,40 +219,10 @@ def _r(lines):
             msg.error('parsing a resin on line {}; {}.'.format(num, e))
             continue
         if name not in names:
+            msg.info("found resin '{}'".format(name))
             rv.append(Resin(E, nu, a, rho, name))
             names.append(name)
         else:
             s = "resin '{}' at line {} is a duplicate, will be ignored."
             msg.warning(s.format(name, num))
     return rv
-
-
-def _l(line, number, resin, vf):
-    """Parse a lamina line;
-
-    l: <weight> <angle> [<vf>] <fiber name>
-
-    Arguments:
-        line: String to parse.
-        number: Line number in the original file.
-        resin: The resin type to use.
-        vf: Global fiber volume fraction.
-        log: A Logger instance to report failures.
-
-    Returns:
-        A tuple to initialize a Lamina.
-    """
-    items = line.split(None, 4)
-    try:
-        vf = float(items[3])
-    except ValueError:
-        if vf is None:
-            s = 'no vf in laminate line {}, and no global vf.'
-            s = s.format(line)
-            msg.error(s)
-            raise ValueError(s)
-        items = line.split(None, 3)
-    values = [items[-1], resin]
-    values += [float(j) for j in items[1:3]]
-    values.append(vf)
-    return values
