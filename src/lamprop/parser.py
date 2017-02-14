@@ -1,8 +1,8 @@
 # file: parser.py
 # vim:fileencoding=utf-8:ft=python
-# Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-14 00:16:08 +0100
+# Last modified: 2017-02-14 22:30:39 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,12 +47,10 @@ def parse(filename):
     except IOError:
         msg.error("cannot read '{}'.".format(filename))
         return []
-    fibers = _f(fd)
-    msg.info("found {} fibers in '{}'".format(len(fibers), filename))
-    fdict = {fiber.name: fiber for fiber in fibers}
-    resins = _r(rd)
-    msg.info("found {} resins in '{}'".format(len(resins), filename))
-    rdict = {resin.name: resin for resin in resins}
+    fdict = _f(fd)
+    msg.info("found {} fibers in '{}'".format(len(fdict), filename))
+    rdict = _r(rd)
+    msg.info("found {} resins in '{}'".format(len(rdict), filename))
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
     msg.info("found {} possible laminates in '{}'".format(len(bpairs),
@@ -112,25 +110,9 @@ def _laminate(ld, resins, fibers):
         del(ld[-1])
     llist = []
     for num, ln in ld[2:]:
-        items = ln[2:].split(maxsplit=2)
-        try:
-            weight, angle = float(items[0]), float(items[1])
-        except ValueError:
-            fs = "cannot find fiber weight or angle on line {}, '{}'"
-            msg.error(fs.format(num, ln))
-            continue
-        try:
-            foo = items[2].split(maxsplit=1)
-            vf = float(foo[0])
-            fname = foo[1]
-        except ValueError:
-            fname = items[2]
-            vf = common_vf
-        if fname not in fibers:
-            fs = "unknown fiber '{}' on line {}"
-            msg.error(fs.format(fname, num))
-            continue
-        llist.append(Lamina(fibers[fname], resins[rname], weight, angle, vf))
+        lamina = _l(num, ln, fibers, resins[rname], common_vf)
+        if lamina:
+            llist.append(lamina)
     if sym:
         msg.info("laminate '{}' is symmetric".format(lname))
         llist = llist + list(reversed(llist))
@@ -190,7 +172,7 @@ def _f(lines):
         else:
             s = "fiber '{}' at line {} is a duplicate, will be ignored."
             msg.warning(s.format(name, num))
-    return rv
+    return {fiber.name: fiber for fiber in rv}
 
 
 def _r(lines):
@@ -225,4 +207,27 @@ def _r(lines):
         else:
             s = "resin '{}' at line {} is a duplicate, will be ignored."
             msg.warning(s.format(name, num))
-    return rv
+    return {fiber.name: fiber for fiber in rv}
+
+
+def _l(num, ln, fibers, resin, vf):
+    """Parse a lamina,"""
+    *items, fname = ln.split(maxsplit=4)
+    if not items[0].startswith('l'):
+        msg.error('line {} is not a lamina'.format(num))
+        return None
+    itemcnt = len(items)
+    if itemcnt < 3:
+        msg.error('not enough data for a laminat in ln {}'.format(num))
+    elif itemcnt == 3:
+        items.append(str(vf))
+    else:  # itemcnt == 4
+        if items[3][0].isalpha():
+            *items, fname = ln.split(maxsplit=3)
+            items.append(str(vf))
+    try:
+        values = [float(j) for j in items[1:5]]
+    except ValueError:
+        msg.error("invalid lamina line {}, '{}'".format(num, ln))
+        return None
+    return Lamina(fibers[fname], resin, *values)

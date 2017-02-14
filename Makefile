@@ -50,4 +50,4 @@ refresh::
 	.git/hooks/post-commit
 
 tests::
-	py.test-3.5 -v
+	py.test-3.6 -v
