@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-14 22:30:39 +0100
+# Last modified: 2017-02-14 22:47:15 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -45,7 +45,7 @@ def parse(filename):
     try:
         rd, fd, ld = _directives(filename)
     except IOError:
-        msg.error("cannot read '{}'.".format(filename))
+        msg.warning("cannot read '{}'.".format(filename))
         return []
     fdict = _f(fd)
     msg.info("found {} fibers in '{}'".format(len(fdict), filename))
@@ -92,7 +92,7 @@ def _laminate(ld, resins, fibers):
     if ld[0][1].startswith('t'):
         lname = ld[0][1][2:].strip()
     else:
-        msg.error("no 't' directive on line {}".format(ld[0][0]))
+        msg.warning("no 't' directive on line {}".format(ld[0][0]))
         return None
     try:
         if not ld[1][1].startswith('m'):
@@ -100,10 +100,10 @@ def _laminate(ld, resins, fibers):
         common_vf, rname = ld[1][1][2:].split(maxsplit=1)
         common_vf = float(common_vf)
         if rname not in resins:
-            msg.error("unknown resin '{}' on line {}".format(rname, ld[1][0]))
+            msg.warning("unknown resin '{}' on line {}".format(rname, ld[1][0]))
             raise ValueError
     except ValueError:
-        msg.error("no valid 'm' directive on line {}".format(ld[1][0]))
+        msg.warning("no valid 'm' directive on line {}".format(ld[1][0]))
         return None
     if ld[-1][1].startswith('s'):
         sym = True
@@ -113,6 +113,9 @@ def _laminate(ld, resins, fibers):
         lamina = _l(num, ln, fibers, resins[rname], common_vf)
         if lamina:
             llist.append(lamina)
+    if not llist:
+        msg.warning("empty laminate '{}'".format(lname))
+        return None
     if sym:
         msg.info("laminate '{}' is symmetric".format(lname))
         llist = llist + list(reversed(llist))
@@ -163,7 +166,7 @@ def _f(lines):
                 raise ValueError('fiber density must be >0')
             name = items[indices[4]]
         except (ValueError, IndexError) as e:
-            msg.error('parsing a fiber on line {}; {}.'.format(num, e))
+            msg.warning('parsing a fiber on line {}; {}.'.format(num, e))
             continue
         if name not in names:
             msg.info("found fiber '{}'".format(name))
@@ -198,7 +201,7 @@ def _r(lines):
                 raise ValueError('resin density must be >0')
             name = items[5]
         except ValueError as e:
-            msg.error('parsing a resin on line {}; {}.'.format(num, e))
+            msg.warning('parsing a resin on line {}; {}.'.format(num, e))
             continue
         if name not in names:
             msg.info("found resin '{}'".format(name))
@@ -214,11 +217,11 @@ def _l(num, ln, fibers, resin, vf):
     """Parse a lamina,"""
     *items, fname = ln.split(maxsplit=4)
     if not items[0].startswith('l'):
-        msg.error('line {} is not a lamina'.format(num))
+        msg.warning('line {} is not a lamina'.format(num))
         return None
     itemcnt = len(items)
     if itemcnt < 3:
-        msg.error('not enough data for a laminat in ln {}'.format(num))
+        msg.warning('not enough data for a lamina in ln {}'.format(num))
     elif itemcnt == 3:
         items.append(str(vf))
     else:  # itemcnt == 4
@@ -228,6 +231,9 @@ def _l(num, ln, fibers, resin, vf):
     try:
         values = [float(j) for j in items[1:5]]
     except ValueError:
-        msg.error("invalid lamina line {}, '{}'".format(num, ln))
+        msg.warning("invalid lamina line {}, '{}'".format(num, ln))
+        return None
+    if fname not in fibers:
+        msg.warning("unknown fiber '{}' on line {}".format(fname, num))
         return None
     return Lamina(fibers[fname], resin, *values)
