@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-14 22:47:15 +0100
+# Last modified: 2017-02-15 23:00:04 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,7 +40,7 @@ def parse(filename):
         filename: The name of the file to parse.
 
     Returns:
-        A list of laminates.
+        A list of types.Laminate.
     """
     try:
         rd, fd, ld = _directives(filename)
@@ -88,6 +88,19 @@ def _directives(filename):
 
 
 def _laminate(ld, resins, fibers):
+    """
+    Parses a laminate definition. This must be a t-directive, followed by an
+    m-directive, followed by one or more l-directives and optionally finished
+    by an s-directive.
+
+    Arguments:
+        ld: A sequence of (number, line) tuples describing a laminate.
+        resins: A dictionary of resins, keyed by their names.
+        fibers: A dictionary of fibers, keyed by their names.
+
+    Returns:
+        A types.Laminate, or None.
+    """
     sym = False
     if ld[0][1].startswith('t'):
         lname = ld[0][1][2:].strip()
@@ -195,8 +208,8 @@ def _r(lines):
             E, nu, a, rho = [float(j) for j in items[1:5]]
             if E <= 0:
                 raise ValueError('E must be >0')
-            if nu <= -1 or nu >= 0.5:
-                raise ValueError('resin Poisson constant <-1 or >0.5')
+            if nu <= 0 or nu >= 0.5:
+                raise ValueError('resin Poisson constant >0 or <0.5')
             if rho <= 0:
                 raise ValueError('resin density must be >0')
             name = items[5]
@@ -214,7 +227,20 @@ def _r(lines):
 
 
 def _l(num, ln, fibers, resin, vf):
-    """Parse a lamina,"""
+    """
+    Parse a lamina line.
+
+    Arguments:
+        num: The line number from the file.
+        ln: A string containing an l-directive.
+        resins: A dictionary of resins, keyed by their names.
+        fibers: A dictionary of fibers, keyed by their names.
+        vf: The global fiber volume fraction as a floating point number
+            between 0 and 1.
+
+    Returns:
+        A types.Lamina, or None.
+    """
     *items, fname = ln.split(maxsplit=4)
     if not items[0].startswith('l'):
         msg.warning('line {} is not a lamina'.format(num))
