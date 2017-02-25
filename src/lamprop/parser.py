@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-25 11:10:00 +0100
+# Last modified: 2017-02-25 15:15:09 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -87,7 +87,7 @@ def _directives(filename):
     return rd, fd, ld
 
 
-def _getnumbers(directive):
+def _get_numbers(directive):
     """Retrieve consecutive floating point numbers from a directive.
 
     Arguments:
@@ -142,8 +142,8 @@ def _laminate(ld, resins, fibers):
         sym = True
         del(ld[-1])
     llist = []
-    for num, ln in ld[2:]:
-        lamina = _l(num, ln, fibers, resins[rname], common_vf)
+    for directive in ld[2:]:
+        lamina = _get_lamina(directive, fibers, resins[rname], common_vf)
         if lamina:
             llist.append(lamina)
     if not llist:
@@ -174,7 +174,7 @@ def _get_components(directives, tp):
     w4 = "Poisson's ratio on line {} should be  >0 and <0.5; skipping."
     for directive in directives:
         ln = directive[0]
-        numbers, name = _getnumbers(directive)
+        numbers, name = _get_numbers(directive)
         count = len(numbers)
         if count != 4:
             msg.warning(w1.format(tname, ln, count))
@@ -196,13 +196,13 @@ def _get_components(directives, tp):
     return {comp.name: comp for comp in rv}
 
 
-def _l(num, ln, fibers, resin, vf):
+def _get_lamina(directive, fibers, resin, vf):
     """
     Parse a lamina line.
 
     Arguments:
-        num: The line number from the file.
-        ln: A string containing an l-directive.
+        directive: A 2-tuple (int, str) that contains the line number and
+            a lamina line.
         resins: A dictionary of resins, keyed by their names.
         fibers: A dictionary of fibers, keyed by their names.
         vf: The global fiber volume fraction as a floating point number
@@ -211,25 +211,16 @@ def _l(num, ln, fibers, resin, vf):
     Returns:
         A types.Lamina, or None.
     """
-    *items, fname = ln.split(maxsplit=4)
-    if not items[0].startswith('l'):
-        msg.warning('line {} is not a lamina'.format(num))
-        return None
-    itemcnt = len(items)
-    if itemcnt < 3:
-        msg.warning('not enough data for a lamina in ln {}'.format(num))
-    elif itemcnt == 3:
-        items.append(str(vf))
-    else:  # itemcnt == 4
-        if items[3][0].isalpha():
-            *items, fname = ln.split(maxsplit=3)
-            items.append(str(vf))
-    try:
-        values = [float(j) for j in items[1:5]]
-    except ValueError:
-        msg.warning("invalid lamina line {}, '{}'".format(num, ln))
+    w1 = "invalid lamina line {}, '{}'"
+    w2 = "unknown fiber '{}' on line {}"
+    ln, line = directive
+    numbers, fname = _get_numbers(directive)
+    if len(numbers) == 2:
+        numbers = numbers + (vf,)
+    elif len(numbers) != 3:
+        msg.warning(w1.format(ln, line))
         return None
     if fname not in fibers:
-        msg.warning("unknown fiber '{}' on line {}".format(fname, num))
+        msg.warning(w2.format(fname, ln))
         return None
-    return Lamina(fibers[fname], resin, *values)
+    return Lamina(fibers[fname], resin, *numbers)
