@@ -28,12 +28,17 @@ lamprop.5 respectively. If you install this program on UNIX-like systems with
 'make install', these will be installed automatically. For users of other
 systems, PDF versions are included in the distribution.
 
+As of version 3, support for old style fiber properties (which also specified
+properties in the radial direction of the fiber) has been removed from the
+code.
+
 
 Requirements
 ------------
 
-This program requires Python (version 3), and the numpy module (version 1.5 or
-later). This version was developed and tested using Python 3.4 and 3.5.
+This program requires Python (version 3), and the numpy module. This version
+was developed and tested using Python 3.6 and numpy 1.11.2. But older versions
+will probably work fine.
 
 
 Installation
@@ -53,18 +58,18 @@ MS Windows
 
 Note that the installation and configuration of Python on ms-windows is
 somewhat involved and outside the scope of this README! Since this code
-requires the numpy extension, I would suggest to install one od the pre-built
-distributions for ms-windows; Anaconda Python or Enthought Canopy.
+requires the numpy extension, I would suggest to install a pre-built
+distribution for ms-windows like Anaconda Python or Enthought Canopy.
 
 On ms-windows, run ``python3 build.py`` in the directory where you have
 unpacked the distribution or where you cloned the repository.
 
-Copy the ‘lamprop’ script to a directory in your PATH (e.g.
-the ‘Scripts’ subdirectory of your Python install) and rename it to
-‘lamprop.pyz’. You can then call it from a cmd.exe window, if the “.pyz”
-extension is associated with a filetype, and the filetype has an appropriate
-action defined.  If trying to run lamprop.pyz gives an error, try executing the
-following commands in a cmd.exe window::
+Copy the ‘lamprop’ script to a directory in your PATH (e.g.  the ‘Scripts’
+subdirectory of your Python install) and rename it to ‘lamprop.pyz’. You can
+then call it from a cmd.exe window, if the “.pyz” extension is associated with
+a filetype, and the filetype has an appropriate action defined.  If trying to
+run lamprop.pyz gives an error, try executing the following commands in
+a cmd.exe window::
 
     assoc .pyz=Python.File
     ftype Python.File="C:\Anaconda3\python.exe" "%1" %*
@@ -73,8 +78,7 @@ Note that ``C:\Anaconda3`` is just an example! You should of course substitute t
 real path to your python.exe.
 
 Note that in Anaconda Python up to and including version 2.1 there is an error
-in the file “anaconda.bat” in ``C:\Anaconda3\Scripts`` or ``C:\Anaconda3\Scripts``.
-The line::
+in the file “anaconda.bat” in ``C:\Anaconda3\Scripts``.  The line::
 
     set PATH="%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
 

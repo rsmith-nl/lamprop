@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2017-02-14 22:34:19 +0100
+# Last modified: 2017-02-25 11:06:28 +0100
 
 
 """Test for lamprop parser."""
@@ -12,32 +12,57 @@ import sys
 
 sys.path.insert(1, 'src')
 
-from lamprop.parser import _f, _r, Resin, Fiber, _l  # noqa
+from lamprop.parser import _get_components, Resin, Fiber, _l  # noqa
 
 
 def test_good_fibers():  # {{{1
-    directives = [(1, 'f: 233000 0.2 -0.54e-6 1.76 new'),
-                  (2, 'f: 230000 23000 0.20 8960 -0.41e-6 9e-6 1.76 old')]
-    fibers = _f(directives)
-    assert len(fibers) == 2
-    assert fibers['new'].name == 'new'
-    assert -0.6e-6 < fibers['new'].α1 < -0.5e-6  # noqa
-    assert fibers['old'].name == 'old'
+    directives = [(2, 'f:  238000  0.25    -0.1e-6     1.76    TenaxHTA'),
+                  (3, 'f:  240000  0.25    -0.1e-6     1.77    TenaxHTS'),
+                  (4, 'f:  240000  0.25    -0.12e-6    1.78    Tenax STS40'),
+                  (5, 'f:  230000  0.27    -0.41e-6    1.76    Toracya T300'),
+                  (6, 'f:  230000  0.27    -0.38e-6    1.80    Torayca T700SC'),
+                  (7, 'f:  235000  0.25    -0.5e-6     1.79    pyrofil TR30S'),
+                  (8, 'f:  640000  0.234   -1.47e-6    2.12    K63712'),
+                  (9, 'f:  790000  0.23    -1.2e-6     2.15    K63A12'),
+                  (10, 'f:  294000  0.27    -0.60e-6    1.76    T800S'),
+                  (11, 'f:  900000  0.234   -1.47e-6    2.20    K13C2U'),
+                  (12, 'f:  339000  0.27    -0.73e-6    1.75    M35J'),
+                  (13, 'f:  436000  0.234   -0.9e-6     1.84    M46J'),
+                  (14, 'f:  242000  0.27    -0.6e-6     1.81    PX35UD'),
+                  (15, 'f:  780000  0.27    -1.5e-6     2.17    XN-80'),
+                  (19, 'f:  73000   0.33    5.3e-6      2.60    e-glas'),
+                  (20, 'f:  80000   0.33    5e-6        2.62    advantex E-CR'),
+                  (22, 'f: 270000   0.25    -6.0e-6     1.56    Zylon'),
+                  (23, 'f: 124000   0.3     -2e-6       1.44    aramide49')]
+    fibers = _get_components(directives, Fiber)
+    assert len(fibers) == len(directives)
+    assert fibers['Tenax STS40'].E1 == 240000
+    assert fibers['Toracya T300'].ν12 == 0.27
+    assert fibers['Torayca T700SC'].α1 == -0.38e-6
+    assert fibers['K63712'].ρ == 2.12
 
 
 def test_bad_fibers():  # {{{1
     directives = [(1, 'f: 233000 0.2 -0.54e-6 geen sg'),
                   (2, 'f: -230000 0.2 -0.41e-6 -1.76 Efout'),
                   (3, 'f: 230000 0.2 -0.41e-6 -1.76 sgfout')]
-    fibers = _f(directives)
+    fibers = _get_components(directives, Fiber)
     assert len(fibers) == 0
 
 
 def test_good_resins():  # {{{1
-    directives = [(1, "r: 4620 0.36 41.4e-6 1.1 foo")]
-    resins = _r(directives)
-    assert len(resins) == 1
-    assert resins['foo'].E == 4620
+    directives = [(0, 'r:  2900    0.25    40e-6   1.15    EPR04908'),
+                  (2, 'r:  4300    0.36    40e-6   1.19    palatal-P4-01'),
+                  (3, 'r:  4000    0.36    40e-6   1.22    synolite-2155-N-1'),
+                  (4, 'r:  4100    0.36    40e-6   1.2     distitron 3501LS1'),
+                  (6, 'r:  3800    0.36    40e-6   1.165   synolite 1967-G-6'),
+                  (8, 'r:  3600    0.36    55e-6   1.145   atlac 430'),
+                  (9, 'r:  3500    0.36    51.5e-6   1.1   atlac 590')]
+    resins = _get_components(directives, Resin)
+    assert len(resins) == len(directives)
+    assert resins['EPR04908'].E == 2900
+    for r in list(resins.values())[1:]:
+        assert r.ν == 0.36
 
 
 def test_bad_resins():  # {{{1
@@ -45,7 +70,7 @@ def test_bad_resins():  # {{{1
                   (2, 'r: 4620 -2 41.4e-6 1.1 nufout'),
                   (3, 'r: 4620 0.7 41.4e-6 1.1 nufout'),
                   (4, 'r: 4620 0.2 41.4e-6 -0.1 sgfout')]
-    resins = _r(directives)
+    resins = _get_components(directives, Resin)
     assert len(resins) == 0
 
 

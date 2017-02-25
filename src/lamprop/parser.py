@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-15 23:00:04 +0100
+# Last modified: 2017-02-25 11:10:00 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,9 +47,9 @@ def parse(filename):
     except IOError:
         msg.warning("cannot read '{}'.".format(filename))
         return []
-    fdict = _f(fd)
+    fdict = _get_components(fd, Fiber)
     msg.info("found {} fibers in '{}'".format(len(fdict), filename))
-    rdict = _r(rd)
+    rdict = _get_components(rd, Resin)
     msg.info("found {} resins in '{}'".format(len(rdict), filename))
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
@@ -85,6 +85,26 @@ def _directives(filename):
     fd = [(num, ln) for num, ln in directives if ln[0] == 'f']
     ld = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
     return rd, fd, ld
+
+
+def _getnumbers(directive):
+    """Retrieve consecutive floating point numbers from a directive.
+
+    Arguments:
+        directive: A 2-tuple (int, str).
+
+    Returns:
+        A tuple of floating point numbers and the remainder of the string.
+    """
+    num, line = directive
+    numbers = []
+    for j in line.split()[1:]:
+        if j[0] in '0123456789.+-':
+            numbers.append(float(j))
+        else:
+            break
+    remain = line.split(maxsplit=len(numbers)+1)[-1]
+    return tuple(numbers), remain
 
 
 def _laminate(ld, resins, fibers):
@@ -135,95 +155,45 @@ def _laminate(ld, resins, fibers):
     return Laminate(lname, llist)
 
 
-def _num(val):
-    """Test if a string is a floating point number
+def _get_components(directives, tp):
+    """Parse fiber and resin lines.
 
     Arguments:
-        val: The string to test.
-
-    Returns:
-        True if val is floating point a number, False otherwise.
-    """
-    try:
-        float(val)
-    except ValueError:
-        return False
-    return True
-
-
-def _f(lines):
-    """Parse fiber lines.
-
-    Arguments:
-        lines: A sequence of (number, line) tuples describing fibers.
+        directives: A sequence of (number, line) tuples describing fibers/resins.
+        tp: The type to return. Either types.Resin or types.Fiber
 
     Returns:
         A list of types.Fiber
     """
     rv = []
     names = []
-    for num, ln in lines:
-        test = ln.split()
-        try:
-            if _num(test[5]):  # old format
-                msg.info("old style fiber on line {}".format(num))
-                items = ln.split(None, 8)
-                indices = [1, 3, 5, 7, 8]
-            else:
-                items = ln.split(None, 5)
-                indices = [1, 2, 3, 4, 5]
-            E1, nu12, a1, rho = [float(items[j]) for j in indices[:4]]
-            if E1 <= 0:
-                raise ValueError('E1 must be >0')
-            if rho <= 0:
-                raise ValueError('fiber density must be >0')
-            name = items[indices[4]]
-        except (ValueError, IndexError) as e:
-            msg.warning('parsing a fiber on line {}; {}.'.format(num, e))
+    tname = tp.__name__.lower()
+    w1 = 'expected 4 numbers for a {} on line {}, found {}; skipping.'
+    w2 = 'duplicate {} "{}" on line {} ignored.'
+    w3 = '{} must be >0 on line {}; skipping.'
+    w4 = "Poisson's ratio on line {} should be  >0 and <0.5; skipping."
+    for directive in directives:
+        ln = directive[0]
+        numbers, name = _getnumbers(directive)
+        count = len(numbers)
+        if count != 4:
+            msg.warning(w1.format(tname, ln, count))
             continue
-        if name not in names:
-            msg.info("found fiber '{}'".format(name))
-            rv.append(Fiber(E1, nu12, a1, rho, name))
-            names.append(name)
-        else:
-            s = "fiber '{}' at line {} is a duplicate, will be ignored."
-            msg.warning(s.format(name, num))
-    return {fiber.name: fiber for fiber in rv}
-
-
-def _r(lines):
-    """Parse resin lines.
-
-    Arguments:
-        lines: A sequence of (line, number) tuples.
-
-    Returns:
-        A list of types.Resin
-    """
-    rv = []
-    names = []
-    for num, ln in lines:
-        items = ln.split(None, 5)
-        try:
-            E, nu, a, rho = [float(j) for j in items[1:5]]
-            if E <= 0:
-                raise ValueError('E must be >0')
-            if nu <= 0 or nu >= 0.5:
-                raise ValueError('resin Poisson constant >0 or <0.5')
-            if rho <= 0:
-                raise ValueError('resin density must be >0')
-            name = items[5]
-        except ValueError as e:
-            msg.warning('parsing a resin on line {}; {}.'.format(num, e))
+        if name in names:
+            msg.warning(w2.format(tname, name, ln))
             continue
-        if name not in names:
-            msg.info("found resin '{}'".format(name))
-            rv.append(Resin(E, nu, a, rho, name))
-            names.append(name)
-        else:
-            s = "resin '{}' at line {} is a duplicate, will be ignored."
-            msg.warning(s.format(name, num))
-    return {fiber.name: fiber for fiber in rv}
+        E, ν, α, ρ = numbers
+        if E < 0:
+            msg.warning(w3.format("Young's modulus", ln))
+            continue
+        if ρ < 0:
+            msg.warning(w3.format('Density', ln))
+            continue
+        if ν < 0 or ν >= 0.5:
+            msg.warning(w4.format(ln))
+            continue
+        rv.append(tp(*numbers, name))
+    return {comp.name: comp for comp in rv}
 
 
 def _l(num, ln, fibers, resin, vf):
