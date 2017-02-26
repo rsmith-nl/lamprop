@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2017-02-25 16:36:48 +0100
+# Last modified: 2017-02-26 22:57:50 +0100
 
 
 """Test for lamprop parser."""
@@ -12,10 +12,18 @@ import sys
 
 sys.path.insert(1, 'src')
 
-from lamprop.parser import _get_numbers, _get_components, _get_lamina, Fiber, Resin  # noqa
+from lamprop.parser import (_get_numbers, _get_components, _directives,
+                            _get_lamina, Fiber, Resin)  # noqa
 
 
-def test_numbers():
+def test_directives():  # {{{1
+    r, f, l = _directives('test/twill245.lam')
+    assert len(r) == 1
+    assert len(f) == 1
+    assert len(l) == 9
+
+
+def test_numbers():  # {{{1
     directives = [(2, 'f:  238000  0.25    -0.1e-6     1.76    TenaxHTA'),
                   (3, 'f:  240000  0.25    -0.1e-6     1.77    TenaxHTS'),
                   (4, 'f:  240000  0.25    -0.12e-6    1.78    Tenax STS40'),
@@ -29,11 +37,11 @@ def test_numbers():
                   (12, 'f:  339000  0.27    -0.73e-6    1.75    M35J'),
                   (13, 'f:  436000  0.234   -0.9e-6     1.84    M46J'),
                   (14, 'f:  242000  0.27    -0.6e-6     1.81    PX35UD'),
-                  (15, 'f:  780000  0.27    -1.5e-6     2.17    XN-80'),
-                  (19, 'f:  73000   0.33    5.3e-6      2.60    e-glas'),
-                  (20, 'f:  80000   0.33    5e-6        2.62    advantex E-CR'),
-                  (22, 'f: 270000   0.25    -6.0e-6     1.56    Zylon'),
-                  (23, 'f: 124000   0.3     -2e-6       1.44    aramide49')]
+                  (15, ' f:  780000  0.27    -1.5e-6     2.17    XN-80'),
+                  (19, ' f:  73000   0.33    5.3e-6      2.60    e-glas'),
+                  (20, ' f:  80000   0.33    5e-6        2.62    advantex E-CR'),
+                  (22, ' f: 270000   0.25    -6.0e-6     1.56    Zylon'),
+                  (23, '\tf: 124000   0.3     -2e-6       1.44    aramide49')]
     for d in directives:
         numbers, rest = _get_numbers(d)
         assert len(numbers) == 4
@@ -53,11 +61,11 @@ def test_good_fibers():  # {{{1
                   (12, 'f:  339000  0.27    -0.73e-6    1.75    M35J'),
                   (13, 'f:  436000  0.234   -0.9e-6     1.84    M46J'),
                   (14, 'f:  242000  0.27    -0.6e-6     1.81    PX35UD'),
-                  (15, 'f:  780000  0.27    -1.5e-6     2.17    XN-80'),
-                  (19, 'f:  73000   0.33    5.3e-6      2.60    e-glas'),
-                  (20, 'f:  80000   0.33    5e-6        2.62    advantex E-CR'),
-                  (22, 'f: 270000   0.25    -6.0e-6     1.56    Zylon'),
-                  (23, 'f: 124000   0.3     -2e-6       1.44    aramide49')]
+                  (15, ' f:  780000  0.27    -1.5e-6     2.17    XN-80'),
+                  (19, ' f:  73000   0.33    5.3e-6      2.60    e-glas'),
+                  (20, '  f:  80000   0.33    5e-6        2.62    advantex E-CR'),
+                  (22, '  f: 270000   0.25    -6.0e-6     1.56    Zylon'),
+                  (23, '\tf: 124000   0.3     -2e-6       1.44    aramide49')]
     fibers = _get_components(directives, Fiber)
     assert len(fibers) == len(directives)
     assert fibers['Tenax STS40'].E1 == 240000
@@ -98,7 +106,7 @@ def test_bad_resins():  # {{{1
     assert len(resins) == 0
 
 
-def test_good_lamina():
+def test_good_lamina():  # {{{1
     directives = [(1, 'l: 200 0 carbon'),
                   (2, 'l: 302 -23.2 0.3 carbon'),
                   (3, 'l: 200 0 test 3'),
