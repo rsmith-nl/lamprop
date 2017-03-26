@@ -1,8 +1,8 @@
 # file: latex.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2016-04-11 22:10:55 +0200
+# Last modified: 2017-03-26 18:15:59 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
 from .version import __version__
 
 
-def out(lam, eng, mat):
+def out(lam, eng, mat):  # {{{1
     '''LaTeX main output function.'''
     print("\\begin{table}[!htbp]")
     print("  \\renewcommand{\\arraystretch}{1.2}")
@@ -44,22 +44,22 @@ def out(lam, eng, mat):
         _engprop(lam)
     if mat:
         _matrices(lam)
-    print("\\end{table}\n")
+    print("\\end{table}\n")  # 1}}}
 
 
-def _engprop(l):
+def _engprop(l):  # {{{1
     '''Prints the engineering properties as a LaTeX table.'''
     print("    \\begin{tabular}[t]{rcrrl}")
     print("      \\multicolumn{4}{c}{\\small"
           "\\textbf{Laminate stacking}}\\\\[0.1em]")
     print("      \\toprule %% \\usepackage{booktabs}")
     print("      Layer & Weight & Angle & vf & Fiber type\\\\")
-    print("            & [g/m$^2$] & [$\\circ$] & [-]\\\\")
+    print("            & [g/m$^2$] & [$\\circ$] & [\\%]\\\\")
     print("      \\midrule")
     for ln, la in enumerate(l.layers, start=1):
-        s = "      {} & {:4.0f} & {:5.0f} & {:4.2f} & {}\\\\"
+        s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
         texfname = la.fiber.name.replace('_', '\_')
-        print(s.format(ln, la.fiber_weight, la.angle, la.vf, texfname))
+        print(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
     print("      \\bottomrule")
     print("    \\end{tabular}\\hspace{0.02\\textwidth}")
     print("    \\begin{tabular}[t]{rrl}")
@@ -68,8 +68,8 @@ def _engprop(l):
     print("      \\toprule")
     print("      Property & Value & Dimension\\\\")
     print("      \\midrule")
-    print("      $\\mathrm{{v_f}}$ & {:4.2f} &-\\\\".format(l.vf))
-    print("      $\\mathrm{{w_f}}$ & {:4.2f} &-\\\\".format(l.wf))
+    print("      $\\mathrm{{v_f}}$ & {:.3g} &\\%\\\\".format(l.vf*100))
+    print("      $\\mathrm{{w_f}}$ & {:.3g} &\\%\\\\".format(l.wf*100))
     print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
     print("      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ))
     s = "      weight & {:.0f} & g/m$^2$\\\\"
@@ -89,7 +89,7 @@ def _engprop(l):
     print("    \\end{tabular}")
 
 
-def _matrices(l):
+def _matrices(l):  # {{{1
     '''Prints the ABD and abd matrices as LaTeX arrays.'''
     def pm(mat):
         """Print the contents of a matrix.

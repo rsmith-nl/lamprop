@@ -1,8 +1,8 @@
 # file: html.py
-# vim:fileencoding=utf-8:ft=python:fdm=indent
-# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# vim:fileencoding=utf-8:ft=python:fdm=marker
+# Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2015-09-29 13:59:20 +0200
+# Last modified: 2017-03-26 18:05:57 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
 from .version import __version__
 
 
-def out(lam, eng, mat):
+def out(lam, eng, mat):  # {{{1
     '''HTML main output function.'''
     print('<!DOCTYPE html>')
     print('<html lang="en-US">')
@@ -59,7 +59,7 @@ def out(lam, eng, mat):
     print('</html>')
 
 
-def _engprop(l):
+def _engprop(l):  # {{{1
     '''Prints the engineering properties as a HTML table.'''
     print('        <!-- first row; tables -->')
     print('        <tr>')
@@ -84,8 +84,8 @@ def _engprop(l):
         print('                <tr>')
         s = "                  <td>{}</td><td>{:4.0f}</td><td>{:5.0f}</td>"
         print(s.format(ln, la.fiber_weight, la.angle))
-        s = '                  <td>{:4.2f}</td><td align="left">{}</td>'
-        print(s.format(la.vf, la.fiber.name))
+        s = '                  <td>{:g}</td><td align="left">{}</td>'
+        print(s.format(la.vf*100, la.fiber.name))
         print('                </tr>')
     print('              </tbody>')
     print('            </table>')
@@ -104,13 +104,13 @@ def _engprop(l):
     print('              <tbody align="right">')
     print('                <tr>')
     s = "                  <td>v<sub>f</sub></td>"\
-        '<td>{:4.2f}</td><td align="left">-</td>'
-    print(s.format(l.vf))
+        '<td>{:.3g}</td><td align="left">%</td>'
+    print(s.format(l.vf*100))
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>w<sub>f</sub></td>"\
-        '<td>{:4.2f}</td><td align="left">-</td>'
-    print(s.format(l.wf))
+        '<td>{:.3g}</td><td align="left">%</td>'
+    print(s.format(l.wf*100))
     print('                </tr>')
     print('                <tr>')
     s = "                  <td>thickness</td><td>{:.3g}</td>"
@@ -174,7 +174,7 @@ def _engprop(l):
     print('        </tr>')
 
 
-def _matrices(l):
+def _matrices(l):  # {{{1
     '''Prints the ABD and abd matrices as HTML tables.'''
     def pr(mat, row):
         """Print a row from a matrix"""
