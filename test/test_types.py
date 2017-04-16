@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2017-02-14 20:51:35 +0100
+# Last modified: 2017-04-16 18:43:30 +0200
 
 """Test for lamprop types"""
 
@@ -20,18 +20,18 @@ hr = Resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin")
 def test_lamina():  # {{{1
     f = Fiber(230000, 0.30, -0.41e-6, 1.76, 'T300')
     r = Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908')
-    l = Lamina(f, r, 100, 0, 0.5)
-    assert ((l.E1, l.E2, l.G12, l.ν12, l.αx, l.αy, l.ρ) ==
+    la = Lamina(f, r, 100, 0, 0.5)
+    assert ((la.E1, la.E2, la.G12, la.ν12, la.αx, la.αy, la.ρ) ==
             (116450.0, 8700, 4350.0, 0.3, 1.1060541004723054e-07, 4.14e-05,
              1.455))
-    assert ((l.Q11, l.Q12, l.Q16, l.Q22, l.Q26, l.Q66) ==
+    assert ((la.Q11, la.Q12, la.Q16, la.Q22, la.Q26, la.Q66) ==
             (117238.3004659929, 2627.6682199763113, 0.0, 8758.894066587705,
              0.0, 4350.0))
 
 
 def test_ud():  # {{{1
-    l = Lamina(hf, hr, 100, 0, 0.5)
-    ud = Laminate('ud', [l, l, l, l])
+    la = Lamina(hf, hr, 100, 0, 0.5)
+    ud = Laminate('ud', [la, la, la, la])
     assert 0.45 < ud.thickness < 0.46
     assert 1.42 < ud.ρ < 1.44
     assert ud.vf == 0.5

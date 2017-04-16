@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2016-06-19 23:22:54 +0200
+# Last modified: 2017-04-16 18:41:02 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -102,7 +102,7 @@ class Fiber(tuple):
             raise ValueError('fiber name must be a non-empty string')
         return tuple.__new__(Fiber, (E1, ν12, α1, ρ, name))
 
-Fiber.E1 = property(operator.itemgetter(0))
+Fiber.E1 = property(operator.itemgetter(0))  # noqa
 Fiber.ν12 = property(operator.itemgetter(1))
 Fiber.α1 = property(operator.itemgetter(2))
 Fiber.ρ = property(operator.itemgetter(3))
@@ -133,7 +133,7 @@ class Resin(tuple):
             raise ValueError('resin name must be a non-empty string')
         return tuple.__new__(Resin, (E, ν, α, ρ, name))
 
-Resin.E = property(operator.itemgetter(0))
+Resin.E = property(operator.itemgetter(0))  # noqa
 Resin.ν = property(operator.itemgetter(1))
 Resin.α = property(operator.itemgetter(2))
 Resin.ρ = property(operator.itemgetter(3))
@@ -221,7 +221,7 @@ class Lamina(tuple):
                                       Q_11, Q_12, Q_16, Q_22, Q_26, Q_66,
                                       ρ))
 
-Lamina.fiber = property(operator.itemgetter(0))
+Lamina.fiber = property(operator.itemgetter(0))  # noqa
 Lamina.resin = property(operator.itemgetter(1))
 Lamina.fiber_weight = property(operator.itemgetter(2))
 Lamina.angle = property(operator.itemgetter(3))
@@ -373,7 +373,7 @@ class Laminate(tuple):
                                         ρ, vf, rw, ABD, abd, Ex, Ey, Gxy,
                                         νxy, νyx, αx, αy, wf))
 
-Laminate.name = property(operator.itemgetter(0))
+Laminate.name = property(operator.itemgetter(0))  # noqa
 Laminate.layers = property(operator.itemgetter(1))
 Laminate.thickness = property(operator.itemgetter(2))
 Laminate.fiber_weight = property(operator.itemgetter(3))

@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2017-02-26 22:57:50 +0100
+# Last modified: 2017-04-16 18:42:22 +0200
 
 
 """Test for lamprop parser."""
@@ -17,10 +17,10 @@ from lamprop.parser import (_get_numbers, _get_components, _directives,
 
 
 def test_directives():  # {{{1
-    r, f, l = _directives('test/twill245.lam')
+    r, f, la = _directives('test/twill245.lam')
     assert len(r) == 1
     assert len(f) == 1
-    assert len(l) == 9
+    assert len(la) == 9
 
 
 def test_numbers():  # {{{1

@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2017-02-25 16:38:16 +0100
+# Last modified: 2017-04-16 18:37:04 +0200
 
 """Calculate the elastic properties of a fibrous composite laminate.
 See lamprop(1) for the manual of this program and lamprop(5) for the manual
@@ -113,6 +113,7 @@ def main(argv):
         for curlam in laminates:
             out(curlam, args.eng, args.mat)
     footer()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
