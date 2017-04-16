@@ -30,7 +30,9 @@ systems, PDF versions are included in the distribution.
 
 As of version 3, support for old style fiber properties (which also specified
 properties in the radial direction of the fiber) has been removed from the
-code.
+code. In the ``tools`` subdirectory of the source distribution a script called
+``convert-lamprop.py`` has been provided to convert old-style lamprop files to
+the new format.
 
 
 Requirements
@@ -71,11 +73,11 @@ a filetype, and the filetype has an appropriate action defined.  If trying to
 run lamprop.pyz gives an error, try executing the following commands in
 a cmd.exe window::
 
-    assoc .pyz=Python.File
-    ftype Python.File="C:\Anaconda3\python.exe" "%1" %*
+    assoc .pyz=Python.ArchiveFile
+    ftype Python.ArchiveFile="C:\Anaconda3\python.exe" "%1" %*
 
 Note that ``C:\Anaconda3`` is just an example! You should of course substitute the
-real path to your python.exe.
+real path to your python 3 executable.
 
 Note that in Anaconda Python up to and including version 2.1 there is an error
 in the file “anaconda.bat” in ``C:\Anaconda3\Scripts``.  The line::
