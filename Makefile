@@ -44,7 +44,7 @@ clean: ${SUBDIR}
 
 # The specifications below are for the maintainer only.
 check:: .IGNORE
-	pep8 src/__main__.py src/lamprop/*.py test/test*.py
+	pylama
 
 refresh::
 	.git/hooks/post-commit
