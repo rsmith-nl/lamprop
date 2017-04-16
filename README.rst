@@ -42,6 +42,15 @@ This program requires Python (version 3), and the numpy module. This version
 was developed and tested using Python 3.6 and numpy 1.11.2. But older versions
 will probably work fine.
 
+Developers
+++++++++++
+
+You will need py.test_ to run the provided tests. Code checks are done using
+pylama_.
+
+.. _py.test: https://docs.pytest.org/
+.. _pylama: http://pylama.readthedocs.io/en/latest/
+
 
 Installation
 ------------
@@ -76,7 +85,7 @@ a cmd.exe window::
     assoc .pyz=Python.ArchiveFile
     ftype Python.ArchiveFile="C:\Anaconda3\python.exe" "%1" %*
 
-Note that ``C:\Anaconda3`` is just an example! You should of course substitute the
+Note that ``C:\Anaconda3`` is just an *example*! You should substitute the
 real path to your python 3 executable.
 
 Note that in Anaconda Python up to and including version 2.1 there is an error
