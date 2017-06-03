@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-02-25 15:15:09 +0100
+# Last modified: 2017-06-03 22:33:15 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-"""Parser for lamprop files"""
+"""Parser for lamprop files."""
 
 import logging
 from .types import Fiber, Resin, Lamina, Laminate
@@ -34,12 +34,13 @@ msg = logging.getLogger('parser')
 
 
 def parse(filename):
-    """Parses a lamprop file.
+    """
+    Parse a lamprop file.
 
     Arguments:
         filename: The name of the file to parse.
 
-    Returns:
+    Returns
         A list of types.Laminate.
     """
     try:
@@ -88,7 +89,8 @@ def _directives(filename):
 
 
 def _get_numbers(directive):
-    """Retrieve consecutive floating point numbers from a directive.
+    """
+    Retrieve consecutive floating point numbers from a directive.
 
     Arguments:
         directive: A 2-tuple (int, str).
@@ -109,9 +111,10 @@ def _get_numbers(directive):
 
 def _laminate(ld, resins, fibers):
     """
-    Parses a laminate definition. This must be a t-directive, followed by an
-    m-directive, followed by one or more l-directives and optionally finished
-    by an s-directive.
+    Parse a laminate definition.
+
+    This must be a t-directive, followed by an m-directive, followed by one or
+    more l-directives and optionally finished by an s-directive.
 
     Arguments:
         ld: A sequence of (number, line) tuples describing a laminate.
@@ -156,7 +159,8 @@ def _laminate(ld, resins, fibers):
 
 
 def _get_components(directives, tp):
-    """Parse fiber and resin lines.
+    """
+    Parse fiber and resin lines.
 
     Arguments:
         directives: A sequence of (number, line) tuples describing fibers/resins.

@@ -4,11 +4,14 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2017-04-16 18:37:04 +0200
+# Last modified: 2017-06-03 22:46:54 +0200
 
-"""Calculate the elastic properties of a fibrous composite laminate.
-See lamprop(1) for the manual of this program and lamprop(5) for the manual
-of the data file format."""
+"""
+Calculate the elastic properties of a fibrous composite laminate.
+
+See lamprop(1) for the manual of this program and lamprop(5) for the manual of
+the data file format.
+"""
 
 import argparse
 import logging
@@ -16,7 +19,7 @@ import sys
 import lamprop as lp
 
 __version__ = lp.__version__
-_lic = '''lamprop {}
+_lic = """lamprop {}
 Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,20 +41,24 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.'''.format(__version__)
+SUCH DAMAGE.""".format(__version__)
 
 
 class LicenseAction(argparse.Action):
+    """Action class to print the license."""
+
     def __call__(self, parser, namespace, values, option_string=None):
         print(_lic)
         sys.exit()
 
 
 def noop():
+    """Empty placeholder function for output types without header."""
     pass
 
 
 def main(argv):
+    """Entry point for lamprop."""
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()

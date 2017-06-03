@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2017-03-26 18:05:57 +0200
+# Last modified: 2017-06-03 22:38:15 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,13 +25,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-"HTML output routines for lamprop."
+"""HTML output routines for lamprop."""
 
 from .version import __version__
 
 
 def out(lam, eng, mat):  # {{{1
-    '''HTML main output function.'''
+    """HTML main output function."""
     print('<!DOCTYPE html>')
     print('<html lang="en-US">')
     print('  <head>')
@@ -60,7 +60,7 @@ def out(lam, eng, mat):  # {{{1
 
 
 def _engprop(l):  # {{{1
-    '''Prints the engineering properties as a HTML table.'''
+    """Print the engineering properties as a HTML table."""
     print('        <!-- first row; tables -->')
     print('        <tr>')
     print('          <td>')
@@ -175,9 +175,9 @@ def _engprop(l):  # {{{1
 
 
 def _matrices(l):  # {{{1
-    '''Prints the ABD and abd matrices as HTML tables.'''
+    """Print the ABD and abd matrices as HTML tables."""
     def pr(mat, row):
-        """Print a row from a matrix"""
+        """Print a row from a matrix."""
         numl = []
         for m in range(6):
             num = mat[row, m]

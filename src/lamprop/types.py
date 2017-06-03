@@ -1,8 +1,8 @@
 # file: types.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
-# Copyright © 2014-2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-04-16 18:41:02 +0200
+# Last modified: 2017-06-03 22:24:01 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +25,8 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-"""Core types of lamprop.
+"""
+Core types of lamprop.
 
 The following references used in coding this module:
 @Book{Hyer:1998,
@@ -78,18 +79,20 @@ import numpy as np
 
 
 class Fiber(tuple):
-    """
-    Immutable object representing the properties of a fiber.
+    """Immutable properties of a fiber."""
 
-    Arguments/properties of a Fiber:
-        E1: Young's modulus in the direction of the fiber in MPa.
-            Must be >0.
-        ν12: Poisson's constant between length and radial directions.
-        α1: CTE in the length of the fiber in K⁻¹
-        ρ: Specific gravity of the fiber in g/cm³. Must be >0.
-        name: String containing the name of the fiber. Must not be empty.
-    """
     def __new__(self, E1, ν12, α1, ρ, name):
+        """
+        Create a Fiber.
+
+        Arguments/properties of a Fiber:
+            E1: Young's modulus in the direction of the fiber in MPa.
+                Must be >0.
+            ν12: Poisson's constant between length and radial directions.
+            α1: CTE in the length of the fiber in K⁻¹
+            ρ: Specific gravity of the fiber in g/cm³. Must be >0.
+            name: String containing the name of the fiber. Must not be empty.
+        """
         E1 = float(E1)
         ν12 = float(ν12)
         α1 = float(α1)
@@ -102,6 +105,7 @@ class Fiber(tuple):
             raise ValueError('fiber name must be a non-empty string')
         return tuple.__new__(Fiber, (E1, ν12, α1, ρ, name))
 
+
 Fiber.E1 = property(operator.itemgetter(0))  # noqa
 Fiber.ν12 = property(operator.itemgetter(1))
 Fiber.α1 = property(operator.itemgetter(2))
@@ -110,17 +114,19 @@ Fiber.name = property(operator.itemgetter(4))
 
 
 class Resin(tuple):
-    """
-    Immutable object representing the properties of a matrix.
+    """Immutable properties of a resin."""
 
-    Arguments/properties of a Resin:
-        E: Young's modulus in MPa. Must be >0.
-        ν: Poisson's constant.
-        α: CTE in K⁻¹
-        ρ: Specific gravity of the resin in g/cm³. Must be >0.
-        name: String containing the name of the resin. Must not be empty.
-    """
     def __new__(self, E, ν, α, ρ, name):
+        """
+        Create a Resin.
+
+        Arguments/properties of a Resin:
+            E: Young's modulus in MPa. Must be >0.
+            ν: Poisson's constant.
+            α: CTE in K⁻¹
+            ρ: Specific gravity of the resin in g/cm³. Must be >0.
+            name: String containing the name of the resin. Must not be empty.
+        """
         E = float(E)
         ν = float(ν)
         α = float(α)
@@ -133,6 +139,7 @@ class Resin(tuple):
             raise ValueError('resin name must be a non-empty string')
         return tuple.__new__(Resin, (E, ν, α, ρ, name))
 
+
 Resin.E = property(operator.itemgetter(0))  # noqa
 Resin.ν = property(operator.itemgetter(1))
 Resin.α = property(operator.itemgetter(2))
@@ -141,38 +148,39 @@ Resin.name = property(operator.itemgetter(4))
 
 
 class Lamina(tuple):
-    """
-    Immutable object representing the properties of a unidirectional
-    composite layer.
+    """Immutable properties of a unidirectional composite layer."""
 
-    Arguments/properties of a Lamina:
-        fiber: The Fiber in the lamina
-        resin: The Resin binding the lamina
-        fiber_weight: The amount of Fibers in g/m².
-        angle: Orientation of the layer in degrees counterclockwise from the
-               x-axis.
-        vf: Fiber volume fraction.
-
-    Additional properties:
-        thickness: Thickness of the lamina in mm.
-        resin_weight: The amount of Resin in g/m².
-        E1: Young's modulus of the lamina in the fiber direction in MPa.
-        E2: Young's modulus of the lamina perpendicular to the fiber direction
-            in MPa.
-        G12: In-plane shear modulus in MPa.
-        ν12: in-plane Poisson's constant.
-        αx: CTE in x direction in K⁻¹.
-        αy: CTE in y direction in K⁻¹.
-        αxy: CTE in shear.
-        Q11: Lamina stiffness matrix component.
-        Q12: Lamina stiffness matrix component.
-        Q16: Lamina stiffness matrix component.
-        Q22: Lamina stiffness matrix component.
-        Q26: Lamina stiffness matrix component.
-        Q66: Lamina stiffness matrix component.
-        ρ: Specific gravity of the lamina in g/cm³.
-    """
     def __new__(self, fiber, resin, fiber_weight, angle, vf):
+        """
+        Create a Lamina.
+
+        Arguments:
+            fiber: The Fiber used in the lamina
+            resin: The Resin binding the lamina
+            fiber_weight: The amount of Fibers in g/m².
+            angle: Orientation of the layer in degrees counterclockwise from the
+                x-axis.
+            vf: Fiber volume fraction.
+
+        Additional generated properties:
+            thickness: Thickness of the lamina in mm.
+            resin_weight: The amount of Resin in g/m².
+            E1: Young's modulus of the lamina in the fiber direction in MPa.
+            E2: Young's modulus of the lamina perpendicular to the fiber direction
+                in MPa.
+            G12: In-plane shear modulus in MPa.
+            ν12: in-plane Poisson's constant.
+            αx: CTE in x direction in K⁻¹.
+            αy: CTE in y direction in K⁻¹.
+            αxy: CTE in shear.
+            Q11: Lamina stiffness matrix component.
+            Q12: Lamina stiffness matrix component.
+            Q16: Lamina stiffness matrix component.
+            Q22: Lamina stiffness matrix component.
+            Q26: Lamina stiffness matrix component.
+            Q66: Lamina stiffness matrix component.
+            ρ: Specific gravity of the lamina in g/cm³.
+        """
         fiber_weight = float(fiber_weight)
         if fiber_weight <= 0:
             raise ValueError('fiber weight cannot be <=0!')
@@ -221,6 +229,7 @@ class Lamina(tuple):
                                       Q_11, Q_12, Q_16, Q_22, Q_26, Q_66,
                                       ρ))
 
+
 Lamina.fiber = property(operator.itemgetter(0))  # noqa
 Lamina.resin = property(operator.itemgetter(1))
 Lamina.fiber_weight = property(operator.itemgetter(2))
@@ -245,31 +254,33 @@ Lamina.ρ = property(operator.itemgetter(20))
 
 
 class Laminate(tuple):
-    """
-    Immutable object containing the properties of a fiber reinforced laminate.
+    """Immutable properties of a fiber reinforced laminate."""
 
-    Arguments/properties of a laminate:
-        name: A non-empty string containing the name of the laminate
-        layers: A sequence of Lamina (will a tuple as a property).
-
-    Additional properties:
-        thickness: Thickness of the laminate in mm.
-        fiber_weight: Total area weight of fibers in g/m².
-        ρ: Specific gravity of the laminate in g/cm³.
-        vf: Average fiber volume fraction.
-        resin_weight: Total area weight of resin in g/m².
-        ABD: Stiffness matrix.
-        abd: Compliance matrix.
-        Ex: Young's modulus in the x-direction.
-        Ey: Young's modulus in the y-direction.
-        Gxy: In-plane shear modulus.
-        νxy: Poisson constant.
-        νyx: Poisson constant.
-        αx: CTE in x-direction.
-        αy: CTE in y-direction.
-        wf: Fiber weight fraction.
-    """
     def __new__(self, name, layers):
+        """
+        Create a new Laminate.
+
+        Arguments/properties of a laminate:
+            name: A non-empty string containing the name of the laminate
+            layers: A sequence of Lamina (will a tuple as a property).
+
+        Additional properties:
+            thickness: Thickness of the laminate in mm.
+            fiber_weight: Total area weight of fibers in g/m².
+            ρ: Specific gravity of the laminate in g/cm³.
+            vf: Average fiber volume fraction.
+            resin_weight: Total area weight of resin in g/m².
+            ABD: Stiffness matrix.
+            abd: Compliance matrix.
+            Ex: Young's modulus in the x-direction.
+            Ey: Young's modulus in the y-direction.
+            Gxy: In-plane shear modulus.
+            νxy: Poisson constant.
+            νyx: Poisson constant.
+            αx: CTE in x-direction.
+            αy: CTE in y-direction.
+            wf: Fiber weight fraction.
+        """
         if not layers:
             raise ValueError('no layers in the laminate')
         if not isinstance(name, str):
@@ -372,6 +383,7 @@ class Laminate(tuple):
         return tuple.__new__(Laminate, (name, layers, thickness, fw,
                                         ρ, vf, rw, ABD, abd, Ex, Ey, Gxy,
                                         νxy, νyx, αx, αy, wf))
+
 
 Laminate.name = property(operator.itemgetter(0))  # noqa
 Laminate.layers = property(operator.itemgetter(1))

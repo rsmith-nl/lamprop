@@ -3,7 +3,7 @@
 #
 # Copyright © 2015,2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2016-06-18 12:50:42 +0200
+# Last modified: 2017-06-03 22:34:58 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,6 +24,8 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Module for calculating fiber reinforced composites properties."""
 
 from .html import out as html_output
 from .latex import out as latex_output

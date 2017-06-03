@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2017-03-26 18:15:59 +0200
+# Last modified: 2017-06-03 22:39:34 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,13 +25,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-"LaTeX output routines for lamprop."
+"""LaTeX output routines for lamprop."""
 
 from .version import __version__
 
 
 def out(lam, eng, mat):  # {{{1
-    '''LaTeX main output function.'''
+    """Output function for LaTeX format."""
     print("\\begin{table}[!htbp]")
     print("  \\renewcommand{\\arraystretch}{1.2}")
     txt = "  \\caption{{\\label{{tab:{0}}}properties of {0}}}"
@@ -48,7 +48,7 @@ def out(lam, eng, mat):  # {{{1
 
 
 def _engprop(l):  # {{{1
-    '''Prints the engineering properties as a LaTeX table.'''
+    """Print the engineering properties as a LaTeX table."""
     print("    \\begin{tabular}[t]{rcrrl}")
     print("      \\multicolumn{4}{c}{\\small"
           "\\textbf{Laminate stacking}}\\\\[0.1em]")
@@ -90,10 +90,9 @@ def _engprop(l):  # {{{1
 
 
 def _matrices(l):  # {{{1
-    '''Prints the ABD and abd matrices as LaTeX arrays.'''
+    """Print the ABD and abd matrices as LaTeX arrays."""
     def pm(mat):
-        """Print the contents of a matrix.
-        """
+        """Print the contents of a matrix."""
         for t in range(6):
             numl = []
             for m in range(6):
