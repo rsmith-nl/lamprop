@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-06-03 22:33:15 +0200
+# Last modified: 2017-06-04 15:02:27 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -54,8 +54,8 @@ def parse(filename):
     msg.info("found {} resins in '{}'".format(len(rdict), filename))
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
-    msg.info("found {} possible laminates in '{}'".format(len(bpairs),
-                                                          filename))
+    msg.info("found {} possible laminates in '{}'".format(
+        len(bpairs), filename))
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
@@ -79,8 +79,9 @@ def _directives(filename):
     with open(filename, encoding='utf-8') as df:
         data = [ln.strip() for ln in df]
     # Filter out lines with directives.
-    directives = [(num, ln) for num, ln in enumerate(data, start=1)
-                  if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
+    directives = [
+        (num, ln) for num, ln in enumerate(data, start=1)
+        if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
     rd = [(num, ln) for num, ln in directives if ln[0] == 'r']
     fd = [(num, ln) for num, ln in directives if ln[0] == 'f']

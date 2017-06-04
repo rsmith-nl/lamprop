@@ -4,8 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2017-06-03 22:46:54 +0200
-
+# Last modified: 2017-06-04 14:58:47 +0200
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -62,32 +61,52 @@ def main(argv):
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
-    group.add_argument('-l', '--latex', action='store_true',
-                       help="generate LaTeX output "
-                            "(the default is plain text)")
-    group.add_argument('-H', '--html', action='store_true',
-                       help="generate HTML output")
-    group.add_argument('-r', '--rtf', action='store_true',
-                       help="generate Rich Text Format output")
+    group.add_argument(
+        '-l',
+        '--latex',
+        action='store_true',
+        help="generate LaTeX output (the default is plain text)")
+    group.add_argument(
+        '-H', '--html', action='store_true', help="generate HTML output")
+    group.add_argument(
+        '-r',
+        '--rtf',
+        action='store_true',
+        help="generate Rich Text Format output")
     group = opts.add_mutually_exclusive_group()
-    group.add_argument('-e', '--eng', action='store_true',
-                       help="output only the layers and "
-                            "engineering properties")
-    group.add_argument('-m', '--mat', action='store_true',
-                       help="output only the ABD and abd matrices")
+    group.add_argument(
+        '-e',
+        '--eng',
+        action='store_true',
+        help="output only the layers and engineering properties")
+    group.add_argument(
+        '-m',
+        '--mat',
+        action='store_true',
+        help="output only the ABD and abd matrices")
     group = opts.add_mutually_exclusive_group()
-    group.add_argument('-L', '--license', action=LicenseAction, nargs=0,
-                       help="print the license")
-    group.add_argument('-v', '--version', action='version',
-                       version=__version__)
-    opts.add_argument('--log', default='warning',
-                      choices=['debug', 'info', 'warning', 'error'],
-                      help="logging level (defaults to 'warning')")
-    opts.add_argument("files", metavar='file', nargs='*',
-                      help="one or more files to process")
+    group.add_argument(
+        '-L',
+        '--license',
+        action=LicenseAction,
+        nargs=0,
+        help="print the license")
+    group.add_argument(
+        '-v', '--version', action='version', version=__version__)
+    opts.add_argument(
+        '--log',
+        default='warning',
+        choices=['debug', 'info', 'warning', 'error'],
+        help="logging level (defaults to 'warning')")
+    opts.add_argument(
+        "files",
+        metavar='file',
+        nargs='*',
+        help="one or more files to process")
     args = opts.parse_args(argv)
-    logging.basicConfig(level=getattr(logging, args.log.upper(), None),
-                        format='%(levelname)s: %(message)s')
+    logging.basicConfig(
+        level=getattr(logging, args.log.upper(), None),
+        format='%(levelname)s: %(message)s')
     del opts, group
     if args.mat is False and args.eng is False:
         args.eng = True

@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-06-03 22:24:01 +0200
+# Last modified: 2017-06-04 15:12:12 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,7 +24,6 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-
 """
 Core types of lamprop.
 
@@ -190,44 +189,43 @@ class Lamina(tuple):
         elif not 0.0 <= vf <= 1.0:
             raise ValueError('vf must be in the ranges 0.0-1.0 or 1.0-100.0')
         vm = (1.0 - vf)
-        fiber_thickness = fiber_weight/(fiber.ρ*1000)
-        thickness = fiber_thickness*(1+vm/vf)
-        resin_weight = thickness*vm*resin.ρ*1000  # Resin [g/m²]
-        E1 = vf*fiber.E1+resin.E*vm  # Hyer:1998, p. 115, (3.32)
-        E2 = 3*resin.E  # Tsai:1992, p. 3-13
-        G12 = E2/2  # Tsai:1992, p. 3-13
+        fiber_thickness = fiber_weight/(fiber.ρ * 1000)
+        thickness = fiber_thickness * (1 + vm / vf)
+        resin_weight = thickness * vm * resin.ρ * 1000  # Resin [g/m²]
+        E1 = vf * fiber.E1 + resin.E * vm  # Hyer:1998, p. 115, (3.32)
+        E2 = 3 * resin.E  # Tsai:1992, p. 3-13
+        G12 = E2 / 2  # Tsai:1992, p. 3-13
         ν12 = 0.3  # Tsai:1992, p. 3-13
         a = math.radians(float(angle))
         m, n = math.cos(a), math.sin(a)
         # The powers of the sine and cosine are often used later.
-        m2 = m*m
-        m3, m4 = m2*m, m2*m2
-        n2 = n*n
-        n3, n4 = n2*n, n2*n2
-        α1 = (fiber.α1*fiber.E1*vf+resin.α*resin.E*vm)/E1
+        m2 = m * m
+        m3, m4 = m2 * m, m2 * m2
+        n2 = n * n
+        n3, n4 = n2 * n, n2 * n2
+        α1 = (fiber.α1 * fiber.E1 * vf + resin.α * resin.E * vm) / E1
         α2 = resin.α  # This is not 100% accurate, but simple.
         αx = α1 * m2 + α2 * n2
         αy = α1 * n2 + α2 * m2
         αxy = 2 * (α1 - α2) * m * n
-        S11, S12 = 1/E1, -ν12/E1
-        S22, S66 = 1/E2, 1/G12
-        denum = S11*S22-S12*S12
-        Q11, Q12 = S22/denum, -S12/denum
-        Q22, Q66 = S11/denum, 1/S66
-        Q_11 = Q11*m4+2*(Q12+2*Q66)*n2*m2+Q22*n4
-        QA = Q11-Q12-2*Q66
-        QB = Q12-Q22+2*Q66
-        Q_12 = (Q11+Q22-4*Q66)*n2*m2+Q12*(n4+m4)
-        Q_16 = QA*n*m3+QB*n3*m
-        Q_22 = Q11*n4+2*(Q12+2*Q66)*n2*m2+Q22*m4
-        Q_26 = QA*n3*m+QB*n*m3
-        Q_66 = (Q11+Q22-2*Q12-2*Q66)*n2*m2+Q66*(n4+m4)
-        ρ = fiber.ρ*vf+resin.ρ*vm
-        return tuple.__new__(Lamina, (fiber, resin, fiber_weight, angle, vf,
-                                      thickness, resin_weight, E1, E2, G12,
-                                      ν12, αx, αy, αxy,
-                                      Q_11, Q_12, Q_16, Q_22, Q_26, Q_66,
-                                      ρ))
+        S11, S12 = 1 / E1, -ν12 / E1
+        S22, S66 = 1 / E2, 1 / G12
+        denum = S11 * S22-S12 * S12
+        Q11, Q12 = S22 / denum, -S12 / denum
+        Q22, Q66 = S11 / denum, 1 / S66
+        Q_11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
+        QA = Q11 - Q12 - 2 * Q66
+        QB = Q12 - Q22 + 2 * Q66
+        Q_12 = (Q11 + Q22 - 4 * Q66) * n2 * m2 + Q12 * (n4 + m4)
+        Q_16 = QA * n * m3 + QB * n3 * m
+        Q_22 = Q11 * n4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * m4
+        Q_26 = QA * n3 * m+QB * n * m3
+        Q_66 = (Q11 + Q22-2 * Q12-2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
+        ρ = fiber.ρ * vf + resin.ρ * vm
+        return tuple.__new__(
+            Lamina, (fiber, resin, fiber_weight, angle, vf, thickness,
+                     resin_weight, E1, E2, G12, ν12, αx, αy, αxy,
+                     Q_11, Q_12, Q_16, Q_22, Q_26, Q_66, ρ))
 
 
 Lamina.fiber = property(operator.itemgetter(0))  # noqa
@@ -290,71 +288,71 @@ class Laminate(tuple):
         layers = tuple(layers)
         thickness = sum(l.thickness for l in layers)
         fw = sum(l.fiber_weight for l in layers)
-        ρ = sum(l.ρ*l.thickness for l in layers)/thickness
-        vf = sum(l.vf*l.thickness for l in layers)/thickness
+        ρ = sum(l.ρ * l.thickness for l in layers) / thickness
+        vf = sum(l.vf * l.thickness for l in layers) / thickness
         rw = sum(l.resin_weight for l in layers)
-        wf = fw/(fw + rw)
+        wf = fw / (fw + rw)
         # Set z-values for lamina.
         zs = -thickness/2
         lz2, lz3 = [], []
         for l in layers:
             ze = zs + l.thickness
-            lz2.append((ze*ze-zs*zs)/2)
-            lz3.append((ze*ze*ze-zs*zs*zs)/3)
+            lz2.append((ze * ze-zs * zs) / 2)
+            lz3.append((ze * ze * ze-zs * zs * zs) / 3)
             zs = ze
         Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
         ABD = np.zeros((6, 6))
         for l, z2, z3 in zip(layers, lz2, lz3):
             # first row
-            ABD[0, 0] += l.Q11*l.thickness      # Hyer:1998, p. 290
-            ABD[0, 1] += l.Q12*l.thickness
-            ABD[0, 2] += l.Q16*l.thickness
-            ABD[0, 3] += l.Q11*z2
-            ABD[0, 4] += l.Q12*z2
-            ABD[0, 5] += l.Q16*z2
+            ABD[0, 0] += l.Q11 * l.thickness      # Hyer:1998, p. 290
+            ABD[0, 1] += l.Q12 * l.thickness
+            ABD[0, 2] += l.Q16 * l.thickness
+            ABD[0, 3] += l.Q11 * z2
+            ABD[0, 4] += l.Q12 * z2
+            ABD[0, 5] += l.Q16 * z2
             # second row
-            ABD[1, 0] += l.Q12*l.thickness
-            ABD[1, 1] += l.Q22*l.thickness
-            ABD[1, 2] += l.Q26*l.thickness
-            ABD[1, 3] += l.Q12*z2
-            ABD[1, 4] += l.Q22*z2
-            ABD[1, 5] += l.Q26*z2
+            ABD[1, 0] += l.Q12 * l.thickness
+            ABD[1, 1] += l.Q22 * l.thickness
+            ABD[1, 2] += l.Q26 * l.thickness
+            ABD[1, 3] += l.Q12 * z2
+            ABD[1, 4] += l.Q22 * z2
+            ABD[1, 5] += l.Q26 * z2
             # third row
-            ABD[2, 0] += l.Q16*l.thickness
-            ABD[2, 1] += l.Q26*l.thickness
-            ABD[2, 2] += l.Q66*l.thickness
-            ABD[2, 3] += l.Q16*z2
-            ABD[2, 4] += l.Q26*z2
-            ABD[2, 5] += l.Q66*z2
+            ABD[2, 0] += l.Q16 * l.thickness
+            ABD[2, 1] += l.Q26 * l.thickness
+            ABD[2, 2] += l.Q66 * l.thickness
+            ABD[2, 3] += l.Q16 * z2
+            ABD[2, 4] += l.Q26 * z2
+            ABD[2, 5] += l.Q66 * z2
             # fourth row
-            ABD[3, 0] += l.Q11*z2
-            ABD[3, 1] += l.Q12*z2
-            ABD[3, 2] += l.Q16*z2
-            ABD[3, 3] += l.Q11*z3
-            ABD[3, 4] += l.Q12*z3
-            ABD[3, 5] += l.Q16*z3
+            ABD[3, 0] += l.Q11 * z2
+            ABD[3, 1] += l.Q12 * z2
+            ABD[3, 2] += l.Q16 * z2
+            ABD[3, 3] += l.Q11 * z3
+            ABD[3, 4] += l.Q12 * z3
+            ABD[3, 5] += l.Q16 * z3
             # fifth row
-            ABD[4, 0] += l.Q12*z2
-            ABD[4, 1] += l.Q22*z2
-            ABD[4, 2] += l.Q26*z2
-            ABD[4, 3] += l.Q12*z3
-            ABD[4, 4] += l.Q22*z3
-            ABD[4, 5] += l.Q26*z3
+            ABD[4, 0] += l.Q12 * z2
+            ABD[4, 1] += l.Q22 * z2
+            ABD[4, 2] += l.Q26 * z2
+            ABD[4, 3] += l.Q12 * z3
+            ABD[4, 4] += l.Q22 * z3
+            ABD[4, 5] += l.Q26 * z3
             # sixth row
-            ABD[5, 0] += l.Q16*z2
-            ABD[5, 1] += l.Q26*z2
-            ABD[5, 2] += l.Q66*z2
-            ABD[5, 3] += l.Q16*z3
-            ABD[5, 4] += l.Q26*z3
-            ABD[5, 5] += l.Q66*z3
+            ABD[5, 0] += l.Q16 * z2
+            ABD[5, 1] += l.Q26 * z2
+            ABD[5, 2] += l.Q66 * z2
+            ABD[5, 3] += l.Q16 * z3
+            ABD[5, 4] += l.Q26 * z3
+            ABD[5, 5] += l.Q66 * z3
             # Calculate unit thermal stress resultants.
             # Hyer:1998, p. 445
-            Ntx += (l.Q11*l.αx + l.Q12*l.αy +
-                    l.Q16*l.αxy)*l.thickness
-            Nty += (l.Q12*l.αx + l.Q22*l.αy +
-                    l.Q26*l.αxy)*l.thickness
-            Ntxy += (l.Q16*l.αx + l.Q26*l.αy +
-                     l.Q66*l.αxy)*l.thickness
+            Ntx += (l.Q11 * l.αx + l.Q12 * l.αy +
+                    l.Q16 * l.αxy) * l.thickness
+            Nty += (l.Q12 * l.αx + l.Q22 * l.αy +
+                    l.Q26 * l.αxy) * l.thickness
+            Ntxy += (l.Q16 * l.αx + l.Q26 * l.αy +
+                     l.Q66 * l.αxy) * l.thickness
         # Finish the matrices, discarding very small νmbers in ABD.
         for i in range(6):
             for j in range(6):
@@ -378,11 +376,11 @@ class Laminate(tuple):
         # Calculate the coefficients of thermal expansion.
         # Technically only valid for a symmetric laminate!
         # Hyer:1998, p. 451, (11.86)
-        αx = abd[0, 0]*Ntx + abd[0, 1]*Nty + abd[0, 2]*Ntxy
-        αy = abd[1, 0]*Ntx + abd[1, 1]*Nty + abd[1, 2]*Ntxy
-        return tuple.__new__(Laminate, (name, layers, thickness, fw,
-                                        ρ, vf, rw, ABD, abd, Ex, Ey, Gxy,
-                                        νxy, νyx, αx, αy, wf))
+        αx = abd[0, 0] * Ntx + abd[0, 1] * Nty + abd[0, 2] * Ntxy
+        αy = abd[1, 0] * Ntx + abd[1, 1] * Nty + abd[1, 2] * Ntxy
+        return tuple.__new__(
+            Laminate, (name, layers, thickness, fw, ρ, vf, rw, ABD,
+                       abd, Ex, Ey, Gxy, νxy, νyx, αx, αy, wf))
 
 
 Laminate.name = property(operator.itemgetter(0))  # noqa
