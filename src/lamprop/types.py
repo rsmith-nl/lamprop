@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-06-04 15:12:12 +0200
+# Last modified: 2017-07-03 21:37:12 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -104,6 +104,13 @@ class Fiber(tuple):
             raise ValueError('fiber name must be a non-empty string')
         return tuple.__new__(Fiber, (E1, ν12, α1, ρ, name))
 
+    def __repr__(self):
+        """
+        Create a string representation of the Fiber.
+        """
+        template = '<Fiber(E1={}, ν12={}, α1={}, ρ={}, name="{}")>'
+        return template.format(self[0], self[1], self[2], self[3], self[4])
+
 
 Fiber.E1 = property(operator.itemgetter(0))  # noqa
 Fiber.ν12 = property(operator.itemgetter(1))
@@ -137,6 +144,13 @@ class Resin(tuple):
         if not isinstance(name, str) and not len(name) > 0:
             raise ValueError('resin name must be a non-empty string')
         return tuple.__new__(Resin, (E, ν, α, ρ, name))
+
+    def __repr__(self):
+        """
+        Create a string representation of the Resin.
+        """
+        template = '<Resin(E={}, ν={}, α={}, ρ={}, name="{}")>'
+        return template.format(*self)
 
 
 Resin.E = property(operator.itemgetter(0))  # noqa
@@ -208,24 +222,34 @@ class Lamina(tuple):
         αx = α1 * m2 + α2 * n2
         αy = α1 * n2 + α2 * m2
         αxy = 2 * (α1 - α2) * m * n
-        S11, S12 = 1 / E1, -ν12 / E1
+        S11, S12 = 1 / E1, -ν12 / E1  # Hyer:1998, p. 152
         S22, S66 = 1 / E2, 1 / G12
-        denum = S11 * S22-S12 * S12
+        denum = S11 * S22 - S12 * S12  # Hyer:1998, p. 154
         Q11, Q12 = S22 / denum, -S12 / denum
         Q22, Q66 = S11 / denum, 1 / S66
+        # Q_ij according to Hyer:1997, p. 182
         Q_11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
         QA = Q11 - Q12 - 2 * Q66
         QB = Q12 - Q22 + 2 * Q66
         Q_12 = (Q11 + Q22 - 4 * Q66) * n2 * m2 + Q12 * (n4 + m4)
         Q_16 = QA * n * m3 + QB * n3 * m
         Q_22 = Q11 * n4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * m4
-        Q_26 = QA * n3 * m+QB * n * m3
-        Q_66 = (Q11 + Q22-2 * Q12-2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
+        Q_26 = QA * n3 * m + QB * n * m3
+        Q_66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
         ρ = fiber.ρ * vf + resin.ρ * vm
         return tuple.__new__(
             Lamina, (fiber, resin, fiber_weight, angle, vf, thickness,
                      resin_weight, E1, E2, G12, ν12, αx, αy, αxy,
                      Q_11, Q_12, Q_16, Q_22, Q_26, Q_66, ρ))
+
+    def __repr__(self):
+        """
+        Create a string representation of the Lamina.
+        """
+        template = '<Lamina(fiber_weight={}, angle={}, vf={}, thickness={}, ' \
+            'resin_weight={}, E1={}, E2={}, G12={}, ν12={}, αx={}, αy={}, ' \
+            'αxy={}, Q_11={}, Q_12={}, Q_16={}, Q_22={}, Q_26={}, Q_66={}, ρ={})>'
+        return template.format(*self[2:])
 
 
 Lamina.fiber = property(operator.itemgetter(0))  # noqa
@@ -297,8 +321,8 @@ class Laminate(tuple):
         lz2, lz3 = [], []
         for l in layers:
             ze = zs + l.thickness
-            lz2.append((ze * ze-zs * zs) / 2)
-            lz3.append((ze * ze * ze-zs * zs * zs) / 3)
+            lz2.append((ze * ze - zs * zs) / 2)
+            lz3.append((ze * ze * ze - zs * zs * zs) / 3)
             zs = ze
         Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
         ABD = np.zeros((6, 6))
@@ -381,6 +405,14 @@ class Laminate(tuple):
         return tuple.__new__(
             Laminate, (name, layers, thickness, fw, ρ, vf, rw, ABD,
                        abd, Ex, Ey, Gxy, νxy, νyx, αx, αy, wf))
+
+    def __repr__(self):
+        """
+        Create a string representation of the Laminate.
+        """
+        template = '<Laminate(name={}, thickness={}, fw={}, ρ={}, vf={}, ' \
+            'rw={}, Ex={}, Ey={}, Gxy={}, νxy={}, νyx={}, αx={}, αy={}, wf={})>'
+        return template.format(self[0], *self[2:7], *self[9:])
 
 
 Laminate.name = property(operator.itemgetter(0))  # noqa
