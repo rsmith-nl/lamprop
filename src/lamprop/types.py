@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-07-03 21:37:12 +0200
+# Last modified: 2017-07-05 20:11:27 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -186,12 +186,12 @@ class Lamina(tuple):
             αx: CTE in x direction in K⁻¹.
             αy: CTE in y direction in K⁻¹.
             αxy: CTE in shear.
-            Q11: Lamina stiffness matrix component.
-            Q12: Lamina stiffness matrix component.
-            Q16: Lamina stiffness matrix component.
-            Q22: Lamina stiffness matrix component.
-            Q26: Lamina stiffness matrix component.
-            Q66: Lamina stiffness matrix component.
+            Q̅11: Transformed lamina stiffness matrix component.
+            Q̅12: Transformed lamina stiffness matrix component.
+            Q̅16: Transformed lamina stiffness matrix component.
+            Q̅22: Transformed lamina stiffness matrix component.
+            Q̅26: Transformed lamina stiffness matrix component.
+            Q̅66: Transformed lamina stiffness matrix component.
             ρ: Specific gravity of the lamina in g/cm³.
         """
         fiber_weight = float(fiber_weight)
@@ -210,6 +210,7 @@ class Lamina(tuple):
         E2 = 3 * resin.E  # Tsai:1992, p. 3-13
         G12 = E2 / 2  # Tsai:1992, p. 3-13
         ν12 = 0.3  # Tsai:1992, p. 3-13
+        ν21 = ν12 * E2 / E1  # Nettles:1994, p. 4
         a = math.radians(float(angle))
         m, n = math.cos(a), math.sin(a)
         # The powers of the sine and cosine are often used later.
@@ -222,25 +223,23 @@ class Lamina(tuple):
         αx = α1 * m2 + α2 * n2
         αy = α1 * n2 + α2 * m2
         αxy = 2 * (α1 - α2) * m * n
-        S11, S12 = 1 / E1, -ν12 / E1  # Hyer:1998, p. 152
-        S22, S66 = 1 / E2, 1 / G12
-        denum = S11 * S22 - S12 * S12  # Hyer:1998, p. 154
-        Q11, Q12 = S22 / denum, -S12 / denum
-        Q22, Q66 = S11 / denum, 1 / S66
-        # Q_ij according to Hyer:1997, p. 182
-        Q_11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
+        denum = (1 - ν12 * ν21)
+        Q11, Q12 = E1 / denum, ν12 * E2 / denum
+        Q22, Q66 = E2 / denum, G12
+        # Q̅ according to Hyer:1997, p. 182
+        Q̅11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
         QA = Q11 - Q12 - 2 * Q66
         QB = Q12 - Q22 + 2 * Q66
-        Q_12 = (Q11 + Q22 - 4 * Q66) * n2 * m2 + Q12 * (n4 + m4)
-        Q_16 = QA * n * m3 + QB * n3 * m
-        Q_22 = Q11 * n4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * m4
-        Q_26 = QA * n3 * m + QB * n * m3
-        Q_66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
+        Q̅12 = (Q11 + Q22 - 4 * Q66) * n2 * m2 + Q12 * (n4 + m4)
+        Q̅16 = QA * n * m3 + QB * n3 * m
+        Q̅22 = Q11 * n4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * m4
+        Q̅26 = QA * n3 * m + QB * n * m3
+        Q̅66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
         ρ = fiber.ρ * vf + resin.ρ * vm
         return tuple.__new__(
             Lamina, (fiber, resin, fiber_weight, angle, vf, thickness,
                      resin_weight, E1, E2, G12, ν12, αx, αy, αxy,
-                     Q_11, Q_12, Q_16, Q_22, Q_26, Q_66, ρ))
+                     Q̅11, Q̅12, Q̅16, Q̅22, Q̅26, Q̅66, ρ))
 
     def __repr__(self):
         """
@@ -248,7 +247,7 @@ class Lamina(tuple):
         """
         template = '<Lamina(fiber_weight={}, angle={}, vf={}, thickness={}, ' \
             'resin_weight={}, E1={}, E2={}, G12={}, ν12={}, αx={}, αy={}, ' \
-            'αxy={}, Q_11={}, Q_12={}, Q_16={}, Q_22={}, Q_26={}, Q_66={}, ρ={})>'
+            'αxy={}, Q̅11={}, Q̅12={}, Q̅16={}, Q̅22={}, Q̅26={}, Q̅66={}, ρ={})>'
         return template.format(*self[2:])
 
 
@@ -266,12 +265,12 @@ Lamina.ν12 = property(operator.itemgetter(10))
 Lamina.αx = property(operator.itemgetter(11))
 Lamina.αy = property(operator.itemgetter(12))
 Lamina.αxy = property(operator.itemgetter(13))
-Lamina.Q11 = property(operator.itemgetter(14))
-Lamina.Q12 = property(operator.itemgetter(15))
-Lamina.Q16 = property(operator.itemgetter(16))
-Lamina.Q22 = property(operator.itemgetter(17))
-Lamina.Q26 = property(operator.itemgetter(18))
-Lamina.Q66 = property(operator.itemgetter(19))
+Lamina.Q̅11 = property(operator.itemgetter(14))
+Lamina.Q̅12 = property(operator.itemgetter(15))
+Lamina.Q̅16 = property(operator.itemgetter(16))
+Lamina.Q̅22 = property(operator.itemgetter(17))
+Lamina.Q̅26 = property(operator.itemgetter(18))
+Lamina.Q̅66 = property(operator.itemgetter(19))
 Lamina.ρ = property(operator.itemgetter(20))
 
 
@@ -328,55 +327,55 @@ class Laminate(tuple):
         ABD = np.zeros((6, 6))
         for l, z2, z3 in zip(layers, lz2, lz3):
             # first row
-            ABD[0, 0] += l.Q11 * l.thickness      # Hyer:1998, p. 290
-            ABD[0, 1] += l.Q12 * l.thickness
-            ABD[0, 2] += l.Q16 * l.thickness
-            ABD[0, 3] += l.Q11 * z2
-            ABD[0, 4] += l.Q12 * z2
-            ABD[0, 5] += l.Q16 * z2
+            ABD[0, 0] += l.Q̅11 * l.thickness      # Hyer:1998, p. 290
+            ABD[0, 1] += l.Q̅12 * l.thickness
+            ABD[0, 2] += l.Q̅16 * l.thickness
+            ABD[0, 3] += l.Q̅11 * z2
+            ABD[0, 4] += l.Q̅12 * z2
+            ABD[0, 5] += l.Q̅16 * z2
             # second row
-            ABD[1, 0] += l.Q12 * l.thickness
-            ABD[1, 1] += l.Q22 * l.thickness
-            ABD[1, 2] += l.Q26 * l.thickness
-            ABD[1, 3] += l.Q12 * z2
-            ABD[1, 4] += l.Q22 * z2
-            ABD[1, 5] += l.Q26 * z2
+            ABD[1, 0] += l.Q̅12 * l.thickness
+            ABD[1, 1] += l.Q̅22 * l.thickness
+            ABD[1, 2] += l.Q̅26 * l.thickness
+            ABD[1, 3] += l.Q̅12 * z2
+            ABD[1, 4] += l.Q̅22 * z2
+            ABD[1, 5] += l.Q̅26 * z2
             # third row
-            ABD[2, 0] += l.Q16 * l.thickness
-            ABD[2, 1] += l.Q26 * l.thickness
-            ABD[2, 2] += l.Q66 * l.thickness
-            ABD[2, 3] += l.Q16 * z2
-            ABD[2, 4] += l.Q26 * z2
-            ABD[2, 5] += l.Q66 * z2
+            ABD[2, 0] += l.Q̅16 * l.thickness
+            ABD[2, 1] += l.Q̅26 * l.thickness
+            ABD[2, 2] += l.Q̅66 * l.thickness
+            ABD[2, 3] += l.Q̅16 * z2
+            ABD[2, 4] += l.Q̅26 * z2
+            ABD[2, 5] += l.Q̅66 * z2
             # fourth row
-            ABD[3, 0] += l.Q11 * z2
-            ABD[3, 1] += l.Q12 * z2
-            ABD[3, 2] += l.Q16 * z2
-            ABD[3, 3] += l.Q11 * z3
-            ABD[3, 4] += l.Q12 * z3
-            ABD[3, 5] += l.Q16 * z3
+            ABD[3, 0] += l.Q̅11 * z2
+            ABD[3, 1] += l.Q̅12 * z2
+            ABD[3, 2] += l.Q̅16 * z2
+            ABD[3, 3] += l.Q̅11 * z3
+            ABD[3, 4] += l.Q̅12 * z3
+            ABD[3, 5] += l.Q̅16 * z3
             # fifth row
-            ABD[4, 0] += l.Q12 * z2
-            ABD[4, 1] += l.Q22 * z2
-            ABD[4, 2] += l.Q26 * z2
-            ABD[4, 3] += l.Q12 * z3
-            ABD[4, 4] += l.Q22 * z3
-            ABD[4, 5] += l.Q26 * z3
+            ABD[4, 0] += l.Q̅12 * z2
+            ABD[4, 1] += l.Q̅22 * z2
+            ABD[4, 2] += l.Q̅26 * z2
+            ABD[4, 3] += l.Q̅12 * z3
+            ABD[4, 4] += l.Q̅22 * z3
+            ABD[4, 5] += l.Q̅26 * z3
             # sixth row
-            ABD[5, 0] += l.Q16 * z2
-            ABD[5, 1] += l.Q26 * z2
-            ABD[5, 2] += l.Q66 * z2
-            ABD[5, 3] += l.Q16 * z3
-            ABD[5, 4] += l.Q26 * z3
-            ABD[5, 5] += l.Q66 * z3
+            ABD[5, 0] += l.Q̅16 * z2
+            ABD[5, 1] += l.Q̅26 * z2
+            ABD[5, 2] += l.Q̅66 * z2
+            ABD[5, 3] += l.Q̅16 * z3
+            ABD[5, 4] += l.Q̅26 * z3
+            ABD[5, 5] += l.Q̅66 * z3
             # Calculate unit thermal stress resultants.
             # Hyer:1998, p. 445
-            Ntx += (l.Q11 * l.αx + l.Q12 * l.αy +
-                    l.Q16 * l.αxy) * l.thickness
-            Nty += (l.Q12 * l.αx + l.Q22 * l.αy +
-                    l.Q26 * l.αxy) * l.thickness
-            Ntxy += (l.Q16 * l.αx + l.Q26 * l.αy +
-                     l.Q66 * l.αxy) * l.thickness
+            Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy +
+                    l.Q̅16 * l.αxy) * l.thickness
+            Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy +
+                    l.Q̅26 * l.αxy) * l.thickness
+            Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy +
+                     l.Q̅66 * l.αxy) * l.thickness
         # Finish the matrices, discarding very small νmbers in ABD.
         for i in range(6):
             for j in range(6):
