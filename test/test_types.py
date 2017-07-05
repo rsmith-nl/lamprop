@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2017-04-16 18:43:30 +0200
+# Last modified: 2017-07-05 22:04:44 +0200
 
 """Test for lamprop types"""
 
@@ -24,7 +24,7 @@ def test_lamina():  # {{{1
     assert ((la.E1, la.E2, la.G12, la.ν12, la.αx, la.αy, la.ρ) ==
             (116450.0, 8700, 4350.0, 0.3, 1.1060541004723054e-07, 4.14e-05,
              1.455))
-    assert ((la.Q11, la.Q12, la.Q16, la.Q22, la.Q26, la.Q66) ==
+    assert ((la.Q̅11, la.Q̅12, la.Q̅16, la.Q̅22, la.Q̅26, la.Q̅66) ==
             (117238.3004659929, 2627.6682199763113, 0.0, 8758.894066587705,
              0.0, 4350.0))
 
