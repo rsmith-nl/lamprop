@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-07-05 20:11:27 +0200
+# Last modified: 2017-07-06 13:03:45 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -65,7 +65,7 @@ The following references used in coding this module:
 
 @Techreport{Nettles:1994,
   author =       {A.T. Nettles},
-  titls =        {Basic Mechanics of Laminated Plates},
+  title =        {Basic Mechanics of Laminated Plates},
   institution =  {NASA},
   year =         {1994},
   number =       {Reference Publication 1351}
