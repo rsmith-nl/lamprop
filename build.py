@@ -3,14 +3,31 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2016-05-05 13:41:25 +0200
+# Last modified: 2017-07-10 23:53:04 +0200
 
 """Create runnable archives from program files and custom modules."""
 
+from subprocess import run, PIPE
 import os
 import py_compile
 import tempfile
 import zipfile as z
+
+
+def newversion():
+    """Generate new contents for version file"""
+    f = """# Automatically generated, do not edit!
+__version__ = '{}'
+"""
+    rv = run(['git', 'tag'], stdout=PIPE)
+    try:
+        tag = rv.stdout.decode('utf-8').splitlines()[-1] + ' '
+    except IndexError:
+        tag = ''
+    rv = run(['git', 'log', '-n', '1', '--format=%h'], stdout=PIPE)
+    short_hash = rv.stdout.decode('ascii').strip()
+    vstring = tag + '({})'.format(short_hash)
+    return f.format(vstring)
 
 
 def mkarchive(name, modules, main='__main__.py',
@@ -55,6 +72,8 @@ if __name__ == '__main__':
     archname = 'lpbin'
     name = 'lamprop'
     os.chdir('src')
+    with open('lamprop/version.py', 'w') as vf:
+        vf.write(newversion())
     mkarchive(archname, name)
     copy(archname, '../'+name)
     os.remove(archname)
