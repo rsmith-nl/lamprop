@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-07-06 13:03:45 +0200
+# Last modified: 2017-07-13 00:29:01 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -72,7 +72,7 @@ The following references used in coding this module:
 }
 """
 
-import operator
+from operator import itemgetter as iget
 import math
 import numpy as np
 
@@ -112,11 +112,11 @@ class Fiber(tuple):
         return template.format(self[0], self[1], self[2], self[3], self[4])
 
 
-Fiber.E1 = property(operator.itemgetter(0))  # noqa
-Fiber.ν12 = property(operator.itemgetter(1))
-Fiber.α1 = property(operator.itemgetter(2))
-Fiber.ρ = property(operator.itemgetter(3))
-Fiber.name = property(operator.itemgetter(4))
+Fiber.E1 = property(iget(0))  # noqa
+Fiber.ν12 = property(iget(1))
+Fiber.α1 = property(iget(2))
+Fiber.ρ = property(iget(3))
+Fiber.name = property(iget(4))
 
 
 class Resin(tuple):
@@ -153,11 +153,11 @@ class Resin(tuple):
         return template.format(*self)
 
 
-Resin.E = property(operator.itemgetter(0))  # noqa
-Resin.ν = property(operator.itemgetter(1))
-Resin.α = property(operator.itemgetter(2))
-Resin.ρ = property(operator.itemgetter(3))
-Resin.name = property(operator.itemgetter(4))
+Resin.E = property(iget(0))  # noqa
+Resin.ν = property(iget(1))
+Resin.α = property(iget(2))
+Resin.ρ = property(iget(3))
+Resin.name = property(iget(4))
 
 
 class Lamina(tuple):
@@ -251,27 +251,27 @@ class Lamina(tuple):
         return template.format(*self[2:])
 
 
-Lamina.fiber = property(operator.itemgetter(0))  # noqa
-Lamina.resin = property(operator.itemgetter(1))
-Lamina.fiber_weight = property(operator.itemgetter(2))
-Lamina.angle = property(operator.itemgetter(3))
-Lamina.vf = property(operator.itemgetter(4))
-Lamina.thickness = property(operator.itemgetter(5))
-Lamina.resin_weight = property(operator.itemgetter(6))
-Lamina.E1 = property(operator.itemgetter(7))
-Lamina.E2 = property(operator.itemgetter(8))
-Lamina.G12 = property(operator.itemgetter(9))
-Lamina.ν12 = property(operator.itemgetter(10))
-Lamina.αx = property(operator.itemgetter(11))
-Lamina.αy = property(operator.itemgetter(12))
-Lamina.αxy = property(operator.itemgetter(13))
-Lamina.Q̅11 = property(operator.itemgetter(14))
-Lamina.Q̅12 = property(operator.itemgetter(15))
-Lamina.Q̅16 = property(operator.itemgetter(16))
-Lamina.Q̅22 = property(operator.itemgetter(17))
-Lamina.Q̅26 = property(operator.itemgetter(18))
-Lamina.Q̅66 = property(operator.itemgetter(19))
-Lamina.ρ = property(operator.itemgetter(20))
+Lamina.fiber = property(iget(0))  # noqa
+Lamina.resin = property(iget(1))
+Lamina.fiber_weight = property(iget(2))
+Lamina.angle = property(iget(3))
+Lamina.vf = property(iget(4))
+Lamina.thickness = property(iget(5))
+Lamina.resin_weight = property(iget(6))
+Lamina.E1 = property(iget(7))
+Lamina.E2 = property(iget(8))
+Lamina.G12 = property(iget(9))
+Lamina.ν12 = property(iget(10))
+Lamina.αx = property(iget(11))
+Lamina.αy = property(iget(12))
+Lamina.αxy = property(iget(13))
+Lamina.Q̅11 = property(iget(14))
+Lamina.Q̅12 = property(iget(15))
+Lamina.Q̅16 = property(iget(16))
+Lamina.Q̅22 = property(iget(17))
+Lamina.Q̅26 = property(iget(18))
+Lamina.Q̅66 = property(iget(19))
+Lamina.ρ = property(iget(20))
 
 
 class Laminate(tuple):
@@ -414,20 +414,20 @@ class Laminate(tuple):
         return template.format(self[0], *self[2:7], *self[9:])
 
 
-Laminate.name = property(operator.itemgetter(0))  # noqa
-Laminate.layers = property(operator.itemgetter(1))
-Laminate.thickness = property(operator.itemgetter(2))
-Laminate.fiber_weight = property(operator.itemgetter(3))
-Laminate.ρ = property(operator.itemgetter(4))
-Laminate.vf = property(operator.itemgetter(5))
-Laminate.resin_weight = property(operator.itemgetter(6))
-Laminate.ABD = property(operator.itemgetter(7))
-Laminate.abd = property(operator.itemgetter(8))
-Laminate.Ex = property(operator.itemgetter(9))
-Laminate.Ey = property(operator.itemgetter(10))
-Laminate.Gxy = property(operator.itemgetter(11))
-Laminate.νxy = property(operator.itemgetter(12))
-Laminate.νyx = property(operator.itemgetter(13))
-Laminate.αx = property(operator.itemgetter(14))
-Laminate.αy = property(operator.itemgetter(15))
-Laminate.wf = property(operator.itemgetter(16))
+Laminate.name = property(iget(0))  # noqa
+Laminate.layers = property(iget(1))
+Laminate.thickness = property(iget(2))
+Laminate.fiber_weight = property(iget(3))
+Laminate.ρ = property(iget(4))
+Laminate.vf = property(iget(5))
+Laminate.resin_weight = property(iget(6))
+Laminate.ABD = property(iget(7))
+Laminate.abd = property(iget(8))
+Laminate.Ex = property(iget(9))
+Laminate.Ey = property(iget(10))
+Laminate.Gxy = property(iget(11))
+Laminate.νxy = property(iget(12))
+Laminate.νyx = property(iget(13))
+Laminate.αx = property(iget(14))
+Laminate.αy = property(iget(15))
+Laminate.wf = property(iget(16))
