@@ -7,7 +7,6 @@ build/
 dist/
 .ropeproject/
 .cache/
-src/lamprop/version.py
 backup-*.tar.gz
 lamprop.?.ps
 lamprop.?.pdf
