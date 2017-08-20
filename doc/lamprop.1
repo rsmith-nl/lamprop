@@ -2,7 +2,7 @@
 .\" lamprop.1
 .\" By: R.F. Smith <rsmith@xs4all.nl>
 .\"
-.Dd March 31, 2015
+.Dd August 20, 2017
 .Dt LAMPROP 1 CON
 .Os
 .Sh NAME
@@ -114,7 +114,7 @@ detail. Their format is as follows.
 .Pp
 .TS
 tab( );
-L C C C C C C C C L.
+|L|C|C C C C C C|C|L|.
 Nx  A11 A12 A16 B11 B12 B16  \(*ex
 Ny  A12 A22 A26 B12 B22 B26  \(*ey
 Nxy \(eq A16 A26 A66 B16 B26 B66 \(mu \(*exy
@@ -122,9 +122,10 @@ Mx  B11 B12 B16 D11 D12 D16  \(*kx
 My  B12 B22 B26 D12 D22 D26  \(*ky
 Mxy  B16 B26 B66 D16 D26 D66  \(*kxy
 .TE
+.Pp
 .TS
 tab( );
-L C C C C C C C C L.
+|L|C|C C C C C C|C|L|.
 \(*ex  a11 a12 a16 b11 b12 b16  Nx
 \(*ey  a12 a22 a26 b12 b22 b26  Ny
 \(*exy \(eq a16 a26 a66 b16 b26 b66 \(mu Nxy
@@ -143,11 +144,11 @@ Bxx in N.
 .It
 Dxx in Nmm.
 .It
-axx in mm/N
+axx in mm/N.
 .It
-bxx in 1/N
+bxx in 1/N.
 .It
-dxx in 1/Nm
+dxx in 1/Nm.
 .El
 .Pp
 The stress resultants N has units of force per unit of length (N/mm). The
@@ -183,7 +184,7 @@ name was misspelled?
 .Sh COMPATIBILITY
 This version of the
 .Nm
-program requires the Python interpreter (version 2.7) and the Numerical
+program requires the Python interpreter (version 3.4+) and the Numerical
 Python (numpy) extension (tested with version 1.6 and later).
 .Sh SEE ALSO
 .Xr lamprop 5 ,
@@ -263,8 +264,9 @@ This manual and the
 software were written by
 .An Roland Smith Aq rsmith@xs4all.nl .
 .Pp
-The latest version of this program is available at:
-.Lk http://rsmith.home.xs4all.nl/software/
+The latest version of this program is available on github:
+.Lk https://github.com/rsmith-nl/lamprop
+(It is probably easiest to use one of the releases.)
 .Sh BUGS
 Some of the calculations depend on the perpendicular modulus of the
 fibers. This property is hard to find in product literature for anisotropic
@@ -281,7 +283,7 @@ The
 .Nm
 program itself is released under the two-clause BSD license given below;
 .Pp
-Copyright \(co 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright \(co 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 .Pp
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
