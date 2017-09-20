@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-07-13 00:29:01 +0200
+# Last modified: 2017-09-20 06:31:16 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -72,15 +72,16 @@ The following references used in coding this module:
 }
 """
 
-from operator import itemgetter as iget
 import math
 import numpy as np
 
 
-class Fiber(tuple):
+class Fiber:
     """Immutable properties of a fiber."""
 
-    def __new__(self, E1, ν12, α1, ρ, name):
+    __slots__ = ('E1', 'ν12', 'α1', 'ρ', 'name')
+
+    def __init__(self, E1, ν12, α1, ρ, name):
         """
         Create a Fiber.
 
@@ -92,17 +93,24 @@ class Fiber(tuple):
             ρ: Specific gravity of the fiber in g/cm³. Must be >0.
             name: String containing the name of the fiber. Must not be empty.
         """
+        # Convert numbers to floats
         E1 = float(E1)
         ν12 = float(ν12)
         α1 = float(α1)
         ρ = float(ρ)
+        # Validate parameters
         if E1 <= 0:
             raise ValueError('fiber E1 must be > 0')
         if ρ <= 0:
             raise ValueError('fiber ρ must be > 0')
         if not isinstance(name, str) and not len(name) > 0:
             raise ValueError('fiber name must be a non-empty string')
-        return tuple.__new__(Fiber, (E1, ν12, α1, ρ, name))
+        # Set attributes
+        super(Fiber, self).__setattr__('E1', E1)
+        super(Fiber, self).__setattr__('ν12', ν12)
+        super(Fiber, self).__setattr__('α1', α1)
+        super(Fiber, self).__setattr__('ρ', ρ)
+        super(Fiber, self).__setattr__('name', name)
 
     def __repr__(self):
         """
@@ -111,18 +119,19 @@ class Fiber(tuple):
         template = '<Fiber(E1={}, ν12={}, α1={}, ρ={}, name="{}")>'
         return template.format(self[0], self[1], self[2], self[3], self[4])
 
+    def __setattr__(self, name, value):
+        """
+        Prevent modification of attributes.
+        """
+        raise AttributeError("'Fiber' objects are immutable")
 
-Fiber.E1 = property(iget(0))  # noqa
-Fiber.ν12 = property(iget(1))
-Fiber.α1 = property(iget(2))
-Fiber.ρ = property(iget(3))
-Fiber.name = property(iget(4))
 
-
-class Resin(tuple):
+class Resin:
     """Immutable properties of a resin."""
 
-    def __new__(self, E, ν, α, ρ, name):
+    __slots__ = ('E', 'ν', 'α', 'ρ', 'name')
+
+    def __init__(self, E, ν, α, ρ, name):
         """
         Create a Resin.
 
@@ -133,17 +142,24 @@ class Resin(tuple):
             ρ: Specific gravity of the resin in g/cm³. Must be >0.
             name: String containing the name of the resin. Must not be empty.
         """
+        # Covert numbers to floats
         E = float(E)
         ν = float(ν)
         α = float(α)
         ρ = float(ρ)
+        # Validate parameters
         if E <= 0:
             raise ValueError('E must be > 0')
         if ρ <= 0:
             raise ValueError('resin ρ must be > 0')
         if not isinstance(name, str) and not len(name) > 0:
             raise ValueError('resin name must be a non-empty string')
-        return tuple.__new__(Resin, (E, ν, α, ρ, name))
+        # Set properties
+        super(Resin, self).__setattr__('E', E)
+        super(Resin, self).__setattr__('ν', ν)
+        super(Resin, self).__setattr__('α', α)
+        super(Resin, self).__setattr__('ρ', ρ)
+        super(Resin, self).__setattr__('name', name)
 
     def __repr__(self):
         """
@@ -152,18 +168,21 @@ class Resin(tuple):
         template = '<Resin(E={}, ν={}, α={}, ρ={}, name="{}")>'
         return template.format(*self)
 
+    def __setattr__(self, name, value):
+        """
+        Prevent modification of attributes.
+        """
+        raise AttributeError("'Resin' objects are immutable")
 
-Resin.E = property(iget(0))  # noqa
-Resin.ν = property(iget(1))
-Resin.α = property(iget(2))
-Resin.ρ = property(iget(3))
-Resin.name = property(iget(4))
 
-
-class Lamina(tuple):
+class Lamina:
     """Immutable properties of a unidirectional composite layer."""
 
-    def __new__(self, fiber, resin, fiber_weight, angle, vf):
+    __slots__ = ('fiber', 'resin', 'fiber_weight', 'angle', 'vf', 'thickness',
+                 'resin_weight', 'E1', 'E2', 'G12', 'ν12', 'αx', 'αy', 'αxy',
+                 'Q̅11', 'Q̅12', 'Q̅16', 'Q̅22', 'Q̅26', 'Q̅66', 'ρ')
+
+    def __init__(self, fiber, resin, fiber_weight, angle, vf):
         """
         Create a Lamina.
 
@@ -236,10 +255,26 @@ class Lamina(tuple):
         Q̅26 = QA * n3 * m + QB * n * m3
         Q̅66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
         ρ = fiber.ρ * vf + resin.ρ * vm
-        return tuple.__new__(
-            Lamina, (fiber, resin, fiber_weight, angle, vf, thickness,
-                     resin_weight, E1, E2, G12, ν12, αx, αy, αxy,
-                     Q̅11, Q̅12, Q̅16, Q̅22, Q̅26, Q̅66, ρ))
+        super(Lamina, self).__setattr__('fiber', fiber)
+        super(Lamina, self).__setattr__('resin', resin)
+        super(Lamina, self).__setattr__('fiber_weight', fiber_weight)
+        super(Lamina, self).__setattr__('angle', angle)
+        super(Lamina, self).__setattr__('vf', vf)
+        super(Lamina, self).__setattr__('thickness', thickness)
+        super(Lamina, self).__setattr__('resin_weight', resin_weight)
+        super(Lamina, self).__setattr__('E1', E1)
+        super(Lamina, self).__setattr__('E2', E2)
+        super(Lamina, self).__setattr__('ν12', ν12)
+        super(Lamina, self).__setattr__('αx', αx)
+        super(Lamina, self).__setattr__('αy', αy)
+        super(Lamina, self).__setattr__('αxy', αxy)
+        super(Lamina, self).__setattr__('Q̅11', Q̅11)
+        super(Lamina, self).__setattr__('Q̅12', Q̅12)
+        super(Lamina, self).__setattr__('Q̅16', Q̅16)
+        super(Lamina, self).__setattr__('Q̅22', Q̅22)
+        super(Lamina, self).__setattr__('Q̅26', Q̅26)
+        super(Lamina, self).__setattr__('Q̅66', Q̅66)
+        super(Lamina, self).__setattr__('ρ', ρ)
 
     def __repr__(self):
         """
@@ -250,34 +285,21 @@ class Lamina(tuple):
             'αxy={}, Q̅11={}, Q̅12={}, Q̅16={}, Q̅22={}, Q̅26={}, Q̅66={}, ρ={})>'
         return template.format(*self[2:])
 
-
-Lamina.fiber = property(iget(0))  # noqa
-Lamina.resin = property(iget(1))
-Lamina.fiber_weight = property(iget(2))
-Lamina.angle = property(iget(3))
-Lamina.vf = property(iget(4))
-Lamina.thickness = property(iget(5))
-Lamina.resin_weight = property(iget(6))
-Lamina.E1 = property(iget(7))
-Lamina.E2 = property(iget(8))
-Lamina.G12 = property(iget(9))
-Lamina.ν12 = property(iget(10))
-Lamina.αx = property(iget(11))
-Lamina.αy = property(iget(12))
-Lamina.αxy = property(iget(13))
-Lamina.Q̅11 = property(iget(14))
-Lamina.Q̅12 = property(iget(15))
-Lamina.Q̅16 = property(iget(16))
-Lamina.Q̅22 = property(iget(17))
-Lamina.Q̅26 = property(iget(18))
-Lamina.Q̅66 = property(iget(19))
-Lamina.ρ = property(iget(20))
+    def __setattr__(self, name, value):
+        """
+        Prevent modification of attributes.
+        """
+        raise AttributeError("'Lamina' objects are immutable")
 
 
-class Laminate(tuple):
+class Laminate:
     """Immutable properties of a fiber reinforced laminate."""
 
-    def __new__(self, name, layers):
+    __slots__ = ('name', 'layers', 'thickness', 'fiber_weight', 'ρ', 'vf',
+                 'resin_weight', 'ABD', 'abd', 'Ex', 'Ey', 'Gxy', 'νxy',
+                 'νyx', 'αx', 'αy', 'wf')
+
+    def __init__(self, name, layers):
         """
         Create a new Laminate.
 
@@ -401,9 +423,23 @@ class Laminate(tuple):
         # Hyer:1998, p. 451, (11.86)
         αx = abd[0, 0] * Ntx + abd[0, 1] * Nty + abd[0, 2] * Ntxy
         αy = abd[1, 0] * Ntx + abd[1, 1] * Nty + abd[1, 2] * Ntxy
-        return tuple.__new__(
-            Laminate, (name, layers, thickness, fw, ρ, vf, rw, ABD,
-                       abd, Ex, Ey, Gxy, νxy, νyx, αx, αy, wf))
+        super(Laminate, self).__setattr__('name', name)
+        super(Laminate, self).__setattr__('layers', layers)
+        super(Laminate, self).__setattr__('thickness', thickness)
+        super(Laminate, self).__setattr__('fiber_weight', fw)
+        super(Laminate, self).__setattr__('ρ', ρ)
+        super(Laminate, self).__setattr__('vf', vf)
+        super(Laminate, self).__setattr__('resin_weight', rw)
+        super(Laminate, self).__setattr__('ABD', ABD)
+        super(Laminate, self).__setattr__('abd', abd)
+        super(Laminate, self).__setattr__('Ex', Ex)
+        super(Laminate, self).__setattr__('Ey', Ey)
+        super(Laminate, self).__setattr__('Gxy', Gxy)
+        super(Laminate, self).__setattr__('νxy', νxy)
+        super(Laminate, self).__setattr__('νyx', νyx)
+        super(Laminate, self).__setattr__('αx', αx)
+        super(Laminate, self).__setattr__('αy', αy)
+        super(Laminate, self).__setattr__('wf', wf)
 
     def __repr__(self):
         """
@@ -413,21 +449,8 @@ class Laminate(tuple):
             'rw={}, Ex={}, Ey={}, Gxy={}, νxy={}, νyx={}, αx={}, αy={}, wf={})>'
         return template.format(self[0], *self[2:7], *self[9:])
 
-
-Laminate.name = property(iget(0))  # noqa
-Laminate.layers = property(iget(1))
-Laminate.thickness = property(iget(2))
-Laminate.fiber_weight = property(iget(3))
-Laminate.ρ = property(iget(4))
-Laminate.vf = property(iget(5))
-Laminate.resin_weight = property(iget(6))
-Laminate.ABD = property(iget(7))
-Laminate.abd = property(iget(8))
-Laminate.Ex = property(iget(9))
-Laminate.Ey = property(iget(10))
-Laminate.Gxy = property(iget(11))
-Laminate.νxy = property(iget(12))
-Laminate.νyx = property(iget(13))
-Laminate.αx = property(iget(14))
-Laminate.αy = property(iget(15))
-Laminate.wf = property(iget(16))
+    def __setattr__(self, name, value):
+        """
+        Prevent modification of attributes.
+        """
+        raise AttributeError("'Laminate' objects are immutable")
