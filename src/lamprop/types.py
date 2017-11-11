@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-09-20 06:31:16 +0200
+# Last modified: 2017-11-11 19:39:55 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -264,6 +264,7 @@ class Lamina:
         super(Lamina, self).__setattr__('resin_weight', resin_weight)
         super(Lamina, self).__setattr__('E1', E1)
         super(Lamina, self).__setattr__('E2', E2)
+        super(Lamina, self).__setattr__('G12', G12)
         super(Lamina, self).__setattr__('ν12', ν12)
         super(Lamina, self).__setattr__('αx', αx)
         super(Lamina, self).__setattr__('αy', αy)
