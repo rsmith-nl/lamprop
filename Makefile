@@ -23,6 +23,7 @@ install: lamprop
 # Install the zipped script.
 	install -d ${BINDIR}
 	install lamprop ${BINDIR}
+	install lamprop-gui ${BINDIR}
 # Install the manual page.
 	gzip -c doc/lamprop.1 >lamprop.1.gz
 	gzip -c doc/lamprop.5 >lamprop.5.gz
@@ -34,7 +35,7 @@ install: lamprop
 
 # Remove an installed lamprop completely
 uninstall::
-	rm -f ${BINDIR}/lamprop $(MANDIR)/man1/lamprop.1* \
+	rm -f ${BINDIR}/lamprop ${BINDIR}/lamprop-gui $(MANDIR)/man1/lamprop.1* \
 	$(MANDIR)/man5/lamprop.5*
 
 clean: ${SUBDIR}
