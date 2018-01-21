@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2017-08-20 16:00:32 +0200
+# Last modified: 2018-01-21 10:18:20 +0100
 
 """Create runnable archives from program files and custom modules."""
 
@@ -57,9 +57,10 @@ def mkarchive(name, modules, main='__main__.py'):
 
 if __name__ == '__main__':
     from shutil import copy
-    archname = 'lpbin'
-    name = 'lamprop'
     os.chdir('src')
-    mkarchive(archname, name)
-    copy(archname, '../'+name)
-    os.remove(archname)
+    programs = [f for f in os.listdir('.') if f.endswith('.py')]
+    for pyfile in programs:
+        name = pyfile[:-3]
+        mkarchive(name, 'lp', main=pyfile)
+        copy(name, '../'+name)
+        os.remove(name)
