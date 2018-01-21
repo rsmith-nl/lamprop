@@ -3,6 +3,7 @@ MANIFEST
 __pycache__
 *~
 lamprop
+lamprop-gui
 build/
 dist/
 .ropeproject/

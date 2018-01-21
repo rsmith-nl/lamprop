@@ -12,7 +12,7 @@ DISTFILES=README.rst
 # Default target.
 all: lamprop ${SUBDIR}
 
-lamprop: src/lamprop.py src/lp/*.py
+lamprop: src/lamprop.py src/lamprop-gui.py src/lp/*.py
 	python3 build.py
 
 ${SUBDIR}::
