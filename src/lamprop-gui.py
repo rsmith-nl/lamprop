@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-01-21 20:30:05 +0100
+# Last modified: 2018-01-21 22:37:10 +0100
 """
 Calculate the elastic properties of a fibrous composite laminate, using a GUI.
 
@@ -11,13 +11,14 @@ See lamprop(5) for the manual of the data file format.
 """
 
 from sys import exit as sys_exit
+from functools import partial
 import os
-import lp
 import tkinter as tk
 from tkinter import ttk
 from tkinter.font import nametofont
 from tkinter.scrolledtext import ScrolledText
 from tkinter import filedialog
+import lp
 
 __version__ = lp.__version__
 
@@ -29,9 +30,11 @@ class LampropUI(tk.Tk):
         self.parent = parent
         self.directory = ''
         self.lamfile = tk.StringVar()
+        self.lamfile.set('no file selected')
         self.laminates = None
-        self.result = tk.StringVar()
         self.engprop = tk.IntVar()
+        self.engprop.set(1)
+        self.result = None
         self.matrices = tk.IntVar()
         self.initialize()
 
@@ -39,7 +42,7 @@ class LampropUI(tk.Tk):
         """Create the GUI."""
         # Set the font
         default_font = nametofont("TkDefaultFont")
-        default_font.configure(size=12)
+        default_font['size'] = 12
         self.option_add("*Font", default_font)
         # General commands and bindings
         self.bind_all('q', self.do_exit)
@@ -48,18 +51,21 @@ class LampropUI(tk.Tk):
         prbut = ttk.Button(self, text="File:", command=self.do_fileopen)
         prbut.grid(row=0, column=0, sticky='w')
         fnlabel = ttk.Label(self, anchor='w', textvariable=self.lamfile)
-        fnlabel.grid(row=0, column=1, columnspan=4, sticky='w')
+        fnlabel.grid(row=0, column=1, columnspan=4, sticky='ew')
         # Second row
         rldbut = ttk.Button(self, text="Reload", command=self.do_reload)
         rldbut.grid(row=1, column=0, sticky='w')
         # Third row
+        cb = partial(self.on_laminate, event=0)
         chkengprop = ttk.Checkbutton(
-            self, text='Engineering properties', variable=self.engprop
+            self, text='Engineering properties', variable=self.engprop,
+            command=cb
         )
         chkengprop.grid(row=2, column=0, columnspan=3, sticky='w')
         # Fourth row
         chkmat = ttk.Checkbutton(
-            self, text='ABD & abd matrices', variable=self.matrices
+            self, text='ABD & abd matrices', variable=self.matrices,
+            command=cb
         )
         chkmat.grid(row=3, column=0, columnspan=3, sticky='w')
         # Fifth row
@@ -67,8 +73,12 @@ class LampropUI(tk.Tk):
         cxlam.grid(row=4, column=0, columnspan=5, sticky='we')
         cxlam.bind("<<ComboboxSelected>>", self.on_laminate)
         self.cxlam = cxlam
-        res = ScrolledText(self)
+        # Sixth row
+        fixed = nametofont('TkFixedFont')
+        fixed['size'] = 12
+        res = ScrolledText(self, state='disabled', font=fixed)
         res.grid(row=5, column=0, columnspan=5, sticky='ew')
+        self.result = res
 
     # Callbacks
     def do_exit(self, event):
@@ -94,16 +104,27 @@ class LampropUI(tk.Tk):
 
     def do_reload(self):
         """Reload the laminates."""
-        self.laminates = lp.parse(self.lamfile.get())
-        if not self.laminates:
+        laminates = lp.parse(self.lamfile.get())
+        if not laminates:
             return
-        names = [lam.name for lam in self.laminates]
-        self.cxlam['values'] = names
+        self.laminates = {lam.name: lam for lam in laminates}
+        self.cxlam['values'] = list(self.laminates.keys())
         self.cxlam.current(0)
+        self.on_laminate(0)
 
     def on_laminate(self, event):
         """Laminate choice has changed."""
-        pass
+        name = self.cxlam.get()
+        text = ''
+        if self.engprop.get():
+            text += lp.text.engprop(self.laminates[name])
+        if self.matrices.get():
+            if text:
+                text += '\n'
+            text += lp.text.matrices(self.laminates[name])
+        self.result['state'] = 'normal'
+        self.result.replace('1.0', 'end', text)
+        self.result['state'] = 'disabled'
 
 
 if __name__ == '__main__':
