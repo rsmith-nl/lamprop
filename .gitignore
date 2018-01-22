@@ -2,8 +2,6 @@ MANIFEST
 *.pyc
 __pycache__
 *~
-lamprop
-lamprop-gui
 build/
 dist/
 .ropeproject/

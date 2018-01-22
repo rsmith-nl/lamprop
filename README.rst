@@ -51,51 +51,28 @@ pylama_.
 .. _py.test: https://docs.pytest.org/
 .. _pylama: http://pylama.readthedocs.io/en/latest/
 
+There are basically two versions of this program; a console version (installed
+as ``lamprop``) primarily meant for POSIX operating systems and a GUI version
+(installed as ``lamprop-gui``) primarily meant for ms-windows.
+
+You can try both versions without installing them first, with the following
+invocations in a shell from the root directory of the repository.
+
+Use::
+
+    python3 -m lamprop.console -h
+
+for the console version, and::
+
+    python3 -m lamprop.gui
+
+for the GUI version.
+
 
 Installation
 ------------
 
-UNIX-like operating systems
-+++++++++++++++++++++++++++
-
-On UNIX-like platforms, run ``make install`` as root. This will install the
-``lamprop`` script itself in ``/usr/local/bin``, and the manual pages in
-``/usr/local/man/man1`` and ``/usr/local/man/man5``. You can change these
-paths by editing the Makefile and changing the definitions of PREFIX, MANDIR
-and BINDIR.
-
-MS Windows
-++++++++++
-
-Note that the installation and configuration of Python on ms-windows is
-somewhat involved and outside the scope of this README! Since this code
-requires the numpy extension, I would suggest to install a pre-built
-distribution for ms-windows like Anaconda Python or Enthought Canopy.
-
-On ms-windows, run ``python3 build.py`` in the directory where you have
-unpacked the distribution or where you cloned the repository.
-
-Copy the ‘lamprop’ script to a directory in your PATH (e.g.  the ‘Scripts’
-subdirectory of your Python install) and rename it to ‘lamprop.pyz’. You can
-then call it from a cmd.exe window, if the “.pyz” extension is associated with
-a filetype, and the filetype has an appropriate action defined.  If trying to
-run lamprop.pyz gives an error, try executing the following commands in
-a cmd.exe window::
-
-    assoc .pyz=Python.ArchiveFile
-    ftype Python.ArchiveFile="C:\Anaconda3\python.exe" "%1" %*
-
-Note that ``C:\Anaconda3`` is just an *example*! You should substitute the
-real path to your python 3 executable.
-
-Note that in Anaconda Python up to and including version 2.1 there is an error
-in the file “anaconda.bat” in ``C:\Anaconda3\Scripts``.  The line::
-
-    set PATH="%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
-
-should be changed to::
-
-    set "PATH=%ANACONDA%;%ANACONDA_SCRIPTS%;%PATH%"
+Run ``./setup.py install``.
 
 
 Vim

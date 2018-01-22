@@ -1,9 +1,31 @@
-# file: lamprop-gui.py
+#!/usr/bin/env python3
+# file: gui.py
 # vim:fileencoding=utf-8:fdm=marker:ft=python
+# lamprop GUI - main program.
 #
-# Author: R.F. Smith <rsmith@xs4all.nl>
+# Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-01-21 22:37:10 +0100
+# Last modified: 2018-01-22 19:19:01 +0100
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+# OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
+# NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+# OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 Calculate the elastic properties of a fibrous composite laminate, using a GUI.
 
@@ -18,7 +40,7 @@ from tkinter import ttk
 from tkinter.font import nametofont
 from tkinter.scrolledtext import ScrolledText
 from tkinter import filedialog
-import lp
+import lamprop as lp
 
 __version__ = lp.__version__
 
@@ -127,10 +149,15 @@ class LampropUI(tk.Tk):
         self.result['state'] = 'disabled'
 
 
-if __name__ == '__main__':
+def main():
+    """Main entry point for lamprop GUI."""
     if os.name == 'posix':
         if os.fork():
             sys_exit()
     root = LampropUI(None)
     root.wm_title('Lamprop GUI v' + __version__)
     root.mainloop()
+
+
+if __name__ == '__main__':
+    main()

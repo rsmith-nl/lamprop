@@ -1,10 +1,11 @@
-# file: __main__.py
+#!/usr/bin/env python3
+# file: lamprop.py
 # vim:fileencoding=utf-8:ft=python
 # lamprop - main program.
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-01-21 09:58:47 +0100
+# Last modified: 2018-01-22 19:19:20 +0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -15,7 +16,7 @@ the data file format.
 import argparse
 import logging
 import sys
-import lp
+import lamprop as lp
 
 __version__ = lp.__version__
 _lic = """lamprop {}
@@ -56,8 +57,8 @@ def noop():
     pass
 
 
-def main(argv):
-    """Entry point for lamprop."""
+def main():
+    """Entry point for lamprop console application."""
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
@@ -103,7 +104,7 @@ def main(argv):
         metavar='file',
         nargs='*',
         help="one or more files to process")
-    args = opts.parse_args(argv)
+    args = opts.parse_args(sys.argv[1:])
     logging.basicConfig(
         level=getattr(logging, args.log.upper(), None),
         format='%(levelname)s: %(message)s')
@@ -142,4 +143,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()
