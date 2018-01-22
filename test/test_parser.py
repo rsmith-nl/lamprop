@@ -3,14 +3,14 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2017-04-16 18:42:22 +0200
+# Last modified: 2018-01-22 20:45:19 +0100
 
 
 """Test for lamprop parser."""
 
 import sys
 
-sys.path.insert(1, 'src')
+sys.path.insert(1, '.')
 
 from lamprop.parser import (_get_numbers, _get_components, _directives,
                             _get_lamina, Fiber, Resin)  # noqa

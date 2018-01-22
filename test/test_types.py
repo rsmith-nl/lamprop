@@ -3,13 +3,13 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2017-07-05 22:04:44 +0200
+# Last modified: 2018-01-22 20:45:29 +0100
 
 """Test for lamprop types"""
 
 import sys
 
-sys.path.insert(1, 'src')
+sys.path.insert(1, '.')
 
 from lamprop.types import Fiber, Resin, Lamina, Laminate  # noqa
 

@@ -46,7 +46,7 @@ Developers
 ++++++++++
 
 You will need py.test_ to run the provided tests. Code checks are done using
-pylama_.
+pylama_. Both should be invoked from the root directory of the repository.
 
 .. _py.test: https://docs.pytest.org/
 .. _pylama: http://pylama.readthedocs.io/en/latest/
@@ -58,22 +58,15 @@ as ``lamprop``) primarily meant for POSIX operating systems and a GUI version
 You can try both versions without installing them first, with the following
 invocations in a shell from the root directory of the repository.
 
-Use::
-
-    python3 -m lamprop.console -h
-
-for the console version, and::
-
-    python3 -m lamprop.gui
-
-for the GUI version.
+Use ``python3 -m lamprop.console -h`` for the console version, and 
+``python3 -m lamprop.gui`` for the GUI version.
 
 
 Installation
 ------------
 
-Run ``./setup.py install``.
-
+Run ``./setup.py install``. This will install both the module and the scripts
+that use it.
 
 Vim
 +++
