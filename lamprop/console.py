@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
 # file: lamprop.py
 # vim:fileencoding=utf-8:ft=python
 # lamprop - main program.
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-01-22 19:19:20 +0100
+# Last modified: 2018-01-23 21:07:04 +0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 

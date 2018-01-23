@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
 # file: gui.py
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 # lamprop GUI - main program.
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-01-22 19:19:01 +0100
+# Last modified: 2018-01-23 21:07:09 +0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
