@@ -4,7 +4,7 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-01-23 21:07:09 +0100
+# Last modified: 2018-03-31 17:40:52 +0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,9 +31,9 @@ Calculate the elastic properties of a fibrous composite laminate, using a GUI.
 See lamprop(5) for the manual of the data file format.
 """
 
-from sys import exit as sys_exit
 from functools import partial
 import os
+import sys
 import tkinter as tk
 from tkinter import ttk
 from tkinter.font import nametofont
@@ -152,7 +152,11 @@ def main():
     """Main entry point for lamprop GUI."""
     if os.name == 'posix':
         if os.fork():
-            sys_exit()
+            sys.exit()
+    else:
+        sys.stdout = open(os.devnull, "w")
+        sys.stderr = open(
+            os.path.join(os.getenv("TEMP"), "stderr-"+os.path.basename(sys.argv[0])), "w")
     root = LampropUI(None)
     root.wm_title('Lamprop GUI v' + __version__)
     root.mainloop()
