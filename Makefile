@@ -1,29 +1,36 @@
-.PHONY: all install uninstall dist clean check refresh test setver
+# file: Makefile
+# vim:fileencoding=utf-8:fdm=marker:ft=make
+#
+# NOTE: This Makefile is only useful on UNIX-like operating systems!
+#       It will *not* work on ms-windows!
+#
+# Author: R.F. Smith <rsmith@xs4all.nl>
+# Created: 2018-01-21 22:44:51 +0100
+# Last modified: 2018-03-31 16:20:01 +0200
+
+.PHONY: all install uninstall clean check test
 
 # Installation locations
 PREFIX=/usr/local
-MANDIR=$(PREFIX)/man
 BINDIR=$(PREFIX)/bin
+MANDIR=$(PREFIX)/man
+PKGPATH!=python3 -c "import sys; print([p for p in sys.path if p.endswith('site-packages')][0])"
 
 # Leave these two as they are.
 SUBDIR=doc
 DISTFILES=README.rst
 
 # Default target.
-all: lamprop ${SUBDIR}
-
-lamprop: src/lamprop.py src/lamprop-gui.py src/lp/*.py
-	python3 build.py
-
-${SUBDIR}::
-	cd ${.TARGET}; make ${.TARGETS}
+all::
+	@echo "use 'make install' the program"
+	@echo "use 'make clean' to remove generated files."
+	@echo "use 'make check' to run pylama."
+	@echo "use 'make test' to run the test suite using py.test."
 
 # Install lamprop and its documentation.
-install: lamprop
-# Install the zipped script.
-	install -d ${BINDIR}
-	install lamprop ${BINDIR}
-	install lamprop-gui ${BINDIR}
+install:
+	python3 setup.py install
+	rm -rf build dist lamprop.egg-info
 # Install the manual page.
 	gzip -c doc/lamprop.1 >lamprop.1.gz
 	gzip -c doc/lamprop.5 >lamprop.5.gz
@@ -35,11 +42,14 @@ install: lamprop
 
 # Remove an installed lamprop completely
 uninstall::
-	rm -f ${BINDIR}/lamprop ${BINDIR}/lamprop-gui $(MANDIR)/man1/lamprop.1* \
-	$(MANDIR)/man5/lamprop.5*
+	rm -rf $(PKGPATH)/lamprop*.egg
+	rm -rf $(BINDIR)/lamprop*
 
-clean: ${SUBDIR}
-	rm -rf lamprop backup-*.tar*
+clean:
+	rm -rf backup-*.tar*
+	rm -rf build
+	rm -rf dist
+	rm -rf lamprop.egg-info
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name __pycache__ -delete
 
@@ -47,8 +57,5 @@ clean: ${SUBDIR}
 check:: .IGNORE
 	pylama
 
-refresh::
-	.git/hooks/post-commit
-
-tests::
+test::
 	py.test-3.6 -v
