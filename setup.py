@@ -4,9 +4,10 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-22 18:05:56 +0100
-# Last modified: 2018-01-22 19:40:15 +0100
+# Last modified: 2018-05-10T14:16:51+0200
 
 from setuptools import setup
+from lamprop.version import __version__
 
 with open('README.rst') as f:
     ld = f.read()
@@ -14,10 +15,11 @@ with open('README.rst') as f:
 name = 'lamprop'
 setup(
     name=name,
-    version='3.5',
+    version=__version__,
     description='Calculates elastic properties of fibrous composites',
     author='Roland Smith',
     author_email='rsmith@xs4all.nl',
+    license='BSD',
     url='https://github.com/rsmith-nl/lamprop',
     install_requires=['numpy>=1.10'],
     provides=[name],
