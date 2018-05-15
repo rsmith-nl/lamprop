@@ -1,0 +1,254 @@
+% file: lamprop-manual.tex
+% vim:fileencoding=utf-8:fdm=marker:ft=tex
+%
+% Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+% Created: 2018-05-13 23:48:04 +0200
+% Last modified: 2018-05-15T22:41:25+0200
+
+\newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
+\newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
+\newcommand{\TheTitle}{Lamprop manual}
+
+\documentclass[a4paper,landscape,oneside,11pt,twocolumn]{memoir}
+\usepackage{fontspec}
+\usepackage{siunitx}
+\usepackage{ifthen}
+\usepackage{enumitem}
+
+% Set fonts for XeTeX {{{1
+\setmainfont{Alegreya}[
+    SmallCapsFont={Alegreya SC},
+    SmallCapsFeatures={Letters=SmallCaps},
+]
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+\usepackage[italic]{mathastext}
+
+% Hyperref moet als laatste geladen worden,
+\usepackage[bookmarks,pdfborder={0 0 0}]{hyperref}
+% met uitzondering van uitbreidingen erop.
+\usepackage{memhfixc}
+
+% Grootte van de pagina
+\setlength{\trimtop}{0pt}
+\setlength{\trimedge}{\stockwidth}
+\addtolength{\trimedge}{-\paperwidth}
+% Een A4 op zijn kant is 297 mm breed en 210 mm hoog.
+% We halen 30 mm van de hoogte af, en 20 mm van de breedte.
+\settypeblocksize{180mm}{277mm}{*}
+% Volgens het log-bestand:
+%   Text height and width: 514.20023pt by 788pt
+%   Columnsep and columnseprule: 10pt and 0pt
+% Dat betekent dat een kolom (788 - 10)/2 = 389pt = 137.2 mm is.
+% Een foto op 300 dpi moet dan 389/72*300 = 1621 pixels breed zijn.
+% Maar op de breedte van 1200 pixels passen er twee foto's in één
+% kolom.
+
+\setulmargins{*}{*}{1}
+\setlrmargins{*}{*}{1}
+\setheadfoot{\onelineskip}{1.5\onelineskip}
+\setheaderspaces{*}{*}{1}
+\checkandfixthelayout
+
+% Instellingen van het siunitx pakket.
+\sisetup{detect-all=true, mode=text, group-digits=true,
+  input-decimal-markers={.,}, output-decimal-marker={.},
+  exponent-product=\times, separate-uncertainty=true,
+  load-configurations=abbreviations}
+
+% voor enumitem
+\setlist[itemize,1]{leftmargin=*}
+\setlist[enumerate,1]{leftmargin=*}
+\setlist[description,1]{leftmargin=*}
+\setlist{noitemsep}
+
+% Instellingen voor polyglossia
+%\setmainlanguage[babelshorthands=true]{english}
+
+% Definities van locale modificaties. MOET achter de invoeging van het ifthen
+% pakket komen!
+%\ifthenelse{\VCModified>0}%
+%{\newcommand{\locmod}{\textcolor{red}{~(m)}}}{\newcommand{\locmod}{}}
+
+
+% Document parameters {{{1
+\title{\TheTitle}
+\author{Roland F. Smith}
+\date{\TheDate}
+
+% Kop- en voetteksten
+\makeevenhead{plain}{\thetitle}{}{}
+\makeoddhead{plain}{\thetitle}{}{}
+\makeheadrule{plain}{\textwidth}{\normalrulethickness}
+\makefootrule{plain}{\textwidth}{\normalrulethickness}{0pt}
+\makeevenfoot{plain}{\theauthor}{\thepage}{\TheDate}
+\makeoddfoot{plain}{\theauthor}{\thepage}{\TheDate}
+
+\makepagestyle{logboek}
+\makeevenhead{logboek}{\thetitle}{}{\rightmark}
+\makeoddhead{logboek}{\thetitle}{}{\rightmark}
+\makeheadrule{logboek}{\textwidth}{\normalrulethickness}
+\makefootrule{logboek}{\textwidth}{\normalrulethickness}{0pt}
+\makeevenfoot{logboek}{\theauthor}{\thepage}{\TheDate}
+\makeoddfoot{logboek}{\theauthor}{\thepage}{\TheDate}
+
+% Ruimte voor nummering in lijsten
+\cftsetindents{section}{1.5em}{3.0em}
+\cftsetindents{figure}{1.5em}{3.0em}
+\cftsetindents{table}{1.5em}{3.0em}
+
+\sloppy
+\makeindex
+
+% Document info. {{{1
+\special{pdf:docinfo <<
+/Title (\TheTitle)
+/Author (\theauthor)
+/Subject (lamprop)
+/Keywords (lamprop, manual, Roland Smith)
+/CreationDate (D:20180108164304+0100)
+>>}
+
+%%%%%%%%%%%%%%%%%%%%%%%%% start van het document %%%%%%%%%%%%%%%%%%%%% {{{1
+\begin{document}
+% Specifiek voor MEMOIR
+% Maak de lijsten minder open.
+\tightlists
+% Opmaak voor verklarende tekst bij figuren
+\hangcaption
+\captiontitlefont{\small}
+\chapterstyle{section}
+% Gebruik twee kolommen in TOC etc.
+\doccoltocetc
+
+% Geen inspringen, maar ruimte tussen paragrafen
+%\setlength{\parskip}{\baselineskip}
+\nonzeroparskip
+\setlength{\parindent}{0pt}
+\setbeforesecskip{5pt}
+\setaftersecskip{1pt}
+\setbeforesubsecskip{5pt}
+\setaftersubsecskip{1pt}
+
+\begin{titlingpage}
+  \setlength{\parindent}{0pt} % Anders klopt uitlijning v.d. \rule's niet.
+  \vspace*{\stretch{1}}
+  \rule{\linewidth}{1mm}\vspace{5pt}
+  \begin{flushright}
+      {\Huge \TheTitle}\\[5mm]
+      {\huge Roland F. Smith}
+  \end{flushright}
+  \rule{\linewidth}{1mm}
+  \vspace*{\stretch{3}}
+  \begin{center}
+    \Large Eindhoven 2018
+  \end{center}
+\end{titlingpage}
+
+% Om paginanummering gelijk te krijgen aan pagina's in PDF.
+\setcounter{page}{2}
+% Gebruik de standaard opmaak.
+\pagestyle{logboek}
+
+% Inhoudsopgave
+\begin{KeepFromToc}
+\tableofcontents
+\end{KeepFromToc}
+% Lijst met afbeeldingen.
+%\listoffigures
+% Lijst met tabellen
+%\listoftables
+% Index
+%\printindex
+\clearpage
+
+% Alleen hoofdstuk- en sectie nummers.
+\setcounter{secnumdepth}{1}
+
+%%%%%%%%%%%%%%%%%%%% Inleiding %%%%%%%%%%%%%%%%%%%% {{{1
+\chapter{Introduction}
+
+The purpose of this program is to calculate some properties of
+fiber-reinforced composite laminates. It calculates:
+\begin{itemize}
+    \item engineering properties like $E_x$, $E_y$ and $G_{xy}$
+    \item thermal properties like $\alpha_x$ and $\alpha_x$
+    \item physical properties like density and laminate thickness
+    \item stiffness and compliance matrices (\textsc{abd}  and abd)
+\end{itemize}
+
+
+Although these properties are not very difficult to calculate, (the relevant
+equations and formulas can be readily found in the available composite
+literature) the calculation is time-consuming and error-prone when done by
+hand.
+
+This program can \emph{not} calculate the strength of composite laminates;
+because there are many different failure modes, strengths of composite
+laminates cannot readily be calculated from the strengths of the separate
+materials that form the laminate. These strengths have to be determined from
+tests.
+
+The original version of this program was written in C, since implementing
+it in a spreadsheet proved cumbersome, inflexible and even produced
+incorrect results. The C version ran up to 1.3.x.
+
+As an exercise in learning the language, the author ported the program to
+the Python programming language. This proved to be a much cleaner, more
+maintainable and shorter implementation.
+
+In the meantime, the program was ported from python version 2 to python
+version 3 and the core objects (in the \texttt{types.py} file) were made
+immutable. Also the output method was made generic to enable output in
+different formats, such as \LaTeX, \textsc{html} and \textsc{rtf}.
+
+Additionally, the generally hard to obtain transverse fiber properties
+were replaced with properties derived from the matrix.
+
+\chapter{Building and installing the program}
+
+\section{Requirements}
+
+The main requirements are \texttt{python} (version 3.4 or later) and the
+\texttt{numpy} library (version 1.6 or later). Currently the development is
+done using \texttt{python} 3.6 and \texttt{numpy} 1.13.
+
+For developers: You will need py.test\footnote{\url{https://docs.pytest.org/}}
+to run the provided tests. Code checks are done using
+pylama\footnote{\url{http://pylama.readthedocs.io/en/latest/}}. Both should be
+invoked from the root directory of the repository.
+
+There are basically two versions of this program; a console version (installed
+as \texttt{lamprop}) primarily meant for \textsc{posix} operating systems and
+a \textsc{gui} version (installed as \texttt{lamprop-gui}) primarily meant for
+ms-windows.
+
+You can try both versions without installing them first, with the following
+invocations in a shell from the root directory of the repository.
+
+Use \texttt{python3 -m lamprop.console -h} for the console version, and
+\texttt{python3 -m lamprop.gui} for the \textsc{gui} version.
+
+
+\section{Installation}
+
+Run \texttt{python3 setup.py install}. This will install both the module and
+the scripts that use it.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%% Eindmaterie %%%%%%%%%%%%%%%%%%%% {{{1
+\setsecnumdepth{none}
+%\include{appendices}
+%\bibliography{lmref}
+\chapter{Colofon}
+
+This document has been typeset with the
+\TeX\footnote{\url{http://nl.wikipedia.org/wiki/TeX}}
+software, using the \LaTeX\footnote{\url{http://nl.wikipedia.org/wiki/LaTeX}}
+macros and specifically the
+\textsc{memoir}\footnote{%
+    \url{http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/}} style.
+
+\end{document}
