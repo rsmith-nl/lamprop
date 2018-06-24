@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-11-11 19:39:55 +0100
+# Last modified: 2018-06-24T18:57:36+0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -81,6 +81,7 @@ class Fiber:
 
     __slots__ = ('E1', 'ν12', 'α1', 'ρ', 'name')
 
+    @profile
     def __init__(self, E1, ν12, α1, ρ, name):
         """
         Create a Fiber.
@@ -131,6 +132,7 @@ class Resin:
 
     __slots__ = ('E', 'ν', 'α', 'ρ', 'name')
 
+    @profile
     def __init__(self, E, ν, α, ρ, name):
         """
         Create a Resin.
@@ -182,6 +184,7 @@ class Lamina:
                  'resin_weight', 'E1', 'E2', 'G12', 'ν12', 'αx', 'αy', 'αxy',
                  'Q̅11', 'Q̅12', 'Q̅16', 'Q̅22', 'Q̅26', 'Q̅66', 'ρ')
 
+    @profile
     def __init__(self, fiber, resin, fiber_weight, angle, vf):
         """
         Create a Lamina.
@@ -300,6 +303,7 @@ class Laminate:
                  'resin_weight', 'ABD', 'abd', 'Ex', 'Ey', 'Gxy', 'νxy',
                  'νyx', 'αx', 'αy', 'wf')
 
+    @profile
     def __init__(self, name, layers):
         """
         Create a new Laminate.

@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-06-04 15:02:27 +0200
+# Last modified: 2018-06-24T18:57:39+0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,6 +33,7 @@ from .types import Fiber, Resin, Lamina, Laminate
 msg = logging.getLogger('parser')
 
 
+@profile
 def parse(filename):
     """
     Parse a lamprop file.
@@ -89,6 +90,7 @@ def _directives(filename):
     return rd, fd, ld
 
 
+@profile
 def _get_numbers(directive):
     """
     Retrieve consecutive floating point numbers from a directive.
@@ -110,6 +112,7 @@ def _get_numbers(directive):
     return tuple(numbers), remain
 
 
+@profile
 def _laminate(ld, resins, fibers):
     """
     Parse a laminate definition.
@@ -159,6 +162,7 @@ def _laminate(ld, resins, fibers):
     return Laminate(lname, llist)
 
 
+@profile
 def _get_components(directives, tp):
     """
     Parse fiber and resin lines.
@@ -201,6 +205,7 @@ def _get_components(directives, tp):
     return {comp.name: comp for comp in rv}
 
 
+@profile
 def _get_lamina(directive, fibers, resin, vf):
     """
     Parse a lamina line.
