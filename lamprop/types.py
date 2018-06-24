@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2018-06-24T18:57:36+0200
+# Last modified: 2018-06-24T20:50:00+0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -74,6 +74,8 @@ The following references used in coding this module:
 
 import math
 import numpy as np
+
+from .prof import profile
 
 
 class Fiber:

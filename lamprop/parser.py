@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2018-06-24T18:57:39+0200
+# Last modified: 2018-06-24T20:49:34+0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,6 +29,7 @@
 
 import logging
 from .types import Fiber, Resin, Lamina, Laminate
+from .prof import profile
 
 msg = logging.getLogger('parser')
 

@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-06-24T19:04:54+0200
+# Last modified: 2018-06-24T20:47:13+0200
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -15,10 +15,8 @@ the data file format.
 import argparse
 import logging
 import sys
-
 # For profiling
-sys.path.insert(1, '.')
-
+sys.path.insert(0, '/home/rsmith/src/progs/lamprop')
 import lamprop as lp
 
 __version__ = lp.__version__
@@ -60,11 +58,9 @@ def noop():
     pass
 
 
-@profile
+@lp.profile
 def main():
     """Entry point for lamprop console application."""
-
-
     # Process the command-line arguments
     opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
     group = opts.add_mutually_exclusive_group()
@@ -150,3 +146,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    lp.profile.print_stats()

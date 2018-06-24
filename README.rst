@@ -58,8 +58,12 @@ as ``lamprop``) primarily meant for POSIX operating systems and a GUI version
 You can try both versions without installing them first, with the following
 invocations in a shell from the root directory of the repository.
 
-Use ``python3 -m lamprop.console -h`` for the console version, and 
+Use ``python3 -m lamprop.console -h`` for the console version, and
 ``python3 -m lamprop.gui`` for the GUI version.
+
+In the ``profiling`` branch, the program user the ``line_profiler`` module to
+do profiling. For example, run ``python3 lamprop/console.py test/twill245.lam | less``
+to get a profile on standard output.
 
 
 Installation

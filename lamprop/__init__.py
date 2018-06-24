@@ -3,7 +3,7 @@
 #
 # Copyright © 2015,2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2017-06-03 22:34:58 +0200
+# Last modified: 2018-06-24T20:46:30+0200
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,4 +34,5 @@ from .rtf import header as rtf_header
 from .rtf import out as rtf_output
 from .text import out as text_output
 from .types import Fiber, Resin, Lamina, Laminate
+from .prof import profile
 from .version import __version__
