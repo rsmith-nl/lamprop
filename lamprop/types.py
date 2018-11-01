@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2017-11-11 19:39:55 +0100
+# Last modified: 2018-11-01T21:51:08+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -226,7 +226,10 @@ class Lamina:
         thickness = fiber_thickness * (1 + vm / vf)
         resin_weight = thickness * vm * resin.ρ * 1000  # Resin [g/m²]
         E1 = vf * fiber.E1 + resin.E * vm  # Hyer:1998, p. 115, (3.32)
-        E2 = 3 * resin.E  # Tsai:1992, p. 3-13
+        # Originally a factor of 3 (conform Tsai:1992, p. 3-13) was used in
+        # the following line. From practical experience this has been reduced
+        # to 2.
+        E2 = 2 * resin.E
         G12 = E2 / 2  # Tsai:1992, p. 3-13
         ν12 = 0.3  # Tsai:1992, p. 3-13
         ν21 = ν12 * E2 / E1  # Nettles:1994, p. 4

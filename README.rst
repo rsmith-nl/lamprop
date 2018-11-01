@@ -65,7 +65,7 @@ Use ``python3 -m lamprop.console -h`` for the console version, and
 Installation
 ------------
 
-Run ``./setup.py install``. This will install both the module and the scripts
+Run ``python3 setup.py install``. This will install both the module and the scripts
 that use it.
 
 Vim
