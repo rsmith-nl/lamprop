@@ -2,9 +2,9 @@
 " Language: lamprop
 " Maintainer: R.F. Smith <rsmith@xs4all.nl>
 " Created: 2015-11-01 12:32:18 +0100
-" Last modified: 2015-11-01 15:19:10 +0100
+" Last modified: 2018-11-11T15:20:39+0100
 
-" Quit when a (custom syntax file was already loaded
+" Quit when a (custom) syntax file was already loaded.
 if exists("b:current_syntax")
     finish
 endif
@@ -14,7 +14,7 @@ syn spell toplevel
 
 syn match lampropComment ".*" contains=@Spell
 syn match lampropStart "^[frtmls]:" contained
-syn match lampropStatement "^[frtmls]:.*$" contains=lampropNumber,lampropStart
+syn match lampropStatement "^[frtmls]:.*$" contains=lampropNumber,lampropStart skipwhite
 syn match lampropNumber "\s[+-]\?\d\+" contained
 syn match lampropNumber "\.\d\+\s" contained
 syn match lampropNumber "\s[+-]\?\d\+\%(\.\d\+\)\?\%([eE][+-]\?\d\+\)\s" contained
