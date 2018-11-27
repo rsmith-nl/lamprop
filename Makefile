@@ -6,7 +6,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2018-03-31 16:20:01 +0200
+# Last modified: 2018-11-27T19:37:03+0100
 
 .PHONY: all install uninstall clean check test
 
@@ -58,4 +58,4 @@ check:: .IGNORE
 	pylama
 
 test::
-	py.test-3.6 -v
+	py.test-3.7 -v

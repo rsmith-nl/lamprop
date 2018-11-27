@@ -9,3 +9,4 @@ lamprop.egg-info/
 backup-*.tar.gz
 lamprop.?.ps
 lamprop.?.pdf
+.pytest_cache/
