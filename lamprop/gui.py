@@ -4,7 +4,7 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-03-31 17:40:52 +0200
+# Last modified: 2018-11-27T16:31:55+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -120,6 +120,7 @@ class LampropUI(tk.Tk):
         )
         if not fn:
             return
+        self.directory = os.path.dirname(fn.name)
         self.lamfile.set(fn.name)
         self.do_reload()
 
