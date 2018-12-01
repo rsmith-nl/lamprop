@@ -3,7 +3,7 @@
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2018-05-15T22:41:25+0200
+% Last modified: 2018-12-02T01:25:10+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -11,9 +11,11 @@
 
 \documentclass[a4paper,landscape,oneside,11pt,twocolumn]{memoir}
 \usepackage{fontspec}
+\usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{ifthen}
 \usepackage{enumitem}
+\usepackage{listings}
 
 % Set fonts for XeTeX {{{1
 \setmainfont{Alegreya}[
@@ -64,6 +66,46 @@
 
 % Instellingen voor polyglossia
 %\setmainlanguage[babelshorthands=true]{english}
+
+% Opmaak van  listings {{{1
+\lstset{
+  language=python,
+%  backgroundcolor=\color{inputbackground},
+  extendedchars=\true,
+  aboveskip=\smallskipamount,
+  belowskip=\smallskipamount,
+  breaklines=true,
+%  basicstyle=\small \ttfamily,
+  basicstyle=\small,
+  showstringspaces=false,
+  commentstyle=\itshape,
+  stringstyle=\ttfamily,
+  upquote=true,
+  columns=fullflexible, % tighter character kerning, like verb
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+\lstdefinestyle{plain}{
+    basicstyle=\tiny\ttfamily,
+    columns=fixed,
+    language={},
+    backgroundcolor={},
+    identifierstyle={}
+}
 
 % Definities van locale modificaties. MOET achter de invoeging van het ifthen
 % pakket komen!
@@ -165,8 +207,8 @@
 % Alleen hoofdstuk- en sectie nummers.
 \setcounter{secnumdepth}{1}
 
-%%%%%%%%%%%%%%%%%%%% Inleiding %%%%%%%%%%%%%%%%%%%% {{{1
-\chapter{Introduction}
+%%%%%%%%%%%%%%%%%%%% Inleiding %%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction} % {{{1
 
 The purpose of this program is to calculate some properties of
 fiber-reinforced composite laminates. It calculates:
@@ -205,13 +247,13 @@ different formats, such as \LaTeX, \textsc{html} and \textsc{rtf}.
 Additionally, the generally hard to obtain transverse fiber properties
 were replaced with properties derived from the matrix.
 
-\chapter{Building and installing the program}
+\chapter{Building and installing the program} % {{{1
 
-\section{Requirements}
+\section{Requirements} % {{{2
 
 The main requirements are \texttt{python} (version 3.4 or later) and the
 \texttt{numpy} library (version 1.6 or later). Currently the development is
-done using \texttt{python} 3.6 and \texttt{numpy} 1.13.
+done using \texttt{python} 3.7 and \texttt{numpy} 1.15.
 
 For developers: You will need py.test\footnote{\url{https://docs.pytest.org/}}
 to run the provided tests. Code checks are done using
@@ -229,13 +271,437 @@ invocations in a shell from the root directory of the repository.
 Use \texttt{python3 -m lamprop.console -h} for the console version, and
 \texttt{python3 -m lamprop.gui} for the \textsc{gui} version.
 
+Note that if lamprop is already installed, using the above commands will use
+the \emph{installed} version of the lamprop module.
 
-\section{Installation}
 
-Run \texttt{python3 setup.py install}. This will install both the module and
+\section{Installation} % {{{2
+
+\begin{itemize}
+    \item Unpack the tarball or zipfile, or clone the github repository.
+    \item Open a terminal window or (on ms-windows a \texttt{cmd} window).
+    \item Change into the lamprop directory.
+    \item Run \texttt{python3 setup.py install}. This will install both the module and
 the scripts that use it.
+\end{itemize}
 
 
+\chapter{Using the program} % {{{1
+
+There are basically three ways to use lamprop.
+
+\begin{enumerate}
+    \item Use the command-line front-end \texttt{lamprop}.
+    \item Use the \textsc{gui}-frontend \texttt{lamprop-gui}.
+    \item Use the lamprop module directly from Python 3.
+\end{enumerate}
+
+The first and second method depend on files written in a domain-specific
+language.
+
+\section{The lamprop file format} % {{{2
+
+The file format is very simple. Functional lines have either \texttt{f},
+\texttt{r}, \texttt{t}, \texttt{m}, \texttt{l} or \texttt{s} as the first
+non-whitespace character. This character must immediately be followed by
+a colon \texttt{:}. All other lines are seen as comments and disregarded.
+
+This program assumes specific metric units. The units used below are important
+because the program internally calculates the thickness of layers (in mm)
+based on the volume fractions and densities of the fibers and resins.
+
+The \texttt{f:}-line line contains a definition of a fiber. The parser
+converts this into an instance of a \texttt{Fiber} object The line must
+contain the following values, separated by whitespace:
+\begin{description}
+    \item[$E_1$] Young's modulus in the fiber direction in \si{MPa}.
+    \item[$\nu_{12}$] Poisson's constant (dimensionless).
+    \item[$\alpha_1$] Coefficient of Thermal Expansion in the fiber direction
+        in \si{K^{-1}}.
+    \item[$\rho$] Density of the fiber in \si{g/cm^3}.
+    \item[$name$] The identifier for the resin. This should be unique in all
+        the files read. Contrary to the previous values, this may contain
+        whitespace.
+\end{description}
+
+Usually, $E_1$ and other properties in the fibre length direction are easily
+obtained from a fiber supplier. Previous versions of this program also
+required some properties perpendicular to the fiber to calculate transverse
+properties of the lamina. Since these values are very hard to obtain, they
+have been replaced by values derived from the matrix, according to Tsai(1992).
+
+In the \texttt{tools} subdirectory of the source distribution you will find
+a script called \texttt{convert-lamprop.py} to convert old-style fiber lines
+to the new format.
+
+The \texttt{r:}-line line contains a definition of a resin. Like with the
+fibers, this becomes an instance of a \texttt{Resin} object in the code. The
+resin line must contain the following values, separated by whitespace.
+\begin{description}
+    \item[$E$] Young's modulus in \si{MPa}.
+    \item[$\nu$] Poisson's constant (dimensionless).
+    \item[$\alpha$] Coefficient of Thermal Expansion in \si{K^{-1}}.
+    \item[$\rho$] Density of the resin in \si{g/cm^3}.
+    \item[$name$] The identifier for the resin. This should be unique in all
+        the files read. Contrary to the previous values, this may contain
+        whitespace.
+\end{description}
+
+The \texttt{t:} line starts a new laminate. It only contains the name which
+identifies the laminate. This name must be unique within the current input
+files. It may contain spaces.
+
+The \texttt{m:} line chooses a resin for the laminate. It must appear after
+a \texttt{t:} line, and before the \texttt{l:} lines. It must contain the
+following values, separated by whitespace:
+\begin{description}
+    \item[$vf$] The fiber volume fraction. This should be a number between
+        0 and 1 or between 1 up to and including 100. In the latter case it
+        is interpreted als a percentage.
+    \item[$name$] The name of the resin to use. This must have been previously
+        declared with an \texttt{r:}-line.
+\end{description}
+
+The \texttt{l:} line defines a single layer (lamina) in the laminate. It must be
+preceded by a \texttt{t:} and a \texttt{m:} line. It must contain the following values,
+separated by whitespace (optional items in brackets):
+\begin{description}
+    \item[$weight$] The area weight in \si{g/m^2} of the dry fibers.
+    \item[$angle$] The angle upwards from the x-axis under which the fibers are oriented.
+    \item[($vf$)] Optionally the layer can have a different fiber volume fraction.
+    \item[$name$] The name of the fiber used in this layer. This fiber must have been
+        declared previously with an \texttt{f:} line.
+\end{description}
+
+The last line in a laminate definition can be an \texttt{s:} line, which stands
+for "symmetry". This signifies that all the lamina before it are to be added
+again in reverse order, making a symmetric laminate stack. An \texttt{s:} line in any
+other position is an error.
+
+\begin{lstlisting}[style=plain]
+Fiber definition
+   E1     v12  alpha1   rho  naam
+f: 233000 0.2  -0.54e-6 1.76 Hyer's carbon fiber
+
+Matrix definition
+   Em   v    alpha   rho name
+r: 4620 0.36 41.4e-6 1.1  Hyer's resin
+
+t: [0/90]s laminate
+This is a standard symmetric cross-ply laminate. It has fine extensional
+moduli in the fiber directions, but a very low shear modulus.
+m: 0.5 Hyer's resin
+l: 100  0 Hyer's carbon fiber
+l: 100 90 Hyer's carbon fiber
+s:
+\end{lstlisting}
+
+\section{Material data} % {{{2
+
+Over the years, the author has gathered a lot of data for different fibers
+from datasheets provided by the manufacturers. Data for different carbon
+fibers is given in \tref{tb:fibers}. In case the $\nu_{12}$ is not
+known for a carbon fiber, it is estimated at 0.25. Similarly, if the
+$\alpha_1$ is not known, it is estimated at \SI{-0.12e-6}{K^{-1}}. For glass
+fibers, $\nu_{12}$ is estimated 0.33 unless known and $\alpha_1$ is estimated
+\SI{5e-6}{K^{-1}} unless known.
+
+\begin{table}[!htbp]
+  \centering
+  \caption{\label{tb:fibers}fibers}
+  \begin{tabular}{lrrrrl}% l,c,r
+      Name & $E_1$ & $\nu_{12}$ & $\alpha_1$ & $\rho$ & Type\\
+      & [\si{MPa}] & [-] & [\si{K^{-1}}] & [\si{g/cm^3}]\\
+    \midrule
+      Tenax HTA & 238000 & 0.25 & -0.1e-6 & 1.76 & carbon\\
+Tenax HTS & 240000 & 0.25 & -0.1e-6 & 1.77 & carbon\\
+Tenax STS40 & 240000 & 0.25 & -0.12e-6 & 1.78 & carbon\\
+Toracya T300 & 230000 & 0.27 & -0.41e-6 & 1.76 & carbon\\
+Torayca T700SC & 230000 & 0.27 & -0.38e-6 & 1.80 & carbon\\
+pyrofil TR30S & 235000 & 0.25 & -0.5e-6 & 1.79 & carbon\\
+sigrafil CT24-5.0-270/E100 & 270000 & 0.25 & -0.12e-6 & 1.79 & carbon\\
+K63712 & 640000 & 0.234 & -1.47e-6 & 2.12 & carbon\\
+K63A12 & 790000 & 0.23 & -1.2e-6 & 2.15 & carbon\\
+Torayca T800S & 294000 & 0.27 & -0.60e-6 & 1.76 & carbon\\
+K13C2U & 900000 & 0.234 & -1.47e-6 & 2.20 & carbon\\
+M35J & 339000 & 0.27 & -0.73e-6 & 1.75 & carbon\\
+M46J & 436000 & 0.234 & -0.9e-6 & 1.84 & carbon\\
+PX35UD & 242000 & 0.27 & -0.6e-6 & 1.81 & carbon\\
+Granoc XN-80-60S & 780000 & 0.27 & -1.5e-6 & 2.17 & carbon\\
+Granoc XN-90-60S & 860000 & 0.27 & -1.5e-6 & 2.19 & carbon\\
+e-glass & 73000 & 0.33 & 5.3e-6 & 2.60 & glass\\
+ecr-glass & 81000 & 0.33 & 5e-6 & 2.62 & glass\\
+  \end{tabular}
+\end{table}
+
+Several resins are shown in \tref{tb:resins}. For resins, $\nu$ is estimated
+0.36 unless known and $\alpha$ is estimated \SI{40e-6}{K^{-1}} unless known.
+
+\begin{table}[!htbp]
+  \centering
+  \caption{\label{tb:resins}Resins}
+  \begin{tabular}{lrrrrl}% l,c,r
+      Name & $E$ & $\nu$ & $\alpha$ & $\rho$ & Type\\
+      & [\si{MPa}] & [-] & [\si{K^{-1}}] & [\si{g/cm^3}]\\
+    \midrule
+      Epikote EPR04908 & 2900 & 0.25 & 40e-6 & 1.15 & epoxy\\
+      Palatal P4-01 & 4300 & 0.36 & 40e-6 & 1.19 & polyester\\
+      Synolite 2155-N-1 & 4000 & 0.36 & 40e-6 & 1.22 & polyester\\
+      Distitron 3501LS1 & 4100 & 0.36 & 40e-6 & 1.2 & polyester\\
+      Synolite 1967-G-6 & 3800 & 0.36 & 40e-6 & 1.165 & \textsc{dcpd}\\
+      atlac 430 & 3600 & 0.36 & 55e-6 & 1.145 & vynilester\\
+  \end{tabular}
+\end{table}
+
+\section{Using the command-line front-end} % {{{2
+
+The command \texttt{lamrop -h} produces the following overview of the options.
+
+\begin{lstlisting}[style=plain]
+usage: lamprop [-h] [-l | -H | -r] [-e | -m] [-L | -v]
+               [--log {debug,info,warning,error}]
+               [file [file ...]]
+
+Calculate the elastic properties of a fibrous composite laminate.
+
+positional arguments:
+  file                  one or more files to process
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --latex           generate LaTeX output (the default is plain text)
+  -H, --html            generate HTML output
+  -r, --rtf             generate Rich Text Format output
+  -e, --eng             output only the layers and engineering properties
+  -m, --mat             output only the ABD and abd matrices
+  -L, --license         print the license
+  -v, --version         show program's version number and exit
+  --log {debug,info,warning,error}
+                        logging level (defaults to 'warning')
+\end{lstlisting}
+
+\section{Using the \textsc{gui} front-end} % {{{2
+
+The \textsc{gui} front-end was written (using \texttt{tkinter}) primarily for
+users of ms-windows, since they are generally not used to the command-line
+interface. The contents of its window are shown in \fref{fig:lamprop-gui}. The
+image shows the looks of the widgets on \textsc{unix}-like operating systems.
+On ms-windows follow the native look.
+
+\begin{figure}[!htbp]
+  \centerline{\includegraphics[scale=1]{lamprop-gui.png}}
+  \caption{\label{fig:lamprop-gui}lamprop \textsc{gui}}
+\end{figure}
+
+The \textsf{File} button allows you to load a lamprop file. If a file is
+loaded its name is shown right of the button. The \textsf{Reload} button
+re-loads a file. The checkboxes below determine which results are shown. If
+a file contains different laminates, the dropbox allows you to select
+a laminate to display. The textbox at the bottom shows the lamprop output as
+text.
+
+Pressing the \texttt{q}-key terminates the program.
+
+\section{Using the \texttt{lamprop} module from Python 3} % {{{2
+
+An example reproducing the results from \fref{fig:lamprop-gui} is shown
+below.\\
+
+\begin{lstlisting}
+import lamprop as la
+
+t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
+epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')
+
+L0 = la.Lamina(t300, epr04908, 100, 0, 0.50)
+L90 = la.Lamina(t300, epr04908, 100, 90, 0.50)
+
+cd0200 = la.Laminate('CD0200-2', (L0, L90, L90, L0))
+
+print(la.text.engprop(cd0200))
+\end{lstlisting}
+
+This is probably the most flexible way to use it, since you could use Python
+to generate large and complex laminates. Below, a symmetric and balanced
+quasi-isotropic laminate with layers every 15\textdegree{} is generated. There
+is no artificial limit to the amount of layers that can be defined. The author
+has used laminates with up to 250 layers. Calculating the properties of that
+laminate took approximately \SI{0.5}{s} on a machine with an Intel Core2 Q9300
+running FreeBSD.
+
+\begin{lstlisting}
+import lamprop as la
+
+t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
+epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')
+
+layers = [la.Lamina(t300, epr04908, 100, a, 0.50) for a in range(-90, 95, 15)]
+layers += layers[::-1]
+
+qi = la.Laminate('quasi-isotropic', layers)
+
+print(la.latex.out(qi, eng=True, mat=False))
+print(la.latex.out(qi, eng=False, mat=True))
+\end{lstlisting}
+
+The resulting \LaTeX{} code basically produces \tref{tab:quasi-isotropic} and
+\tref{tab:quasi-isotropic-mat}; the content was separated into two tables to
+fit on the page.
+\clearpage
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:quasi-isotropic}Layers and engineering properties of quasi-isotropic}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 3.7\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  100 &   -90 & 50 & T300-2\\
+      2 &  100 &   -75 & 50 & T300-2\\
+      3 &  100 &   -60 & 50 & T300-2\\
+      4 &  100 &   -45 & 50 & T300-2\\
+      5 &  100 &   -30 & 50 & T300-2\\
+      6 &  100 &   -15 & 50 & T300-2\\
+      7 &  100 &     0 & 50 & T300-2\\
+      8 &  100 &    15 & 50 & T300-2\\
+      9 &  100 &    30 & 50 & T300-2\\
+      10 &  100 &    45 & 50 & T300-2\\
+      11 &  100 &    60 & 50 & T300-2\\
+      12 &  100 &    75 & 50 & T300-2\\
+      13 &  100 &    90 & 50 & T300-2\\
+      14 &  100 &    90 & 50 & T300-2\\
+      15 &  100 &    75 & 50 & T300-2\\
+      16 &  100 &    60 & 50 & T300-2\\
+      17 &  100 &    45 & 50 & T300-2\\
+      18 &  100 &    30 & 50 & T300-2\\
+      19 &  100 &    15 & 50 & T300-2\\
+      20 &  100 &     0 & 50 & T300-2\\
+      21 &  100 &   -15 & 50 & T300-2\\
+      22 &  100 &   -30 & 50 & T300-2\\
+      23 &  100 &   -45 & 50 & T300-2\\
+      24 &  100 &   -60 & 50 & T300-2\\
+      25 &  100 &   -75 & 50 & T300-2\\
+      26 &  100 &   -90 & 50 & T300-2\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrl}
+      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 60.5 &\%\\
+      thickness & 2.95 & mm\\
+      density & 1.46 & g/cm$^3$\\
+      weight & 4299 & g/m$^2$\\
+      resin & 1699 & g/m$^2$\\
+      \midrule
+      $\mathrm{E_x}$ &    40924 & MPa\\
+      $\mathrm{E_y}$ &    48752 & MPa\\
+      $\mathrm{G_{xy}}$ &    15327 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.266215 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.317136 &-\\
+      $\mathrm{\alpha_x}$ & 3.11462e-06 & K$^{-1}$\\
+      $\mathrm{\alpha_y}$ & 2.12576e-06 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:quasi-isotropic-mat}Matrices of quasi-isotropic}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 3.7\\[3pt]}
+  \resizebox{.8\hsize}{!}{
+  \vbox{
+    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+          N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           1.3206\times 10^{5} &  4.1882\times 10^{4} & 0 & 0 & 0 & 0\\
+           4.1882\times 10^{4} &  1.5732\times 10^{5} & 0 & 0 & 0 & 0\\
+          0 & 0 &  4.5286\times 10^{4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  7.9688\times 10^{4} &  2.8649\times 10^{4} & -1.8401\times 10^{4}\\
+          0 & 0 & 0 &  2.8649\times 10^{4} &  1.3446\times 10^{5} & -2.9077\times 10^{4}\\
+          0 & 0 & 0 & -1.8401\times 10^{4} & -2.9077\times 10^{4} &  3.1125\times 10^{4}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\}\]
+    }
+    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\} = \left|\begin{array}{cccccc}
+           8.2705\times 10^{-6} & -2.2017\times 10^{-6} & 0 & 0 & 0 & 0\\
+          -2.2017\times 10^{-6} &  6.9425\times 10^{-6} & 0 & 0 & 0 & 0\\
+          0 & 0 &  2.2082\times 10^{-5} & 0 & 0 & 0\\
+          0 & 0 & 0 &  1.4796\times 10^{-5} & -1.5802\times 10^{-6} &
+          7.2712\times 10^{-6}\\
+          0 & 0 & 0 & -1.5802\times 10^{-6} &  9.4889\times 10^{-6} &
+          7.9304\times 10^{-6}\\
+          0 & 0 & 0 &  7.2712\times 10^{-6} &  7.9304\times 10^{-6} &
+          4.3835\times 10^{-5}\\
+          \end{array}\right|\times
+        \left\{\begin{array}{c}
+            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+          \end{array}\right\}\]\\
+    }
+    }
+    }
+\end{table}
+
+The stiffness or ABD matrix and compliance or abd matrix are shown with the
+relevant strains and forces in \tref{tab:quasi-isotropic-mat}. Both are 6×6
+matrices that can be divided into three 3×3 matrices; A, B and D or a, b and
+d.
+
+The expansions below reveal the symmetries in these matrices.
+
+\[
+    ABD = \left|\begin{array}{cccccc}
+        A_{11} & A_{12} & A_{16} & B_{11} & B_{12} & B_{16}\\
+        A_{12} & A_{22} & A_{26} & B_{12} & B_{22} & B_{26}\\
+        A_{16} & A_{26} & A_{66} & B_{16} & B_{26} & B_{66}\\
+        B_{11} & B_{12} & B_{16} & D_{11} & D_{12} & D_{16}\\
+        B_{12} & B_{22} & B_{26} & D_{12} & D_{22} & D_{26}\\
+        B_{16} & B_{26} & B_{66} & D_{16} & D_{26} & D_{66}\\
+    \end{array}\right|\quad
+    abd = \left|\begin{array}{cccccc}
+        a_{11} & a_{12} & a_{16} & b_{11} & b_{12} & b_{16}\\
+        a_{12} & a_{22} & a_{26} & b_{12} & b_{22} & b_{26}\\
+        a_{16} & a_{26} & a_{66} & b_{16} & b_{26} & b_{66}\\
+        b_{11} & b_{12} & b_{16} & d_{11} & d_{12} & d_{16}\\
+        b_{12} & b_{22} & b_{26} & d_{12} & d_{22} & d_{26}\\
+        b_{16} & b_{26} & b_{66} & d_{16} & d_{26} & d_{66}\\
+    \end{array}\right|
+\]
+
+The units of the parts of the ABD and abd matrix are as follows (where $i$ and
+$j$ are 1, 2 or 6):
+$A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{N}.  $D_{ij}$ is in \si{N.mm}.
+$a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is in \si{1/N}.  $d_{ij}$ is in
+\si{1/Nmm}.
+% 
+% \begin{description}
+%     \item[$A_{ij}$] is in \si{N/mm}.
+%     \item[$B_{ij}$] is in \si{N}.
+%     \item[$D_{ij}$] is in \si{N.mm}.
+%     \item[$a_{ij}$] is in \si{mm/N}.
+%     \item[$b_{ij}$] is in \si{1/N}.
+%     \item[$d_{ij}$] is in \si{1/Nmm}.
+% \end{description}
+
+The stress resultants $N$ are units of force per unit of length (\si{N/mm}).
+Moment resultants $m$ are in units of torque per unit of length (\si{Nmm/mm}
+= \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
 
 
 %%%%%%%%%%%%%%%%%%%% Eindmaterie %%%%%%%%%%%%%%%%%%%% {{{1

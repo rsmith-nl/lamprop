@@ -3,11 +3,9 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-05-15T01:05:44+0200
-# Last modified: 2018-05-15T01:08:47+0200
+# Last modified: 2018-12-01T18:31:52+0100
 .SUFFIXES:
 .PHONY: clean
-
-VERSION!=awk '/GITHash/ {print(substr($$0, 15, 40));}' vc.tex
 
 DOCSRC= lamprop-manual.tex
 DOCPDF = ${DOCSRC:.tex=.pdf}
