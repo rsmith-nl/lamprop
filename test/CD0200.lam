@@ -1,4 +1,4 @@
-Time-stamp: <2013-03-10 15:36:12 rsmith>
+# Last modified: 2018-12-01T23:02:57+0100
 
 soorten vezels (oud formaat)
    E1         E2       v12  G12   alpha1   alpha2 rho  naam
@@ -15,17 +15,17 @@ r: 2900 0.36 41.4e-6 1.15 Epikote04908
 
 t: CD0200
 m: 0.5 Epikote04908
-l: 50 0  T300
-l: 50 90 T300
-l: 50 90 T300
-l: 50 0  T300
+l: 100 0  T300
+l: 100 90 T300
+l: 100 90 T300
+l: 100 0  T300
 
 t: CD0200-2
 m: 0.5 Epikote04908
-l: 50 0  T300-2
-l: 50 90 T300-2
-l: 50 90 T300-2
-l: 50 0  T300-2
+l: 100 0  T300-2
+l: 100 90 T300-2
+l: 100 90 T300-2
+l: 100 0  T300-2
 
 t: CD0200-3
 m: 0.5 Epikote04908
