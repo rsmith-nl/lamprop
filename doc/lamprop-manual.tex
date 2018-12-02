@@ -3,7 +3,7 @@
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2018-12-02T01:25:10+0100
+% Last modified: 2018-12-02T02:04:34+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -658,10 +658,12 @@ fit on the page.
     }
 \end{table}
 
-The stiffness or ABD matrix and compliance or abd matrix are shown with the
-relevant strains and forces in \tref{tab:quasi-isotropic-mat}. Both are 6×6
-matrices that can be divided into three 3×3 matrices; A, B and D or a, b and
-d.
+\section{Meaning of the ABD and abd matrices} % {{{2
+
+The stiffness or ABD matrix and compliance or abd matrix are what converts
+strains into forces and the other way around, see
+\tref{tab:quasi-isotropic-mat}.  Both are 6×6 matrices that can be divided
+into three 3×3 matrices; A, B and D or a, b and d.
 
 The expansions below reveal the symmetries in these matrices.
 
@@ -686,18 +688,13 @@ The expansions below reveal the symmetries in these matrices.
 
 The units of the parts of the ABD and abd matrix are as follows (where $i$ and
 $j$ are 1, 2 or 6):
-$A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{N}.  $D_{ij}$ is in \si{N.mm}.
-$a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is in \si{1/N}.  $d_{ij}$ is in
-\si{1/Nmm}.
-% 
-% \begin{description}
-%     \item[$A_{ij}$] is in \si{N/mm}.
-%     \item[$B_{ij}$] is in \si{N}.
-%     \item[$D_{ij}$] is in \si{N.mm}.
-%     \item[$a_{ij}$] is in \si{mm/N}.
-%     \item[$b_{ij}$] is in \si{1/N}.
-%     \item[$d_{ij}$] is in \si{1/Nmm}.
-% \end{description}
+$A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}.  $D_{ij}$ is in \si{N.mm}.
+$a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is in \si{mm/Nmm}.  $d_{ij}$ is in
+\si{1/Nmm}. This clearly shows that abd is the inverse of ABD.
+
+The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
+behavior of a square piece of laminate small enough that the stress and strain
+resultants can be considered constant over its dimensions.
 
 The stress resultants $N$ are units of force per unit of length (\si{N/mm}).
 Moment resultants $m$ are in units of torque per unit of length (\si{Nmm/mm}
