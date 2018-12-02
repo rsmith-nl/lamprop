@@ -4,12 +4,11 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-03-31 13:05:43 +0200
+# Last modified: 2018-12-02T16:14:47+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
-See lamprop(1) for the manual of this program and lamprop(5) for the manual of
-the data file format.
+See the manual (lamprop-manual.pdf) for more in-depth information.
 """
 
 import argparse

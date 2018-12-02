@@ -1,13 +1,14 @@
 % file: lamprop-manual.tex
-% vim:fileencoding=utf-8:fdm=marker:ft=tex
+% vim:fileencoding=utf-8:fdm=marker:ft=tex:spelllang=en
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2018-12-02T02:04:34+0100
+% Last modified: 2018-12-02T15:32:29+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
 \newcommand{\TheTitle}{Lamprop manual}
+\newcommand{\trefpi}[1]{\tref{#1} op page~\pageref{#1}}
 
 \documentclass[a4paper,landscape,oneside,11pt,twocolumn]{memoir}
 \usepackage{fontspec}
@@ -16,6 +17,8 @@
 \usepackage{ifthen}
 \usepackage{enumitem}
 \usepackage{listings}
+\usepackage{natbib}
+\usepackage{url}
 
 % Set fonts for XeTeX {{{1
 \setmainfont{Alegreya}[
@@ -172,6 +175,8 @@
 \setbeforesubsecskip{5pt}
 \setaftersubsecskip{1pt}
 
+\bibliographystyle{plainnat}
+
 \begin{titlingpage}
   \setlength{\parindent}{0pt} % Anders klopt uitlijning v.d. \rule's niet.
   \vspace*{\stretch{1}}
@@ -228,8 +233,9 @@ hand.
 This program can \emph{not} calculate the strength of composite laminates;
 because there are many different failure modes, strengths of composite
 laminates cannot readily be calculated from the strengths of the separate
-materials that form the laminate. These strengths have to be determined from
-tests.
+materials that form the laminate. These strengths really have to be determined from
+tests. However, the author has found \citet{1992WeiEn..52...29H} useful for
+initial estimation of the strengths of multi-layer laminates.
 
 The original version of this program was written in C, since implementing
 it in a spreadsheet proved cumbersome, inflexible and even produced
@@ -246,6 +252,10 @@ different formats, such as \LaTeX, \textsc{html} and \textsc{rtf}.
 
 Additionally, the generally hard to obtain transverse fiber properties
 were replaced with properties derived from the matrix.
+
+The books from \citet{Hyer:1998} and \citet{Tsai:1992} and the report from
+\citet{Nettles:1994} were instrumental in writing the code.
+
 
 \chapter{Building and installing the program} % {{{1
 
@@ -277,12 +287,30 @@ the \emph{installed} version of the lamprop module.
 
 \section{Installation} % {{{2
 
+First, you need to install Python 3 and numpy. For \textsc{unix}-like operating systems,
+use the packages or build scripts that your operating system provides.
+
+On ms-windows it is easiest to get a ready-built complete Python 3
+distributions like Anaconda\footnote{\url{https://store.continuum.io/cshop/anaconda/}},
+ActivePython\footnote{\url{https://www.activestate.com/products/activepython/}} or
+Canopy\footnote{\url{https://www.enthought.com/product/canopy/}}. The main
+reason for this is that they include numpy and other useful modules.
+
+There are Python binaries for ms-windows available from
+python.org\footnote{\url{https://www.python.org/downloads/}}. But these do not
+include numpy. You can download pre-built numpy binaries from
+pypi\footnote{\url{https://pypi.org/project/numpy/\#files}}, but the author has
+never tried that.
+
+Once the requirements are met, you can proceed with the installation of lamprop.
+
 \begin{itemize}
     \item Unpack the tarball or zipfile, or clone the github repository.
     \item Open a terminal window or (on ms-windows a \texttt{cmd} window).
-    \item Change into the lamprop directory.
+    \item Change into the directory where lamprop was unpacked or cloned.
     \item Run \texttt{python3 setup.py install}. This will install both the module and
-the scripts that use it.
+        the scripts that use it. If you get an error message that the command
+        \texttt{python3} is not recognized, try \texttt{python} instead.
 \end{itemize}
 
 
@@ -303,7 +331,7 @@ language.
 
 The file format is very simple. Functional lines have either \texttt{f},
 \texttt{r}, \texttt{t}, \texttt{m}, \texttt{l} or \texttt{s} as the first
-non-whitespace character. This character must immediately be followed by
+non whitespace character. This character must immediately be followed by
 a colon \texttt{:}. All other lines are seen as comments and disregarded.
 
 This program assumes specific metric units. The units used below are important
@@ -326,9 +354,14 @@ contain the following values, separated by whitespace:
 
 Usually, $E_1$ and other properties in the fibre length direction are easily
 obtained from a fiber supplier. Previous versions of this program also
-required some properties perpendicular to the fiber to calculate transverse
-properties of the lamina. Since these values are very hard to obtain, they
-have been replaced by values derived from the matrix, according to Tsai(1992).
+required the Young's modulus perpendicular to the fiber to calculate
+transverse properties of the lamina. Since this values is generally not given
+in the manufacturer documentation, it has been replaced by the modulus of the
+matrix multiplied by a factor, according to \citet{Tsai:1992}. However, the
+author has found that the factor provided by Tsai overestimates $E_2$,
+especially when using glass fibers. So from lamprop version 3.6 onwards, this
+factor has been reduced. All users of previous versions are encouraged to
+upgrade.
 
 In the \texttt{tools} subdirectory of the source distribution you will find
 a script called \texttt{convert-lamprop.py} to convert old-style fiber lines
@@ -378,6 +411,8 @@ for "symmetry". This signifies that all the lamina before it are to be added
 again in reverse order, making a symmetric laminate stack. An \texttt{s:} line in any
 other position is an error.
 
+An example is given below.
+
 \begin{lstlisting}[style=plain]
 Fiber definition
    E1     v12  alpha1   rho  naam
@@ -396,10 +431,15 @@ l: 100 90 Hyer's carbon fiber
 s:
 \end{lstlisting}
 
+There is no artificial limit to the amount of layers that you can use other
+than Python running out of memory. The author has used laminates with up to
+250 layers. Calculating the properties of that laminate took approximately
+\SI{0.5}{s} on a machine with an Intel Core2 Q9300 running FreeBSD.
+
 \section{Material data} % {{{2
 
 Over the years, the author has gathered a lot of data for different fibers
-from datasheets provided by the manufacturers. Data for different carbon
+from datasheets provided by the manufacturers. Data for different
 fibers is given in \tref{tb:fibers}. In case the $\nu_{12}$ is not
 known for a carbon fiber, it is estimated at 0.25. Similarly, if the
 $\alpha_1$ is not known, it is estimated at \SI{-0.12e-6}{K^{-1}}. For glass
@@ -499,13 +539,12 @@ re-loads a file. The checkboxes below determine which results are shown. If
 a file contains different laminates, the dropbox allows you to select
 a laminate to display. The textbox at the bottom shows the lamprop output as
 text.
-
 Pressing the \texttt{q}-key terminates the program.
 
 \section{Using the \texttt{lamprop} module from Python 3} % {{{2
 
 An example reproducing the results from \fref{fig:lamprop-gui} is shown
-below.\\
+below.
 
 \begin{lstlisting}
 import lamprop as la
@@ -521,13 +560,10 @@ cd0200 = la.Laminate('CD0200-2', (L0, L90, L90, L0))
 print(la.text.engprop(cd0200))
 \end{lstlisting}
 
-This is probably the most flexible way to use it, since you could use Python
-to generate large and complex laminates. Below, a symmetric and balanced
-quasi-isotropic laminate with layers every 15\textdegree{} is generated. There
-is no artificial limit to the amount of layers that can be defined. The author
-has used laminates with up to 250 layers. Calculating the properties of that
-laminate took approximately \SI{0.5}{s} on a machine with an Intel Core2 Q9300
-running FreeBSD.
+This is probably the most powerful way to use it, since you could use Python
+to generate large and complex laminates. In the code shown below, a symmetric
+and balanced quasi-isotropic laminate with layers every 15\textdegree{} (26 in
+all) is generated in \emph{two lines of Python code}.
 
 \begin{lstlisting}
 import lamprop as la
@@ -545,9 +581,9 @@ print(la.latex.out(qi, eng=False, mat=True))
 \end{lstlisting}
 
 The resulting \LaTeX{} code basically produces \tref{tab:quasi-isotropic} and
-\tref{tab:quasi-isotropic-mat}; the content was separated into two tables to
+\trefpi{tab:quasi-isotropic-mat}; the content was separated into two tables to
 fit on the page.
-\clearpage
+%\clearpage
 
 \begin{table}[!htbp]
   \renewcommand{\arraystretch}{1.2}
@@ -664,7 +700,6 @@ The stiffness or ABD matrix and compliance or abd matrix are what converts
 strains into forces and the other way around, see
 \tref{tab:quasi-isotropic-mat}.  Both are 6×6 matrices that can be divided
 into three 3×3 matrices; A, B and D or a, b and d.
-
 The expansions below reveal the symmetries in these matrices.
 
 \[
@@ -687,24 +722,92 @@ The expansions below reveal the symmetries in these matrices.
 \]
 
 The units of the parts of the ABD and abd matrix are as follows (where $i$ and
-$j$ are 1, 2 or 6):
-$A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}.  $D_{ij}$ is in \si{N.mm}.
-$a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is in \si{mm/Nmm}.  $d_{ij}$ is in
-\si{1/Nmm}. This clearly shows that abd is the inverse of ABD.
-
-The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
-behavior of a square piece of laminate small enough that the stress and strain
-resultants can be considered constant over its dimensions.
+$j$ are 1, 2 or 6): $A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}
+= \si{N}.  $D_{ij}$ is in \si{N.mm}.  $a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is
+in \si{1/N}.  $d_{ij}$ is in \si{1/Nmm}. This clearly shows that abd is the
+inverse of ABD.
 
 The stress resultants $N$ are units of force per unit of length (\si{N/mm}).
 Moment resultants $m$ are in units of torque per unit of length (\si{Nmm/mm}
 = \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
 
+The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
+behavior of a square piece of laminate small enough that the stress and strain
+resultants can be considered constant over its dimensions.
+
+
+\chapter{Tips and tricks} % {{{1
+
+The 0\textdegree{} direction is generally in the length of the part or in the
+direction of the largest load.
+
+The following section should be considered a \emph{general guideline}.
+Sometimes there can be good reason to deviate from it.
+
+\section{Keep your laminates symmetric and balanced} % {{{2
+
+Looking at the stacking of the layers, it should be symmetric w.r.t. the
+middle of the stack. So the following laminate is symmetric:
+
+\begin{enumerate}
+    \item 0\textdegree
+    \item 45\textdegree
+    \item 90\textdegree
+    \item -45\textdegree
+    \item -45\textdegree
+    \item 90\textdegree
+    \item 45\textdegree
+    \item 0\textdegree
+\end{enumerate}
+
+This is often shortened to “[0/45/90/-45]s”. The area weights of the layers
+should also be symmetric.
+
+A balanced laminate is a laminate where for every layer at an angle on
+\emph{n}\textdegree{} there is also a layer at \emph{-n}\textdegree.
+It is often added that for every 0\textdegree{} layer there should also be an
+equally sized 90\textdegree{} layer, but the author disagrees. For beam-like
+parts it is often desirable to have the majority of the fibers in the
+0\textdegree{} direction.
+
+\section{Align your fibers with the expected load}
+
+This is a no-brainer for tensile loads, but there is a twist. To counter
+torsion and shear loads, there should be layers of fibers in the \textpm
+45\textdegree{} direction.  For bending loads the 0\textdegree{} layers should
+be at the outside of the part.
+
+\section{Laminate strength}
+
+As mentioned before, this program cannot predict the strength of laminates
+from the properties of the fibers and resin used in the layers; it is outside
+the scope of classical laminate theory.
+
+Even stronger, the author does not believe that a general theory of laminate
+strength is feasible due to the many different possible failure modes and
+the factors outside of the fiber and resin properties that influence the
+laminate.  Examples of the latter are the void content, the degree of cure of
+the resin and errors in cutting or placing the fibers. These are determined by
+type of production process used and the craftsmanship of the people involved.
+
+However, the following guidelines have served the author well over the years.
+
+For unidirectional layers loaded in the fiber direction, the strain at which
+either the fibers or the matrix fail in tension multiplied by the laminate's
+Young's modulus is the maximum allowed tensile stress.
+
+The allowed compression stress for such layers is deemed to be 1/2 of the
+allowed tensile stress
+
+The strength of unidirectional layers in the \textpm 45\textdegree{} or
+90\textdegree{} directions is estimated as 10\% of the strength in the
+0\textdegree{} direction. This is the 10\%-rule according to
+\citet{1992WeiEn..52...29H}.
 
 %%%%%%%%%%%%%%%%%%%% Eindmaterie %%%%%%%%%%%%%%%%%%%% {{{1
 \setsecnumdepth{none}
 %\include{appendices}
-%\bibliography{lmref}
+\bibliography{lman}
 \chapter{Colofon}
 
 This document has been typeset with the

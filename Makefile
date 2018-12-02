@@ -6,19 +6,19 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2018-11-27T19:37:03+0100
+# Last modified: 2018-12-02T16:15:18+0100
 
-.PHONY: all install uninstall clean check test
+.PHONY: all install uninstall clean check test doc
 
 # Installation locations
-PREFIX=/usr/local
-BINDIR=$(PREFIX)/bin
-MANDIR=$(PREFIX)/man
+PREFIX:=/usr/local
+BINDIR:=$(PREFIX)/bin
+DOCDIR:=$(PREFIX)/share/doc/lamprop
 PKGPATH!=python3 -c "import sys; print([p for p in sys.path if p.endswith('site-packages')][0])"
 
 # Leave these two as they are.
-SUBDIR=doc
-DISTFILES=README.rst
+SUBDIR:=doc
+DISTFILES:=README.rst
 
 # Default target.
 all::
@@ -26,24 +26,21 @@ all::
 	@echo "use 'make clean' to remove generated files."
 	@echo "use 'make check' to run pylama."
 	@echo "use 'make test' to run the test suite using py.test."
+	@echo "use 'make doc' to build the documentation using LaTeX."
 
 # Install lamprop and its documentation.
 install:
 	python3 setup.py install
 	rm -rf build dist lamprop.egg-info
-# Install the manual page.
-	gzip -c doc/lamprop.1 >lamprop.1.gz
-	gzip -c doc/lamprop.5 >lamprop.5.gz
-	install -d $(MANDIR)/man1
-	install -d $(MANDIR)/man5
-	install -m 644 lamprop.1.gz $(MANDIR)/man1
-	install -m 644 lamprop.5.gz $(MANDIR)/man5
-	rm -f lamprop.1.gz lamprop.5.gz
+# Install the manual.
+	mkdir -p $(DOCDIR)
+	install -m 644 doc/lamprop-manual.pdf $(DOCDIR)
 
 # Remove an installed lamprop completely
 uninstall::
 	rm -rf $(PKGPATH)/lamprop*.egg
 	rm -rf $(BINDIR)/lamprop*
+	rm -rf $(DOCDIR)/lamprop-manual.pdf
 
 clean:
 	rm -rf backup-*.tar*
@@ -59,3 +56,6 @@ check:: .IGNORE
 
 test::
 	py.test-3.7 -v
+
+doc::
+	cd $(SUBDIR); make
