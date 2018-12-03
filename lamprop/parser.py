@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python
 # Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2017-06-04 15:02:27 +0200
+# Last modified: 2018-12-04T00:39:53+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
 """Parser for lamprop files."""
 
 import logging
-from .types import Fiber, Resin, Lamina, Laminate
+from .core import fiber, resin, lamina, laminate
 
 msg = logging.getLogger('parser')
 
@@ -41,16 +41,16 @@ def parse(filename):
         filename: The name of the file to parse.
 
     Returns
-        A list of types.Laminate.
+        A list of types.laminate.
     """
     try:
         rd, fd, ld = _directives(filename)
     except IOError:
         msg.warning("cannot read '{}'.".format(filename))
         return []
-    fdict = _get_components(fd, Fiber)
+    fdict = _get_components(fd, fiber)
     msg.info("found {} fibers in '{}'".format(len(fdict), filename))
-    rdict = _get_components(rd, Resin)
+    rdict = _get_components(rd, resin)
     msg.info("found {} resins in '{}'".format(len(rdict), filename))
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
@@ -123,7 +123,7 @@ def _laminate(ld, resins, fibers):
         fibers: A dictionary of fibers, keyed by their names.
 
     Returns:
-        A types.Laminate, or None.
+        A laminate dictionary, or None.
     """
     sym = False
     if ld[0][1].startswith('t'):
@@ -156,7 +156,7 @@ def _laminate(ld, resins, fibers):
     if sym:
         msg.info("laminate '{}' is symmetric".format(lname))
         llist = llist + list(reversed(llist))
-    return Laminate(lname, llist)
+    return laminate(lname, llist)
 
 
 def _get_components(directives, tp):
@@ -165,14 +165,14 @@ def _get_components(directives, tp):
 
     Arguments:
         directives: A sequence of (number, line) tuples describing fibers/resins.
-        tp: The type to return. Either types.Resin or types.Fiber
+        tp: The conversion function to use. Either core.fiber or core.resin
 
     Returns:
-        A list of types.Fiber
+        A list of fiber dictionaries
     """
     rv = []
     names = []
-    tname = tp.__name__.lower()
+    tname = tp.__name__
     w1 = 'expected 4 numbers for a {} on line {}, found {}; skipping.'
     w2 = 'duplicate {} "{}" on line {} ignored.'
     w3 = '{} must be >0 on line {}; skipping.'
@@ -214,7 +214,7 @@ def _get_lamina(directive, fibers, resin, vf):
             between 0 and 1.
 
     Returns:
-        A types.Lamina, or None.
+        A lamina dictionary, or None.
     """
     w1 = "invalid lamina line {}, '{}'"
     w2 = "unknown fiber '{}' on line {}"
@@ -228,4 +228,4 @@ def _get_lamina(directive, fibers, resin, vf):
     if fname not in fibers:
         msg.warning(w2.format(fname, ln))
         return None
-    return Lamina(fibers[fname], resin, *numbers)
+    return lamina(fibers[fname], resin, *numbers)

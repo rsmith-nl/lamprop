@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2018-11-27T19:50:55+0100
+# Last modified: 2018-12-04T00:34:36+0100
 
 """Test for lamprop types"""
 
@@ -11,16 +11,16 @@ import sys
 
 sys.path.insert(1, '.')
 
-from lamprop.types import Fiber, Resin, Lamina, Laminate  # noqa
+from lamprop.core import fiber, resin, lamina, laminate  # noqa
 
-hf = Fiber(233000, 0.2, -0.54e-6, 1.76, "Hyer's carbon fiber")
-hr = Resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin")
+hf = fiber(233000, 0.2, -0.54e-6, 1.76, "Hyer's carbon fiber")
+hr = resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin")
 
 
 def test_lamina():  # {{{1
-    f = Fiber(230000, 0.30, -0.41e-6, 1.76, 'T300')
-    r = Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908')
-    la = Lamina(f, r, 100, 0, 0.5)
+    f = fiber(230000, 0.30, -0.41e-6, 1.76, 'T300')
+    r = resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908')
+    la = lamina(f, r, 100, 0, 0.5)
     assert ((la.E1, la.E2, la.G12, la.ν12, la.αx, la.αy, la.ρ) ==
             (116450.0, 5800, 2900.0, 0.3, 1.1060541004723054e-07, 4.14e-05,
              1.455))
@@ -29,8 +29,8 @@ def test_lamina():  # {{{1
 
 
 def test_ud():  # {{{1
-    la = Lamina(hf, hr, 100, 0, 0.5)
-    ud = Laminate('ud', [la, la, la, la])
+    la = lamina(hf, hr, 100, 0, 0.5)
+    ud = laminate('ud', [la, la, la, la])
     assert 0.45 < ud.thickness < 0.46
     assert 1.42 < ud.ρ < 1.44
     assert ud.vf == 0.5
@@ -45,9 +45,9 @@ def test_ud():  # {{{1
 
 
 def test_plain_weave():  # {{{1
-    A = Lamina(hf, hr, 100, 0, 0.5)
-    B = Lamina(hf, hr, 100, 90, 0.5)
-    pw = Laminate('pw', [A, B, B, A])
+    A = lamina(hf, hr, 100, 0, 0.5)
+    B = lamina(hf, hr, 100, 90, 0.5)
+    pw = laminate('pw', [A, B, B, A])
     assert 0.45 < pw.thickness < 0.46
     assert 1.42 < pw.ρ < 1.44
     assert pw.vf == 0.5
@@ -62,9 +62,9 @@ def test_plain_weave():  # {{{1
 
 
 def test_pm45():  # {{{1
-    A = Lamina(hf, hr, 100, 45, 0.5)
-    B = Lamina(hf, hr, 100, -45, 0.5)
-    pw = Laminate('pw', [A, B, B, A])
+    A = lamina(hf, hr, 100, 45, 0.5)
+    B = lamina(hf, hr, 100, -45, 0.5)
+    pw = laminate('pw', [A, B, B, A])
     assert 0.45 < pw.thickness < 0.46
     assert 1.42 < pw.ρ < 1.44
     assert pw.vf == 0.5
@@ -79,11 +79,11 @@ def test_pm45():  # {{{1
 
 
 def test_qi():  # {{{1
-    A = Lamina(hf, hr, 200, 0, 0.5)
-    B = Lamina(hf, hr, 200, 90, 0.5)
-    C = Lamina(hf, hr, 100, 45, 0.5)
-    D = Lamina(hf, hr, 100, -45, 0.5)
-    qi = Laminate('qi', [A, B, C, D, D, C, B, A])
+    A = lamina(hf, hr, 200, 0, 0.5)
+    B = lamina(hf, hr, 200, 90, 0.5)
+    C = lamina(hf, hr, 100, 45, 0.5)
+    D = lamina(hf, hr, 100, -45, 0.5)
+    qi = laminate('qi', [A, B, C, D, D, C, B, A])
     assert 1.35 < qi.thickness < 1.37
     assert 1.42 < qi.ρ < 1.44
     assert qi.vf == 0.5
