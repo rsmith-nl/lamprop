@@ -1,8 +1,8 @@
-# file: 
+# file: core.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2018-12-04T00:31:49+0100
+# Last modified: 2018-12-04T20:23:18+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,8 @@
 """
 Core functions of lamprop.
 
-The following references used in coding this module:
+The following references were used in coding this module:
+
 @Book{Hyer:1998,
   author =       {Micheal W. Hyer},
   title =        {Stress analysis of fiber-reinforced composite materials},
@@ -77,7 +78,7 @@ import numpy as np
 
 
 class NamedDict(dict):
-    """Syntactic sugar for dictionaries"""
+    """Syntactic sugar: dot access for dictionary items."""
 
     def __getattr__(self, name):
         return self[name]
