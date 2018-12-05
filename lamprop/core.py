@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2018-12-05T00:37:09+0100
+# Last modified: 2018-12-05T01:00:48+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -114,7 +114,7 @@ def fiber(E1, ν12, α1, ρ, name):
 
 
 def resin(E, ν, α, ρ, name):
-    """Create a Resin.
+    """Create a resin.
 
     Arguments/properties of a Resin:
         E (float): Young's modulus in MPa. Must be >0.
@@ -139,12 +139,12 @@ def resin(E, ν, α, ρ, name):
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):
-    """Create a Lamina.
+    """Create a lamina.
 
     Arguments:
         fiber: The Fiber used in the lamina
         resin: The Resin binding the lamina
-        fiber_weight: The amount of Fibers in g/m².
+        fiber_weight: The amount of Fibers in g/m². Must be >0.
         angle: Orientation of the layer in degrees counterclockwise from the
             x-axis.
         vf: Fiber volume fraction.
@@ -222,11 +222,11 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
 
 
 def laminate(name, layers):
-    """Create a new Laminate.
+    """Create a laminate.
 
     Arguments/properties of a laminate:
         name: A non-empty string containing the name of the laminate
-        layers: A sequence of lamina (will be converted into a tuple).
+        layers: A non-empty sequence of lamina (will be converted into a tuple).
 
     Additional properties:
         thickness: Thickness of the laminate in mm.
