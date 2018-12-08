@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2018-12-05T01:00:48+0100
+# Last modified: 2018-12-08T15:35:18+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -73,18 +73,9 @@ The following references were used in coding this module:
 }
 """
 
+from types import SimpleNamespace
 import math
 import numpy as np
-
-
-class _NamedDict(dict):
-    """Syntactic sugar: dot access for dictionary items."""
-
-    def __getattr__(self, name):
-        return self[name]
-
-    def __setattr__(self, name, value):
-        self[name] = value
 
 
 def fiber(E1, ν12, α1, ρ, name):
@@ -110,7 +101,7 @@ def fiber(E1, ν12, α1, ρ, name):
         raise ValueError('fiber ρ must be > 0')
     if not isinstance(name, str) and not len(name) > 0:
         raise ValueError('fiber name must be a non-empty string')
-    return _NamedDict({'E1': E1, 'ν12': ν12, 'α1': α1, 'ρ': ρ, 'name': name})
+    return SimpleNamespace(E1=E1, ν12=ν12, α1=α1, ρ=ρ, name=name)
 
 
 def resin(E, ν, α, ρ, name):
@@ -135,7 +126,7 @@ def resin(E, ν, α, ρ, name):
         raise ValueError('resin ρ must be > 0')
     if not isinstance(name, str) and not len(name) > 0:
         raise ValueError('resin name must be a non-empty string')
-    return _NamedDict({'E': E, 'ν': ν, 'α': α, 'ρ': ρ, 'name': name})
+    return SimpleNamespace(E=E, ν=ν, α=α, ρ=ρ, name=name)
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):
@@ -213,12 +204,13 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     Q̅26 = QA * n3 * m + QB * n * m3
     Q̅66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
     ρ = fiber.ρ * vf + resin.ρ * vm
-    return _NamedDict({'fiber': fiber, 'resin': resin, 'fiber_weight':
-                       fiber_weight, 'angle': angle, 'vf': vf, 'thickness':
-                       thickness, 'resin_weight': resin_weight, 'E1': E1, 'E2':
-                       E2, 'G12': G12, 'ν12': ν12, 'αx': αx, 'αy': αy, 'αxy':
-                       αxy, 'Q̅11': Q̅11, 'Q̅12': Q̅12, 'Q̅16': Q̅16, 'Q̅22': Q̅22,
-                       'Q̅26': Q̅26, 'Q̅66': Q̅66, 'ρ': ρ})
+
+    return SimpleNamespace(fiber=fiber, resin=resin,
+                           fiber_weight=fiber_weight, angle=angle,
+                           vf=vf, thickness=thickness,
+                           resin_weight=resin_weight, E1=E1, E2=E2, G12=G12,
+                           ν12=ν12, αx=αx, αy=αy, αxy=αxy, Q̅11=Q̅11, Q̅12=Q̅12,
+                           Q̅16=Q̅16, Q̅22=Q̅22, Q̅26=Q̅26, Q̅66=Q̅66, ρ=ρ)
 
 
 def laminate(name, layers):
@@ -343,8 +335,7 @@ def laminate(name, layers):
     # Hyer:1998, p. 451, (11.86)
     αx = abd[0, 0] * Ntx + abd[0, 1] * Nty + abd[0, 2] * Ntxy
     αy = abd[1, 0] * Ntx + abd[1, 1] * Nty + abd[1, 2] * Ntxy
-    return _NamedDict({'name': name, 'layers': layers, 'thickness': thickness,
-                       'fiber_weight': fiber_weight, 'ρ': ρ, 'vf': vf,
-                       'resin_weight': resin_weight, 'ABD': ABD, 'abd': abd,
-                       'Ex': Ex, 'Ey': Ey, 'Gxy': Gxy, 'νxy': νxy, 'νyx': νyx,
-                       'αx': αx, 'αy': αy, 'wf': wf})
+    return SimpleNamespace(name=name, layers=layers, thickness=thickness,
+                           fiber_weight=fiber_weight, ρ=ρ, vf=vf,
+                           resin_weight=resin_weight, ABD=ABD, abd=abd, Ex=Ex,
+                           Ey=Ey, Gxy=Gxy, νxy=νxy, νyx=νyx, αx=αx, αy=αy, wf=wf)
