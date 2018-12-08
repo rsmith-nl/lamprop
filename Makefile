@@ -6,15 +6,15 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2018-12-02T16:15:18+0100
+# Last modified: 2018-12-08T23:50:13+0100
 
-.PHONY: all install uninstall clean check test doc
+.PHONY: all install uninstall dist clean check tags format test doc
 
 # Installation locations
 PREFIX:=/usr/local
 BINDIR:=$(PREFIX)/bin
 DOCDIR:=$(PREFIX)/share/doc/lamprop
-PKGPATH!=python3 -c "import sys; print([p for p in sys.path if p.endswith('site-packages')][0])"
+PKGPATH!=python3 -c "import site; print(site.getsitepackages()[0])"
 
 # Leave these two as they are.
 SUBDIR:=doc
@@ -22,37 +22,59 @@ DISTFILES:=README.rst
 
 # Default target.
 all::
-	@echo "use 'make install' the program"
-	@echo "use 'make clean' to remove generated files."
-	@echo "use 'make check' to run pylama."
-	@echo "use 'make test' to run the test suite using py.test."
-	@echo "use 'make doc' to build the documentation using LaTeX."
+	@echo 'you can use the following commands:'
+	@echo '* test: run the built-in tests.'
+	@echo '* install'
+	@echo '* uninstall'
+	@echo '* dist: create a distribution file.'
+	@echo '* clean: remove all generated files.'
+	@echo '* check: run pylama on all python files.'
+	@echo '* tags: run exctags.'
+	@echo '* format: format the source with yapf.'
+	@echo '* doc: build the documentation using LaTeX.'
 
 # Install lamprop and its documentation.
-install:
-	python3 setup.py install
-	rm -rf build dist lamprop.egg-info
+install::
+	@if [ `id -u` != 0 ]; then \
+		echo "You must be root to install the software!"; \
+		exit 1; \
+	fi
+# Let Python do the install work.
+	python3 -B setup.py install
+	rm -rf build dist *.egg-info
 # Install the manual.
 	mkdir -p $(DOCDIR)
 	install -m 644 doc/lamprop-manual.pdf $(DOCDIR)
 
 # Remove an installed lamprop completely
 uninstall::
+	@if [ `id -u` != 0 ]; then \
+		echo "You must be root to uninstall the software!"; \
+		exit 1; \
+	fi
 	rm -rf $(PKGPATH)/lamprop*.egg
 	rm -rf $(BINDIR)/lamprop*
 	rm -rf $(DOCDIR)/lamprop-manual.pdf
 
+# Create distribution file. Use zip format to make deployment easier on windoze.
+dist:
+	python3 -B setup.py sdist --format=zip
+	rm -f MANIFEST
+
 clean:
-	rm -rf backup-*.tar*
-	rm -rf build
-	rm -rf dist
-	rm -rf lamprop.egg-info
+	rm -rf backup-*.tar* build dist MANIFEST *.egg-info
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name __pycache__ -delete
 
-# The specifications below are for the maintainer only.
+# The targets below are mostly for the maintainer.
 check:: .IGNORE
-	pylama
+	pylama -i E501,W605 lamprop/*.py test/*.py setup.py tools/*.py
+
+tags::
+	exctags -R --verbose
+
+format::
+	yapf-3.7 -i lamprop/*.py test/*.py setup.py tools/*.py
 
 test::
 	py.test-3.7 -v
