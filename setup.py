@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-22 18:05:56 +0100
-# Last modified: 2018-05-10T14:16:51+0200
+# Last modified: 2018-12-29T19:31:58+0100
 
 from setuptools import setup
 from lamprop.version import __version__
@@ -21,7 +21,6 @@ setup(
     author_email='rsmith@xs4all.nl',
     license='BSD',
     url='https://github.com/rsmith-nl/lamprop',
-    install_requires=['numpy>=1.10'],
     provides=[name],
     packages=[name],
     entry_points={
