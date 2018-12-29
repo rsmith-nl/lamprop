@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-03-28 11:53:57 +0100
-# Last modified: 2017-06-03 22:41:15 +0200
+# Last modified: 2018-12-29T11:48:46+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -96,12 +96,12 @@ def _matrices(l, printheader):  # {{{1
              "\\cellx9104\\pard\\intbl {0:.4e}\\cell {1:.4e}\\cell " \
              "{2:.4e}\\cell {3:.4e}\\cell {4:.4e}\\cell {5:.4e}\cell\\row"
     for n in range(6):
-        m = matstr.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2],
-                          l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5])
+        m = matstr.format(l.ABD[n][0], l.ABD[n][1], l.ABD[n][2],
+                          l.ABD[n][3], l.ABD[n][4], l.ABD[n][5])
         print(m.replace('e+00', ''))
     print("\\pard\\sa200 Compliance (abd) matrix:\\par")
     for n in range(6):
-        m = matstr.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2],
-                          l.abd[n, 3], l.abd[n, 4], l.abd[n, 5])
+        m = matstr.format(l.abd[n][0], l.abd[n][1], l.abd[n][2],
+                          l.abd[n][3], l.abd[n][4], l.abd[n][5])
         print(m.replace('e+00', ''))
     print(r"\pard\sa200\sl276\slmult1\par")

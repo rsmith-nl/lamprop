@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2017-06-03 22:39:34 +0200
+# Last modified: 2018-12-29T11:43:37+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -96,11 +96,11 @@ def _matrices(l):  # {{{1
         for t in range(6):
             numl = []
             for m in range(6):
-                num = mat[t, m]
+                num = mat[t][m]
                 if num == 0.0:
                     nums = '0'
                 else:
-                    nums, exp = "{:> 10.4e}".format(mat[t, m]).split('e')
+                    nums, exp = "{:> 10.4e}".format(mat[t][m]).split('e')
                     exp = int(exp)
                     if exp != 0:
                         nums += '\\times 10^{{{}}}'.format(exp)

@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2018-01-21 20:59:02 +0100
+# Last modified: 2018-12-29T11:42:11+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -97,12 +97,12 @@ def matrices(l, header=False):  # {{{1
     matstr = "|{:< 10.4} {:< 10.4} {:< 10.4} " \
              "{:< 10.4} {:< 10.4} {:< 10.4}|"
     for n in range(6):
-        m = matstr.format(l.ABD[n, 0], l.ABD[n, 1], l.ABD[n, 2],
-                          l.ABD[n, 3], l.ABD[n, 4], l.ABD[n, 5])
+        m = matstr.format(l.ABD[n][0], l.ABD[n][1], l.ABD[n][2],
+                          l.ABD[n][3], l.ABD[n][4], l.ABD[n][5])
         lines.append(m)
     lines.append("Compliance (abd) matrix:")
     for n in range(6):
-        m = matstr.format(l.abd[n, 0], l.abd[n, 1], l.abd[n, 2],
-                          l.abd[n, 3], l.abd[n, 4], l.abd[n, 5])
+        m = matstr.format(l.abd[n][0], l.abd[n][1], l.abd[n][2],
+                          l.abd[n][3], l.abd[n][4], l.abd[n][5])
         lines.append(m)
     return '\n'.join(lines)

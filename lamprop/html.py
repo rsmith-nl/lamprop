@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2017-06-03 22:38:15 +0200
+# Last modified: 2018-12-29T11:45:18+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -180,7 +180,7 @@ def _matrices(l):  # {{{1
         """Print a row from a matrix."""
         numl = []
         for m in range(6):
-            num = mat[row, m]
+            num = mat[row][m]
             if num == 0.0:
                 nums = '0'
             else:
