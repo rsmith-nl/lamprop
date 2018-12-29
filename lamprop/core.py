@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2014-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2018-12-08T15:35:18+0100
+# Last modified: 2018-12-29T11:33:11+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -75,7 +75,7 @@ The following references were used in coding this module:
 
 from types import SimpleNamespace
 import math
-import numpy as np
+import lamprop.matrix as m
 
 
 def fiber(E1, ν12, α1, ρ, name):
@@ -259,50 +259,50 @@ def laminate(name, layers):
         lz3.append((ze * ze * ze - zs * zs * zs) / 3)
         zs = ze
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
-    ABD = np.zeros((6, 6))
+    ABD = m.zeros(6)
     for l, z2, z3 in zip(layers, lz2, lz3):
         # first row
-        ABD[0, 0] += l.Q̅11 * l.thickness      # Hyer:1998, p. 290
-        ABD[0, 1] += l.Q̅12 * l.thickness
-        ABD[0, 2] += l.Q̅16 * l.thickness
-        ABD[0, 3] += l.Q̅11 * z2
-        ABD[0, 4] += l.Q̅12 * z2
-        ABD[0, 5] += l.Q̅16 * z2
+        ABD[0][0] += l.Q̅11 * l.thickness      # Hyer:1998, p. 290
+        ABD[0][1] += l.Q̅12 * l.thickness
+        ABD[0][2] += l.Q̅16 * l.thickness
+        ABD[0][3] += l.Q̅11 * z2
+        ABD[0][4] += l.Q̅12 * z2
+        ABD[0][5] += l.Q̅16 * z2
         # second row
-        ABD[1, 0] += l.Q̅12 * l.thickness
-        ABD[1, 1] += l.Q̅22 * l.thickness
-        ABD[1, 2] += l.Q̅26 * l.thickness
-        ABD[1, 3] += l.Q̅12 * z2
-        ABD[1, 4] += l.Q̅22 * z2
-        ABD[1, 5] += l.Q̅26 * z2
+        ABD[1][0] += l.Q̅12 * l.thickness
+        ABD[1][1] += l.Q̅22 * l.thickness
+        ABD[1][2] += l.Q̅26 * l.thickness
+        ABD[1][3] += l.Q̅12 * z2
+        ABD[1][4] += l.Q̅22 * z2
+        ABD[1][5] += l.Q̅26 * z2
         # third row
-        ABD[2, 0] += l.Q̅16 * l.thickness
-        ABD[2, 1] += l.Q̅26 * l.thickness
-        ABD[2, 2] += l.Q̅66 * l.thickness
-        ABD[2, 3] += l.Q̅16 * z2
-        ABD[2, 4] += l.Q̅26 * z2
-        ABD[2, 5] += l.Q̅66 * z2
+        ABD[2][0] += l.Q̅16 * l.thickness
+        ABD[2][1] += l.Q̅26 * l.thickness
+        ABD[2][2] += l.Q̅66 * l.thickness
+        ABD[2][3] += l.Q̅16 * z2
+        ABD[2][4] += l.Q̅26 * z2
+        ABD[2][5] += l.Q̅66 * z2
         # fourth row
-        ABD[3, 0] += l.Q̅11 * z2
-        ABD[3, 1] += l.Q̅12 * z2
-        ABD[3, 2] += l.Q̅16 * z2
-        ABD[3, 3] += l.Q̅11 * z3
-        ABD[3, 4] += l.Q̅12 * z3
-        ABD[3, 5] += l.Q̅16 * z3
+        ABD[3][0] += l.Q̅11 * z2
+        ABD[3][1] += l.Q̅12 * z2
+        ABD[3][2] += l.Q̅16 * z2
+        ABD[3][3] += l.Q̅11 * z3
+        ABD[3][4] += l.Q̅12 * z3
+        ABD[3][5] += l.Q̅16 * z3
         # fifth row
-        ABD[4, 0] += l.Q̅12 * z2
-        ABD[4, 1] += l.Q̅22 * z2
-        ABD[4, 2] += l.Q̅26 * z2
-        ABD[4, 3] += l.Q̅12 * z3
-        ABD[4, 4] += l.Q̅22 * z3
-        ABD[4, 5] += l.Q̅26 * z3
+        ABD[4][0] += l.Q̅12 * z2
+        ABD[4][1] += l.Q̅22 * z2
+        ABD[4][2] += l.Q̅26 * z2
+        ABD[4][3] += l.Q̅12 * z3
+        ABD[4][4] += l.Q̅22 * z3
+        ABD[4][5] += l.Q̅26 * z3
         # sixth row
-        ABD[5, 0] += l.Q̅16 * z2
-        ABD[5, 1] += l.Q̅26 * z2
-        ABD[5, 2] += l.Q̅66 * z2
-        ABD[5, 3] += l.Q̅16 * z3
-        ABD[5, 4] += l.Q̅26 * z3
-        ABD[5, 5] += l.Q̅66 * z3
+        ABD[5][0] += l.Q̅16 * z2
+        ABD[5][1] += l.Q̅26 * z2
+        ABD[5][2] += l.Q̅66 * z2
+        ABD[5][3] += l.Q̅16 * z3
+        ABD[5][4] += l.Q̅26 * z3
+        ABD[5][5] += l.Q̅66 * z3
         # Calculate unit thermal stress resultants.
         # Hyer:1998, p. 445
         Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy +
@@ -314,27 +314,27 @@ def laminate(name, layers):
     # Finish the matrices, discarding very small νmbers in ABD.
     for i in range(6):
         for j in range(6):
-            if math.fabs(ABD[i, j]) < 1e-7:
-                ABD[i, j] = 0.0
-    abd = np.linalg.inv(ABD)
+            if math.fabs(ABD[i][j]) < 1e-7:
+                ABD[i][j] = 0.0
+    abd = m.inv(ABD)
     # Calculate the engineering properties.
     # Nettles:1994, p. 34 e.v.
-    dABD = np.linalg.det(ABD)
-    dt1 = np.linalg.det(ABD[1:6, 1:6])
+    dABD = m.det(ABD)
+    dt1 = m.det(m.delete(ABD, 0, 0))
     Ex = (dABD / (dt1 * thickness))
-    dt2 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 1, 1))
+    dt2 = m.det(m.delete(ABD, 1, 1))
     Ey = (dABD / (dt2 * thickness))
-    dt3 = np.linalg.det(np.delete(np.delete(ABD, 2, 0), 2, 1))
+    dt3 = m.det(m.delete(ABD, 2, 2))
     Gxy = (dABD / (dt3 * thickness))
-    dt4 = np.linalg.det(np.delete(np.delete(ABD, 0, 0), 1, 1))
-    dt5 = np.linalg.det(np.delete(np.delete(ABD, 1, 0), 0, 1))
+    dt4 = m.det(m.delete(ABD, 0, 1))
+    dt5 = m.det(m.delete(ABD, 1, 0))
     νxy = dt4 / dt1
     νyx = dt5 / dt2
     # Calculate the coefficients of thermal expansion.
     # *Technically* only valid for a symmetric laminate!
     # Hyer:1998, p. 451, (11.86)
-    αx = abd[0, 0] * Ntx + abd[0, 1] * Nty + abd[0, 2] * Ntxy
-    αy = abd[1, 0] * Ntx + abd[1, 1] * Nty + abd[1, 2] * Ntxy
+    αx = abd[0][0] * Ntx + abd[0][1] * Nty + abd[0][2] * Ntxy
+    αy = abd[1][0] * Ntx + abd[1][1] * Nty + abd[1][2] * Ntxy
     return SimpleNamespace(name=name, layers=layers, thickness=thickness,
                            fiber_weight=fiber_weight, ρ=ρ, vf=vf,
                            resin_weight=resin_weight, ABD=ABD, abd=abd, Ex=Ex,
