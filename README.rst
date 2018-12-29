@@ -40,9 +40,9 @@ the new format.
 Requirements
 ------------
 
-This program requires Python (version 3), and the numpy module. This version
-was developed and tested using Python 3.7 and numpy 1.15.1. But older versions
-will probably work fine.
+This program requires at least Python 3. It is *not* compatible with Python 2!
+This version was developed and tested using Python 3.7. Older versions of
+Python 3 will probably work fine.
 
 
 Developers
@@ -61,7 +61,7 @@ as ``lamprop``) primarily meant for POSIX operating systems and a GUI version
 You can try both versions without installing them first, with the following
 invocations in a shell from the root directory of the repository.
 
-Use ``python3 -m lamprop.console -h`` for the console version, and 
+Use ``python3 -m lamprop.console -h`` for the console version, and
 ``python3 -m lamprop.gui`` for the GUI version.
 
 
