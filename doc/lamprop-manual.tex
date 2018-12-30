@@ -3,7 +3,7 @@
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2018-12-02T15:32:29+0100
+% Last modified: 2018-12-30T22:18:36+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -246,9 +246,9 @@ the Python programming language. This proved to be a much cleaner, more
 maintainable and shorter implementation.
 
 In the meantime, the program was ported from python version 2 to python
-version 3 and the core objects (in the \texttt{types.py} file) were made
-immutable. Also the output method was made generic to enable output in
-different formats, such as \LaTeX, \textsc{html} and \textsc{rtf}.
+version 3 and the core objects were replaced by functions. (now in
+\texttt{core.py} ) Also the output method was made generic to enable output in
+different formats, such as \LaTeX and \textsc{html}.
 
 Additionally, the generally hard to obtain transverse fiber properties
 were replaced with properties derived from the matrix.
@@ -256,16 +256,17 @@ were replaced with properties derived from the matrix.
 The books from \citet{Hyer:1998} and \citet{Tsai:1992} and the report from
 \citet{Nettles:1994} were instrumental in writing the code.
 
+All the important code is covered by tests using pytest, and pylama is used to
+check the code when it is saved.
 
 \chapter{Building and installing the program} % {{{1
 
 \section{Requirements} % {{{2
 
-The main requirements are \texttt{python} (version 3.4 or later) and the
-\texttt{numpy} library (version 1.6 or later). Currently the development is
-done using \texttt{python} 3.7 and \texttt{numpy} 1.15.
+The only requirement is \texttt{python} (version 3.4 or later). Currently the
+development is done using \texttt{python} 3.7.
 
-For developers: You will need py.test\footnote{\url{https://docs.pytest.org/}}
+For developers: You will need pytest\footnote{\url{https://docs.pytest.org/}}
 to run the provided tests. Code checks are done using
 pylama\footnote{\url{http://pylama.readthedocs.io/en/latest/}}. Both should be
 invoked from the root directory of the repository.
@@ -281,26 +282,21 @@ invocations in a shell from the root directory of the repository.
 Use \texttt{python3 -m lamprop.console -h} for the console version, and
 \texttt{python3 -m lamprop.gui} for the \textsc{gui} version.
 
-Note that if lamprop is already installed, using the above commands will use
-the \emph{installed} version of the lamprop module.
-
-
 \section{Installation} % {{{2
 
-First, you need to install Python 3 and numpy. For \textsc{unix}-like operating systems,
+First, you need to install Python 3. For \textsc{unix}-like operating systems,
 use the packages or build scripts that your operating system provides.
 
-On ms-windows it is easiest to get a ready-built complete Python 3
+There are Python binaries for ms-windows available from
+python.org\footnote{\url{https://www.python.org/downloads/}}, and those should
+work fine for lamprop. But if you want to do more with python, building python
+extensions (written in C) on ms-windows can be a real pain.
+
+So on ms-windows it is easiest to get a ready-built complete Python 3
 distributions like Anaconda\footnote{\url{https://store.continuum.io/cshop/anaconda/}},
 ActivePython\footnote{\url{https://www.activestate.com/products/activepython/}} or
 Canopy\footnote{\url{https://www.enthought.com/product/canopy/}}. The main
-reason for this is that they include numpy and other useful modules.
-
-There are Python binaries for ms-windows available from
-python.org\footnote{\url{https://www.python.org/downloads/}}. But these do not
-include numpy. You can download pre-built numpy binaries from
-pypi\footnote{\url{https://pypi.org/project/numpy/\#files}}, but the author has
-never tried that.
+reason for this is that they include a lot of useful modules.
 
 Once the requirements are met, you can proceed with the installation of lamprop.
 
