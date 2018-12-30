@@ -1,8 +1,8 @@
 # file: latex.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
-# Copyright © 2011-2015 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2018-12-29T11:43:37+0100
+# Last modified: 2018-12-30T13:10:27+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,68 +31,74 @@ from .version import __version__
 
 
 def out(lam, eng, mat):  # {{{1
-    """Output function for LaTeX format."""
-    print("\\begin{table}[!htbp]")
-    print("  \\renewcommand{\\arraystretch}{1.2}")
-    txt = "  \\caption{{\\label{{tab:{0}}}properties of {0}}}"
-    # Raw underscores in LaTeX text mode produce “Missing $” errors.
+    """Output function for LaTeX format. Returns a list of lines."""
     texlname = lam.name.replace('_', '\_')
-    print(txt.format(texlname))
-    print("  \\centering\\footnotesize{\\rule{0pt}{10pt}")
-    print("  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__))
+    txt = "  \\caption{{\\label{{tab:{0}}}properties of {0}}}"
+    lines = [
+        "\\begin{table}[!htbp]",
+        "  \\renewcommand{\\arraystretch}{1.2}",
+        txt.format(texlname),
+        "  \\centering\\footnotesize{\\rule{0pt}{10pt}",
+        "  \\tiny calculated by lamprop {}\\\\[3pt]}}".format(__version__)
+    ]
     if eng:
-        _engprop(lam)
+        lines += _engprop(lam)
     if mat:
-        _matrices(lam)
-    print("\\end{table}\n")  # 1}}}
+        lines += _matrices(lam)
+    lines.append("\\end{table}")
+    lines.append("")
+    return lines  # 1}}}
 
 
 def _engprop(l):  # {{{1
-    """Print the engineering properties as a LaTeX table."""
-    print("    \\begin{tabular}[t]{rcrrl}")
-    print("      \\multicolumn{4}{c}{\\small"
-          "\\textbf{Laminate stacking}}\\\\[0.1em]")
-    print("      \\toprule %% \\usepackage{booktabs}")
-    print("      Layer & Weight & Angle & vf & Fiber type\\\\")
-    print("            & [g/m$^2$] & [$\\circ$] & [\\%]\\\\")
-    print("      \\midrule")
+    """Return the engineering properties as a LaTeX table in the form of
+    a list of lines."""
+    lines = [
+        "    \\begin{tabular}[t]{rcrrl}",
+        "      \\multicolumn{4}{c}{\\small\\textbf{Laminate stacking}}\\\\[0.1em]",
+        "      \\toprule %% \\usepackage{booktabs}",
+        "      Layer & Weight & Angle & vf & Fiber type\\\\",
+        "            & [g/m$^2$] & [$\\circ$] & [\\%]\\\\",
+        "      \\midrule",
+    ]
     for ln, la in enumerate(l.layers, start=1):
         s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
         texfname = la.fiber.name.replace('_', '\_')
-        print(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
-    print("      \\bottomrule")
-    print("    \\end{tabular}\\hspace{0.02\\textwidth}")
-    print("    \\begin{tabular}[t]{rrl}")
-    print("      \\multicolumn{3}{c}{\\small\\textbf{Engineering"
-          " properties}}\\\\[0.1em]")
-    print("      \\toprule")
-    print("      Property & Value & Dimension\\\\")
-    print("      \\midrule")
-    print("      $\\mathrm{{v_f}}$ & {:.3g} &\\%\\\\".format(l.vf*100))
-    print("      $\\mathrm{{w_f}}$ & {:.3g} &\\%\\\\".format(l.wf*100))
-    print("      thickness & {:.3g} & mm\\\\".format(l.thickness))
-    print("      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ))
-    s = "      weight & {:.0f} & g/m$^2$\\\\"
-    print(s.format(l.fiber_weight+l.resin_weight))
-    print("      resin & {:.0f} & g/m$^2$\\\\".format(l.resin_weight))
-    print("      \\midrule")
-    print("      $\\mathrm{{E_x}}$ & {:8.0f} & MPa\\\\".format(l.Ex))
-    print("      $\\mathrm{{E_y}}$ & {:8.0f} & MPa\\\\".format(l.Ey))
-    print("      $\\mathrm{{G_{{xy}}}}$ & {:8.0f} & MPa\\\\".format(l.Gxy))
-    print("      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.νxy))
-    print("      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.νyx))
-    s = "      $\\mathrm{{\\alpha_x}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.αx))
-    s = "      $\\mathrm{{\\alpha_y}}$ & {:g} & K$^{{-1}}$\\\\"
-    print(s.format(l.αy))
-    print("      \\bottomrule")
-    print("    \\end{tabular}")
+        lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
+    lines += [
+        "      \\bottomrule",
+        "    \\end{tabular}\\hspace{0.02\\textwidth}",
+        "    \\begin{tabular}[t]{rrl}",
+        "      \\multicolumn{3}{c}{\\small\\textbf{Engineering properties}}\\\\[0.1em]",
+        "      \\toprule",
+        "      Property & Value & Dimension\\\\",
+        "      \\midrule",
+        "      $\\mathrm{{v_f}}$ & {:.3g} &\\%\\\\".format(l.vf*100),
+        "      $\\mathrm{{w_f}}$ & {:.3g} &\\%\\\\".format(l.wf*100),
+        "      thickness & {:.3g} & mm\\\\".format(l.thickness),
+        "      density & {:.3g} & g/cm$^3$\\\\".format(l.ρ),
+        "      weight & {:.0f} & g/m$^2$\\\\".format(l.fiber_weight+l.resin_weight),
+        "      resin & {:.0f} & g/m$^2$\\\\".format(l.resin_weight),
+        "      \\midrule",
+        "      $\\mathrm{{E_x}}$ & {:8.0f} & MPa\\\\".format(l.Ex),
+        "      $\\mathrm{{E_y}}$ & {:8.0f} & MPa\\\\".format(l.Ey),
+        "      $\\mathrm{{G_{{xy}}}}$ & {:8.0f} & MPa\\\\".format(l.Gxy),
+        "      $\\mathrm{{\\nu_{{xy}}}}$ & {:g} &-\\\\".format(l.νxy),
+        "      $\\mathrm{{\\nu_{{yx}}}}$ & {:g} &-\\\\".format(l.νyx),
+        "      $\\mathrm{{\\alpha_x}}$ & {:g} & K$^{{-1}}$\\\\".format(l.αx),
+        "      $\\mathrm{{\\alpha_y}}$ & {:g} & K$^{{-1}}$\\\\".format(l.αy),
+        "      \\bottomrule",
+        "    \\end{tabular}",
+    ]
+    return lines
 
 
 def _matrices(l):  # {{{1
-    """Print the ABD and abd matrices as LaTeX arrays."""
+    """Return the ABD and abd matrices as LaTeX arrays in the form of
+    a list of lines."""
     def pm(mat):
-        """Print the contents of a matrix."""
+        """Return the contents of a matrix."""
+        lines = []
         for t in range(6):
             numl = []
             for m in range(6):
@@ -105,33 +111,37 @@ def _matrices(l):  # {{{1
                     if exp != 0:
                         nums += '\\times 10^{{{}}}'.format(exp)
                 numl.append(nums)
-            print('          ' + ' & '.join(numl) + r'\\')
-    print("  \\vbox{")
-    print("    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\[-5mm]")
-    print("      \\tiny\\[\\left\\{\\begin{array}{c}")
-    print("          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
-    print("        \\end{array}\\right\\} = ")
-    print("      \\left|\\begin{array}{cccccc}")
-    pm(l.ABD)
-    print("          \\end{array}\\right| \\times")
-    print("        \\left\\{\\begin{array}{c}")
-    print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
-          "\\gamma_{xy}\\\\[3pt]")
-    print("            "
-          "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
-    print("          \\end{array}\\right\\}\\]")
-    print("    }")
-    print("    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\[-5mm]")
-    print("      \\tiny\\[\\left\\{\\begin{array}{c}")
-    print("            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] "
-          "\\gamma_{xy}\\\\[3pt]")
-    print("            "
-          "\\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}")
-    print("          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}")
-    pm(l.abd)
-    print("          \\end{array}\\right|\\times")
-    print("        \\left\\{\\begin{array}{c}")
-    print("            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}")
-    print("          \\end{array}\\right\\}\\]\\\\")
-    print("    }")
-    print("  }")
+            lines.append('          ' + ' & '.join(numl) + r'\\')
+        return lines
+    lines = [
+        "  \\vbox{",
+        "    \\vbox{\\small\\textbf{Stiffness (ABD) matrix}\\\\[-5mm]",
+        "      \\tiny\\[\\left\\{\\begin{array}{c}",
+        "          N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}",
+        "        \\end{array}\\right\\} = ",
+        "      \\left|\\begin{array}{cccccc}",
+    ]
+    lines += pm(l.ABD)
+    lines += [
+        "          \\end{array}\\right| \\times",
+        "        \\left\\{\\begin{array}{c}",
+        "            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] \\gamma_{xy}\\\\[3pt]",
+        "            \\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}",
+        "          \\end{array}\\right\\}\\]",
+        "    }",
+        "    \\vbox{\\small\\textbf{Compliance (abd) matrix}\\\\[-5mm]",
+        "      \\tiny\\[\\left\\{\\begin{array}{c}",
+        "            \\epsilon_x\\\\[3pt] \\epsilon_y\\\\[3pt] \\gamma_{xy}\\\\[3pt]",
+        "            \\kappa_x\\\\[3pt] \\kappa_y\\\\[3pt] \\kappa_{xy}",
+        "          \\end{array}\\right\\} = \\left|\\begin{array}{cccccc}",
+    ]
+    lines += pm(l.abd)
+    lines += [
+        "          \\end{array}\\right|\\times",
+        "        \\left\\{\\begin{array}{c}",
+        "            N_x\\\\ N_y\\\\ N_{xy}\\\\ M_x\\\\ M_y\\\\ M_{xy}",
+        "          \\end{array}\\right\\}\\]\\\\",
+        "    }",
+        "  }",
+    ]
+    return lines

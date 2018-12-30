@@ -4,7 +4,7 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2018-11-27T16:31:55+0100
+# Last modified: 2018-12-30T12:21:24+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -139,11 +139,11 @@ class LampropUI(tk.Tk):
         name = self.cxlam.get()
         text = ''
         if self.engprop.get():
-            text += lp.text.engprop(self.laminates[name])
+            text += '\n'.join(lp.text.engprop(self.laminates[name]))
         if self.matrices.get():
             if text:
                 text += '\n'
-            text += lp.text.matrices(self.laminates[name])
+            text += '\n'.join(lp.text.matrices(self.laminates[name]))
         self.result['state'] = 'normal'
         self.result.replace('1.0', 'end', text)
         self.result['state'] = 'disabled'

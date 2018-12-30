@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-12-02T16:14:47+0100
+# Last modified: 2018-12-30T19:18:27+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -50,11 +50,6 @@ class LicenseAction(argparse.Action):
         sys.exit()
 
 
-def noop():
-    """Empty placeholder function for output types without header."""
-    pass
-
-
 def main():
     """Entry point for lamprop console application."""
     # Process the command-line arguments
@@ -67,9 +62,6 @@ def main():
         help="generate LaTeX output (the default is plain text)"
     )
     group.add_argument('-H', '--html', action='store_true', help="generate HTML output")
-    group.add_argument(
-        '-r', '--rtf', action='store_true', help="generate Rich Text Format output"
-    )
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
         '-e',
@@ -114,23 +106,15 @@ def main():
         sys.exit(1)
     # Set the output method.
     out = lp.text_output
-    header = noop
-    footer = noop
     if args.latex:
         out = lp.latex_output
     elif args.html:
         out = lp.html_output
-    elif args.rtf:
-        header = lp.rtf_header
-        out = lp.rtf_output
-        footer = lp.rtf_footer
-    header()
     for f in args.files:
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
         for curlam in laminates:
-            out(curlam, args.eng, args.mat)
-    footer()
+            print(*out(curlam, args.eng, args.mat), sep='\n')
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@
 #
 # Copyright © 2015,2016 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2015-05-16 16:57:52 +0200
-# Last modified: 2018-12-04T00:32:32+0100
+# Last modified: 2018-12-30T19:25:36+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,9 +29,6 @@
 from .html import out as html_output
 from .latex import out as latex_output
 from .parser import parse
-from .rtf import footer as rtf_footer
-from .rtf import header as rtf_header
-from .rtf import out as rtf_output
 from .text import out as text_output
 from .core import fiber, resin, lamina, laminate
 from .version import __version__
