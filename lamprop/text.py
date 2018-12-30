@@ -2,7 +2,7 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Copyright © 2011-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2018-12-29T11:42:11+0100
+# Last modified: 2018-12-30T02:09:08+0100
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
 
 """Text output routines for lamprop."""
 
-import sys
+# import sys
 from .version import __version__
 
 # Data
@@ -40,14 +40,14 @@ _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm³",
       "    [g/m²]   [°]  [%]"]
 
 # Platforms that don't support UTF-8 get ASCII text.
-enc = sys.stdout.encoding
-if not enc or enc.lower() != 'utf-8':
-    _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
-          "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
-          "v_xy = {0:7.5f}",
-          "v_yx = {0:7.5f}",
-          "a_x = {0:9.4g} 1/K, a_y = {1:9.4g} 1/K",
-          "    [g/m2] [deg]  [%]"]
+# enc = sys.stdout.encoding
+# if not enc or enc.lower() != 'utf-8':
+#     _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
+#           "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
+#           "v_xy = {0:7.5f}",
+#           "v_yx = {0:7.5f}",
+#           "a_x = {0:9.4g} 1/K, a_y = {1:9.4g} 1/K",
+#           "    [g/m2] [deg]  [%]"]
 
 
 def out(lam, eng, mat):  # {{{1
