@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-12-30T19:18:27+0100
+# Last modified: 2019-01-01T00:21:46+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -18,7 +18,7 @@ import lamprop as lp
 
 __version__ = lp.__version__
 _lic = """lamprop {}
-Copyright © 2011-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions

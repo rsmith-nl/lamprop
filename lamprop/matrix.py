@@ -1,13 +1,12 @@
 # file: matrix.py
-# vim:fileencoding=utf-8:fdm=marker:ft=python
+# vim:fileencoding=utf-8:ft=python:fdm=marker
 #
-# Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2018-12-29T11:33:31+0100
+# Last modified: 2019-01-01T00:27:44+0100
 
 from copy import deepcopy
-# from random import random
 
 _LIMIT = 1e-7  # Numbers smaller than abs(_LIMIT) are set to 0.
 
@@ -28,15 +27,6 @@ def zeros(num):
         row = [0 for j in range(num)]
         matrix.append(row)
     return matrix
-
-
-# def rand(num):
-#     """Create a num×num random matrix."""
-#     matrix = []
-#     for i in range(num):
-#         row = [round(random(), 2) for j in range(num)]
-#         matrix.append(row)
-#     return matrix
 
 
 def det(m):
