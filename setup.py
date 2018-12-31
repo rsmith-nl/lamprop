@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-22 18:05:56 +0100
-# Last modified: 2018-12-29T19:31:58+0100
+# Last modified: 2019-01-01T00:49:19+0100
 
 from setuptools import setup
 from lamprop.version import __version__
@@ -19,10 +19,10 @@ setup(
     description='Calculates elastic properties of fibrous composites',
     author='Roland Smith',
     author_email='rsmith@xs4all.nl',
-    license='BSD',
     url='https://github.com/rsmith-nl/lamprop',
     provides=[name],
     packages=[name],
+    platforms='any',
     entry_points={
         'console_scripts': ['lamprop = lamprop.console:main'],
         'gui_scripts': ['lamprop-gui = lamprop.gui:main']
