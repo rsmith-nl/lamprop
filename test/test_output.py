@@ -1,9 +1,9 @@
 # file: test_output.py
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 #
-# Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>
+# Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-12-30T01:32:58+0100
-# Last modified: 2018-12-30T17:22:02+0100
+# Last modified: 2019-01-01T02:38:36+0100
 """Compare output to reference output."""
 
 from lamprop.parser import parse

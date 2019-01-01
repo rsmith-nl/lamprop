@@ -3,12 +3,13 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2018-12-04T00:34:36+0100
-
+# Last modified: 2019-01-01T02:40:22+0100
 """Test for lamprop types"""
 
-import sys
 
+import sys
+# Inserting the path is needed to make sure that the module here is loaded,
+# not an installed version!
 sys.path.insert(1, '.')
 
 from lamprop.core import fiber, resin, lamina, laminate  # noqa

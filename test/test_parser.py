@@ -3,9 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2018-12-04T00:42:44+0100
-
-
+# Last modified: 2019-01-01T02:38:49+0100
 """Test for lamprop parser."""
 
 import sys
