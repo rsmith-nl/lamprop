@@ -2,11 +2,12 @@
 # vim:fileencoding=utf-8:fdm=marker:ft=make
 #
 # NOTE: This Makefile is only useful on UNIX-like operating systems!
-#       It will *not* work on ms-windows!
+#       It will *not* work on ms-windows! Building the documentation requires
+#       a working LaTeX installation.
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2018-12-08T23:50:13+0100
+# Last modified: 2019-01-01T13:59:42+0100
 
 .PHONY: all install uninstall dist clean check tags format test doc
 

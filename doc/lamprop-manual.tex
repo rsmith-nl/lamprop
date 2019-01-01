@@ -3,7 +3,7 @@
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2018-12-30T22:18:36+0100
+% Last modified: 2019-01-01T22:36:40+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -188,7 +188,7 @@
   \rule{\linewidth}{1mm}
   \vspace*{\stretch{3}}
   \begin{center}
-    \Large Eindhoven 2018
+    \Large Eindhoven \number\year
   \end{center}
 \end{titlingpage}
 
@@ -221,7 +221,7 @@ fiber-reinforced composite laminates. It calculates:
     \item engineering properties like $E_x$, $E_y$ and $G_{xy}$
     \item thermal properties like $\alpha_x$ and $\alpha_x$
     \item physical properties like density and laminate thickness
-    \item stiffness and compliance matrices (\textsc{abd}  and abd)
+    \item stiffness and compliance matrices (\textsc{abd} and abd)
 \end{itemize}
 
 
@@ -263,8 +263,8 @@ check the code when it is saved.
 
 \section{Requirements} % {{{2
 
-The only requirement is \texttt{python} (version 3.4 or later). Currently the
-development is done using \texttt{python} 3.7.
+The only requirement is Python (version 3.4 or later). Currently the
+development is done using Python 3.7.
 
 For developers: You will need pytest\footnote{\url{https://docs.pytest.org/}}
 to run the provided tests. Code checks are done using
@@ -289,14 +289,17 @@ use the packages or build scripts that your operating system provides.
 
 There are Python binaries for ms-windows available from
 python.org\footnote{\url{https://www.python.org/downloads/}}, and those should
-work fine for lamprop. But if you want to do more with python, building python
-extensions (written in C) on ms-windows can be a real pain.
+work fine for lamprop.
 
-So on ms-windows it is easiest to get a ready-built complete Python 3
-distributions like Anaconda\footnote{\url{https://store.continuum.io/cshop/anaconda/}},
-ActivePython\footnote{\url{https://www.activestate.com/products/activepython/}} or
-Canopy\footnote{\url{https://www.enthought.com/product/canopy/}}. The main
-reason for this is that they include a lot of useful modules.
+Building Python extensions (written in C) on ms-windows can be a real pain. So
+if you are using ms-windows and you decide you also want to use Python for
+other things, it is easiest to get a ready-built complete Python
+3 distributions like
+Anaconda\footnote{\url{https://store.continuum.io/cshop/anaconda/}},
+ActivePython\footnote{\url{https://www.activestate.com/products/activepython/}}
+or Canopy\footnote{\url{https://www.enthought.com/product/canopy/}}. The main
+reason for this is that they include a lot of useful modules and programs to
+manage them en keep them up to date.
 
 Once the requirements are met, you can proceed with the installation of lamprop.
 
@@ -336,7 +339,7 @@ based on the volume fractions and densities of the fibers and resins.
 
 The \texttt{f:}-line line contains a definition of a fiber. The parser
 converts this into an instance of a \texttt{Fiber} object The line must
-contain the following values, separated by whitespace:
+contain the following values, separated by white space:
 \begin{description}
     \item[$E_1$] Young's modulus in the fiber direction in \si{MPa}.
     \item[$\nu_{12}$] Poisson's constant (dimensionless).
@@ -345,8 +348,11 @@ contain the following values, separated by whitespace:
     \item[$\rho$] Density of the fiber in \si{g/cm^3}.
     \item[$name$] The identifier for the resin. This should be unique in all
         the files read. Contrary to the previous values, this may contain
-        whitespace.
+        white space.
 \end{description}
+
+Below an example for standard e-glass fiber.\\
+\texttt{73000 0.33 5.3e-6 2.60 e-glass}
 
 Usually, $E_1$ and other properties in the fibre length direction are easily
 obtained from a fiber supplier. Previous versions of this program also
@@ -365,7 +371,7 @@ to the new format.
 
 The \texttt{r:}-line line contains a definition of a resin. Like with the
 fibers, this becomes an instance of a \texttt{Resin} object in the code. The
-resin line must contain the following values, separated by whitespace.
+resin line must contain the following values, separated by white space.
 \begin{description}
     \item[$E$] Young's modulus in \si{MPa}.
     \item[$\nu$] Poisson's constant (dimensionless).
@@ -376,13 +382,16 @@ resin line must contain the following values, separated by whitespace.
         whitespace.
 \end{description}
 
+An example of a generic thermoset resin is shown below.\\
+\texttt{3800 0.36 40e-6 1.165 generic}
+
 The \texttt{t:} line starts a new laminate. It only contains the name which
 identifies the laminate. This name must be unique within the current input
 files. It may contain spaces.
 
 The \texttt{m:} line chooses a resin for the laminate. It must appear after
 a \texttt{t:} line, and before the \texttt{l:} lines. It must contain the
-following values, separated by whitespace:
+following values, separated by white space:
 \begin{description}
     \item[$vf$] The fiber volume fraction. This should be a number between
         0 and 1 or between 1 up to and including 100. In the latter case it
@@ -393,7 +402,7 @@ following values, separated by whitespace:
 
 The \texttt{l:} line defines a single layer (lamina) in the laminate. It must be
 preceded by a \texttt{t:} and a \texttt{m:} line. It must contain the following values,
-separated by whitespace (optional items in brackets):
+separated by white space (optional items in brackets):
 \begin{description}
     \item[$weight$] The area weight in \si{g/m^2} of the dry fibers.
     \item[$angle$] The angle upwards from the x-axis under which the fibers are oriented.
@@ -408,7 +417,6 @@ again in reverse order, making a symmetric laminate stack. An \texttt{s:} line i
 other position is an error.
 
 An example is given below.
-
 \begin{lstlisting}[style=plain]
 Fiber definition
    E1     v12  alpha1   rho  naam
@@ -435,7 +443,7 @@ than Python running out of memory. The author has used laminates with up to
 \section{Material data} % {{{2
 
 Over the years, the author has gathered a lot of data for different fibers
-from datasheets provided by the manufacturers. Data for different
+from data sheets provided by the manufacturers. Data for different
 fibers is given in \tref{tb:fibers}. In case the $\nu_{12}$ is not
 known for a carbon fiber, it is estimated at 0.25. Similarly, if the
 $\alpha_1$ is not known, it is estimated at \SI{-0.12e-6}{K^{-1}}. For glass
@@ -485,7 +493,7 @@ Several resins are shown in \tref{tb:resins}. For resins, $\nu$ is estimated
       Synolite 2155-N-1 & 4000 & 0.36 & 40e-6 & 1.22 & polyester\\
       Distitron 3501LS1 & 4100 & 0.36 & 40e-6 & 1.2 & polyester\\
       Synolite 1967-G-6 & 3800 & 0.36 & 40e-6 & 1.165 & \textsc{dcpd}\\
-      atlac 430 & 3600 & 0.36 & 55e-6 & 1.145 & vynilester\\
+      atlac 430 & 3600 & 0.36 & 55e-6 & 1.145 & vinylester\\
   \end{tabular}
 \end{table}
 
@@ -507,7 +515,6 @@ optional arguments:
   -h, --help            show this help message and exit
   -l, --latex           generate LaTeX output (the default is plain text)
   -H, --html            generate HTML output
-  -r, --rtf             generate Rich Text Format output
   -e, --eng             output only the layers and engineering properties
   -m, --mat             output only the ABD and abd matrices
   -L, --license         print the license
@@ -515,6 +522,13 @@ optional arguments:
   --log {debug,info,warning,error}
                         logging level (defaults to 'warning')
 \end{lstlisting}
+
+Running \texttt{lamprop} from the command line produces text output by
+default. Output in \LaTeX{} or \textsc{html} format can be requested with the
+appropriate arguments. As of 4.0, \textsc{rtf} output (for inclusion in word
+processor documents) has been removed. Since most word processors can read
+\textsc{html}, use that instead.
+
 
 \section{Using the \textsc{gui} front-end} % {{{2
 
@@ -723,13 +737,15 @@ $j$ are 1, 2 or 6): $A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}
 in \si{1/N}.  $d_{ij}$ is in \si{1/Nmm}. This clearly shows that abd is the
 inverse of ABD.
 
-The stress resultants $N$ are units of force per unit of length (\si{N/mm}).
-Moment resultants $m$ are in units of torque per unit of length (\si{Nmm/mm}
+The stress resultants $N$ are units of force per unit of width (\si{N/mm}).
+Moment resultants $m$ are in units of torque per unit of width (\si{Nmm/mm}
 = \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
 
 The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
 behavior of a square piece of laminate small enough that the stress and strain
 resultants can be considered constant over its dimensions.
+
+
 
 
 \chapter{Tips and tricks} % {{{1
@@ -766,12 +782,40 @@ equally sized 90\textdegree{} layer, but the author disagrees. For beam-like
 parts it is often desirable to have the majority of the fibers in the
 0\textdegree{} direction.
 
+Classical laminate theory strictly speaking is only valid for stackings of
+unidirectional layers. For woven fabrics and random oriented fiber products
+approximations are used.
+
+\section{Representing woven fabrics}
+
+A woven fabric is approximated as a [0\textdegree/90\textdegree]s stack, where
+the weight of each layer is 1/4 of the total weight of the woven fabric. If
+warp and weft of the weave are not of equal weight, you should adjust the
+layers accordingly. Symmetry is important because a lone
+[0\textdegree/90\textdegree] would exhibit tension/bending coupling that
+doesn't occur in a woven fabric.
+If the woven fabric is a small part of a larger stacking, you can use
+[0\textdegree/90\textdegree] to represent a weave.
+
+
+\section{Representing non-wovens}
+
+Things like chopped strand mat (“\textsc{csm}”), continuous filament mat
+(“\textsc{cfm}”) or other non-wovens can be approximated as
+a [0\textdegree/60\textdegree/-60\textdegree]s stack with the area weight
+evenly divided over the directions. Do keep in mind that the fiber volume
+fraction for such materials is significantly lower than for unidirectional or
+woven materials. For \textsc{csm} it is unlikely to exceed 25\% and for
+\textsc{cfm} 10--15\% are typical values.
+
+
 \section{Align your fibers with the expected load}
 
 This is a no-brainer for tensile loads, but there is a twist. To counter
 torsion and shear loads, there should be layers of fibers in the \textpm
 45\textdegree{} direction.  For bending loads the 0\textdegree{} layers should
 be at the outside of the part.
+
 
 \section{Laminate strength}
 
@@ -780,11 +824,12 @@ from the properties of the fibers and resin used in the layers; it is outside
 the scope of classical laminate theory.
 
 Even stronger, the author does not believe that a general theory of laminate
-strength is feasible due to the many different possible failure modes and
-the factors outside of the fiber and resin properties that influence the
-laminate.  Examples of the latter are the void content, the degree of cure of
-the resin and errors in cutting or placing the fibers. These are determined by
-type of production process used and the craftsmanship of the people involved.
+strength based on constituent properties is feasible due to the many different
+possible failure modes and the factors outside of the fiber and resin
+properties that influence the laminate.  Examples of the latter are the void
+content, the degree of cure of the resin and errors in cutting or placing the
+fibers. These are determined by type of production process used and the
+craftsmanship of the people involved.
 
 However, the following guidelines have served the author well over the years.
 
@@ -806,11 +851,20 @@ The strength of unidirectional layers in the \textpm 45\textdegree{} or
 \bibliography{lman}
 \chapter{Colofon}
 
-This document has been typeset with the
-\TeX\footnote{\url{http://nl.wikipedia.org/wiki/TeX}}
-software, using the \LaTeX\footnote{\url{http://nl.wikipedia.org/wiki/LaTeX}}
-macros and specifically the
-\textsc{memoir}\footnote{%
+This document has been set with the “TeX
+Live”\footnote{\url{https://www.tug.org/texlive/}} implementation of the
+\TeX\footnote{\url{http://nl.wikipedia.org/wiki/TeX}} typesetting software,
+using the \LaTeX\footnote{\url{http://nl.wikipedia.org/wiki/LaTeX}} macros and
+specifically the \textsc{memoir}\footnote{%
     \url{http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/}} style.
+
+The main font used for the text is
+Alegreya\footnote{\url{https://github.com/huertatipografica/Alegreya}}.  The
+\textsf{TeX Gyre
+Heros}\footnote{\url{http://www.gust.org.pl/projects/e-foundry/tex-gyre}} font
+is used for sans-serif text, while \texttt{TeX Gyre Cursor} is used for
+program names and program output.
+
+
 
 \end{document}
