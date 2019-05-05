@@ -3,7 +3,7 @@
 # Copyright © 2014-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2019-01-01T00:28:20+0100
+# Last modified: 2019-05-05T11:25:08+0200
 """Parser for lamprop files."""
 
 import logging
@@ -60,7 +60,7 @@ def _directives(filename):
     # Filter out lines with directives.
     directives = [
         (num, ln) for num, ln in enumerate(data, start=1)
-        if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
+        if len(ln) > 1 and ln[1] == ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
     rd = [(num, ln) for num, ln in directives if ln[0] == 'r']
     fd = [(num, ln) for num, ln in directives if ln[0] == 'f']

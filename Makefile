@@ -7,7 +7,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2019-01-01T13:59:42+0100
+# Last modified: 2019-05-05T11:28:53+0200
 
 .PHONY: all install uninstall dist clean check tags format test doc
 
@@ -30,7 +30,7 @@ all::
 	@echo '* dist: create a distribution file.'
 	@echo '* clean: remove all generated files.'
 	@echo '* check: run pylama on all python files.'
-	@echo '* tags: run exctags.'
+	@echo '* tags: run uctags.'
 	@echo '* format: format the source with yapf.'
 	@echo '* doc: build the documentation using LaTeX.'
 
@@ -72,7 +72,7 @@ check:: .IGNORE
 	pylama -i E501,W605 lamprop/*.py test/*.py setup.py tools/*.py
 
 tags::
-	exctags -R --verbose
+	uctags -R --verbose
 
 format::
 	yapf-3.7 -i lamprop/*.py test/*.py setup.py tools/*.py

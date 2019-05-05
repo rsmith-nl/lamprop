@@ -4,15 +4,15 @@
 # Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2019-01-01T00:25:59+0100
+# Last modified: 2019-05-05T11:27:16+0200
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
 
 
-def out(lam, eng, mat):  # {{{1
+def out(lam, eng, mat):
     """Output function for LaTeX format. Returns a list of lines."""
-    texlname = lam.name.replace('_', '\_')
+    texlname = lam.name.replace('_', r'\_')
     txt = "  \\caption{{\\label{{tab:{0}}}properties of {0}}}"
     lines = [
         "\\begin{table}[!htbp]",
@@ -27,10 +27,10 @@ def out(lam, eng, mat):  # {{{1
         lines += _matrices(lam)
     lines.append("\\end{table}")
     lines.append("")
-    return lines  # 1}}}
+    return lines
 
 
-def _engprop(l):  # {{{1
+def _engprop(l):
     """Return the engineering properties as a LaTeX table in the form of
     a list of lines."""
     lines = [
@@ -43,7 +43,7 @@ def _engprop(l):  # {{{1
     ]
     for ln, la in enumerate(l.layers, start=1):
         s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
-        texfname = la.fiber.name.replace('_', '\_')
+        texfname = la.fiber.name.replace('_', r'\_')
         lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
     lines += [
         "      \\bottomrule",
@@ -73,7 +73,7 @@ def _engprop(l):  # {{{1
     return lines
 
 
-def _matrices(l):  # {{{1
+def _matrices(l):
     """Return the ABD and abd matrices as LaTeX arrays in the form of
     a list of lines."""
     def pm(mat):
