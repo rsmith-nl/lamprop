@@ -1,0 +1,304 @@
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:unidirectional laminate}properties of unidirectional laminate}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 4.0α1\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      2 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      3 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      4 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrl}
+      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 61.5 &\%\\
+      thickness & 0.455 & mm\\
+      density & 1.43 & g/cm$^3$\\
+      weight & 650 & g/m$^2$\\
+      resin & 250 & g/m$^2$\\
+      \midrule
+      $\mathrm{E_x}$ &   118810 & MPa\\
+      $\mathrm{E_y}$ &     9240 & MPa\\
+      $\mathrm{G_{xy}}$ &     4620 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.3 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.0233314 &-\\
+      $\mathrm{\alpha_x}$ & 2.75431e-07 & K$^{-1}$\\
+      $\mathrm{\alpha_y}$ & 4.14e-05 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+  \vbox{
+    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+          N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           5.4385\times 10^{4} &  1.2689\times 10^{3} & 0 & 0 & 0 & 0\\
+           1.2689\times 10^{3} &  4.2296\times 10^{3} & 0 & 0 & 0 & 0\\
+          0 & 0 &  2.1000\times 10^{3} & 0 & 0 & 0\\
+          0 & 0 & 0 &  9.3638\times 10^{2} &  2.1847\times 10^{1} & 0\\
+          0 & 0 & 0 &  2.1847\times 10^{1} &  7.2824\times 10^{1} & 0\\
+          0 & 0 & 0 & 0 & 0 &  3.6157\times 10^{1}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\}\]
+    }
+    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\} = \left|\begin{array}{cccccc}
+           1.8517\times 10^{-5} & -5.5551\times 10^{-6} & 0 & 0 & 0 & 0\\
+          -5.5551\times 10^{-6} &  2.3810\times 10^{-4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  4.7619\times 10^{-4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  1.0755\times 10^{-3} & -3.2264\times 10^{-4} & 0\\
+          0 & 0 & 0 & -3.2264\times 10^{-4} &  1.3829\times 10^{-2} & 0\\
+          0 & 0 & 0 & 0 & 0 &  2.7657\times 10^{-2}\\
+          \end{array}\right|\times
+        \left\{\begin{array}{c}
+            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+          \end{array}\right\}\]\\
+    }
+  }
+\end{table}
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:[0/90]s laminate}properties of [0/90]s laminate}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 4.0α1\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      2 &  100 &    90 & 50 & Hyer's carbon fiber\\
+      3 &  100 &    90 & 50 & Hyer's carbon fiber\\
+      4 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrl}
+      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 61.5 &\%\\
+      thickness & 0.455 & mm\\
+      density & 1.43 & g/cm$^3$\\
+      weight & 650 & g/m$^2$\\
+      resin & 250 & g/m$^2$\\
+      \midrule
+      $\mathrm{E_x}$ &    64355 & MPa\\
+      $\mathrm{E_y}$ &    64355 & MPa\\
+      $\mathrm{G_{xy}}$ &     4620 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.0432956 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.0432956 &-\\
+      $\mathrm{\alpha_x}$ & 3.97311e-06 & K$^{-1}$\\
+      $\mathrm{\alpha_y}$ & 3.97311e-06 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+  \vbox{
+    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+          N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           2.9307\times 10^{4} &  1.2689\times 10^{3} & 0 & 0 & 0 & 0\\
+           1.2689\times 10^{3} &  2.9307\times 10^{4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  2.1000\times 10^{3} & 0 & 0 & 0\\
+          0 & 0 & 0 &  8.2844\times 10^{2} &  2.1847\times 10^{1} & 0\\
+          0 & 0 & 0 &  2.1847\times 10^{1} &  1.8077\times 10^{2} & 0\\
+          0 & 0 & 0 & 0 & 0 &  3.6157\times 10^{1}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\}\]
+    }
+    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\} = \left|\begin{array}{cccccc}
+           3.4185\times 10^{-5} & -1.4801\times 10^{-6} & 0 & 0 & 0 & 0\\
+          -1.4801\times 10^{-6} &  3.4185\times 10^{-5} & 0 & 0 & 0 & 0\\
+          0 & 0 &  4.7619\times 10^{-4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  1.2109\times 10^{-3} & -1.4635\times 10^{-4} & 0\\
+          0 & 0 & 0 & -1.4635\times 10^{-4} &  5.5496\times 10^{-3} & 0\\
+          0 & 0 & 0 & 0 & 0 &  2.7657\times 10^{-2}\\
+          \end{array}\right|\times
+        \left\{\begin{array}{c}
+            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+          \end{array}\right\}\]\\
+    }
+  }
+\end{table}
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:[+45/-45]s laminate}properties of [+45/-45]s laminate}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 4.0α1\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      2 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      3 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      4 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrl}
+      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 61.5 &\%\\
+      thickness & 0.455 & mm\\
+      density & 1.43 & g/cm$^3$\\
+      weight & 650 & g/m$^2$\\
+      resin & 250 & g/m$^2$\\
+      \midrule
+      $\mathrm{E_x}$ &    16248 & MPa\\
+      $\mathrm{E_y}$ &    16248 & MPa\\
+      $\mathrm{G_{xy}}$ &    30842 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.758456 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.758456 &-\\
+      $\mathrm{\alpha_x}$ & 3.97311e-06 & K$^{-1}$\\
+      $\mathrm{\alpha_y}$ & 3.97311e-06 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+  \vbox{
+    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+          N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           1.7388\times 10^{4} &  1.3188\times 10^{4} & 0 & 0 & 0 & 0\\
+           1.3188\times 10^{4} &  1.7388\times 10^{4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  1.4019\times 10^{4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  2.9938\times 10^{2} &  2.2707\times 10^{2} &  1.6192\times 10^{2}\\
+          0 & 0 & 0 &  2.2707\times 10^{2} &  2.9938\times 10^{2} &  1.6192\times 10^{2}\\
+          0 & 0 & 0 &  1.6192\times 10^{2} &  1.6192\times 10^{2} &  2.4138\times 10^{2}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\}\]
+    }
+    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\} = \left|\begin{array}{cccccc}
+           1.3540\times 10^{-4} & -1.0270\times 10^{-4} & 0 & 0 & 0 & 0\\
+          -1.0270\times 10^{-4} &  1.3540\times 10^{-4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  7.1330\times 10^{-5} & 0 & 0 & 0\\
+          0 & 0 & 0 &  8.5313\times 10^{-3} & -5.2973\times 10^{-3} & -2.1693\times 10^{-3}\\
+          0 & 0 & 0 & -5.2973\times 10^{-3} &  8.5313\times 10^{-3} & -2.1693\times 10^{-3}\\
+          0 & 0 & 0 & -2.1693\times 10^{-3} & -2.1693\times 10^{-3} &  7.0533\times 10^{-3}\\
+          \end{array}\right|\times
+        \left\{\begin{array}{c}
+            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+          \end{array}\right\}\]\\
+    }
+  }
+\end{table}
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:quasi isotropic laminate}properties of quasi isotropic laminate}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 4.0α1\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  200 &     0 & 50 & Hyer's carbon fiber\\
+      2 &  200 &    90 & 50 & Hyer's carbon fiber\\
+      3 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      4 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      5 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      6 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      7 &  200 &    90 & 50 & Hyer's carbon fiber\\
+      8 &  200 &     0 & 50 & Hyer's carbon fiber\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrl}
+      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 61.5 &\%\\
+      thickness & 1.36 & mm\\
+      density & 1.43 & g/cm$^3$\\
+      weight & 1950 & g/m$^2$\\
+      resin & 750 & g/m$^2$\\
+      \midrule
+      $\mathrm{E_x}$ &    53349 & MPa\\
+      $\mathrm{E_y}$ &    53349 & MPa\\
+      $\mathrm{G_{xy}}$ &    13361 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.206912 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.206912 &-\\
+      $\mathrm{\alpha_x}$ & 3.97311e-06 & K$^{-1}$\\
+      $\mathrm{\alpha_y}$ & 3.97311e-06 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+  \vbox{
+    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+          N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           7.6003\times 10^{4} &  1.5726\times 10^{4} & 0 & 0 & 0 & 0\\
+           1.5726\times 10^{4} &  7.6003\times 10^{4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  1.8219\times 10^{4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  1.8600\times 10^{4} &  7.9509\times 10^{2} &  1.6192\times 10^{2}\\
+          0 & 0 & 0 &  7.9509\times 10^{2} &  8.2377\times 10^{3} &  1.6192\times 10^{2}\\
+          0 & 0 & 0 &  1.6192\times 10^{2} &  1.6192\times 10^{2} &  1.1815\times 10^{3}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\}\]
+    }
+    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+      \tiny\[\left\{\begin{array}{c}
+            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
+            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+          \end{array}\right\} = \left|\begin{array}{cccccc}
+           1.3746\times 10^{-5} & -2.8442\times 10^{-6} & 0 & 0 & 0 & 0\\
+          -2.8442\times 10^{-6} &  1.3746\times 10^{-5} & 0 & 0 & 0 & 0\\
+          0 & 0 &  5.4887\times 10^{-5} & 0 & 0 & 0\\
+          0 & 0 & 0 &  5.4038\times 10^{-5} & -5.0838\times 10^{-6} & -6.7091\times 10^{-6}\\
+          0 & 0 & 0 & -5.0838\times 10^{-6} &  1.2220\times 10^{-4} & -1.6050\times 10^{-5}\\
+          0 & 0 & 0 & -6.7091\times 10^{-6} & -1.6050\times 10^{-5} &  8.4953\times 10^{-4}\\
+          \end{array}\right|\times
+        \left\{\begin{array}{c}
+            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
+          \end{array}\right\}\]\\
+    }
+  }
+\end{table}
+

@@ -1,30 +1,9 @@
 # file: parser.py
 # vim:fileencoding=utf-8:ft=python
-# Copyright © 2014-2017 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2018-12-04T00:39:53+0100
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the distribution.
-#
-# THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-# ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE
-# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-# SUCH DAMAGE.
-
+# Last modified: 2019-05-05T11:25:08+0200
 """Parser for lamprop files."""
 
 import logging
@@ -81,7 +60,7 @@ def _directives(filename):
     # Filter out lines with directives.
     directives = [
         (num, ln) for num, ln in enumerate(data, start=1)
-        if len(ln) > 1 and ln[1] is ':' and ln[0] in 'tmlsfr']
+        if len(ln) > 1 and ln[1] == ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
     rd = [(num, ln) for num, ln in directives if ln[0] == 'r']
     fd = [(num, ln) for num, ln in directives if ln[0] == 'f']

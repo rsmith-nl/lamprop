@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2018-12-02T16:14:47+0100
+# Last modified: 2019-01-01T00:21:46+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -18,7 +18,7 @@ import lamprop as lp
 
 __version__ = lp.__version__
 _lic = """lamprop {}
-Copyright © 2011-2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -50,11 +50,6 @@ class LicenseAction(argparse.Action):
         sys.exit()
 
 
-def noop():
-    """Empty placeholder function for output types without header."""
-    pass
-
-
 def main():
     """Entry point for lamprop console application."""
     # Process the command-line arguments
@@ -64,48 +59,38 @@ def main():
         '-l',
         '--latex',
         action='store_true',
-        help="generate LaTeX output (the default is plain text)")
-    group.add_argument(
-        '-H', '--html', action='store_true', help="generate HTML output")
-    group.add_argument(
-        '-r',
-        '--rtf',
-        action='store_true',
-        help="generate Rich Text Format output")
+        help="generate LaTeX output (the default is plain text)"
+    )
+    group.add_argument('-H', '--html', action='store_true', help="generate HTML output")
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
         '-e',
         '--eng',
         action='store_true',
-        help="output only the layers and engineering properties")
+        help="output only the layers and engineering properties"
+    )
     group.add_argument(
-        '-m',
-        '--mat',
-        action='store_true',
-        help="output only the ABD and abd matrices")
+        '-m', '--mat', action='store_true', help="output only the ABD and abd matrices"
+    )
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
-        '-L',
-        '--license',
-        action=LicenseAction,
-        nargs=0,
-        help="print the license")
-    group.add_argument(
-        '-v', '--version', action='version', version=__version__)
+        '-L', '--license', action=LicenseAction, nargs=0, help="print the license"
+    )
+    group.add_argument('-v', '--version', action='version', version=__version__)
     opts.add_argument(
         '--log',
         default='warning',
         choices=['debug', 'info', 'warning', 'error'],
-        help="logging level (defaults to 'warning')")
+        help="logging level (defaults to 'warning')"
+    )
     opts.add_argument(
-        "files",
-        metavar='file',
-        nargs='*',
-        help="one or more files to process")
+        "files", metavar='file', nargs='*', help="one or more files to process"
+    )
     args = opts.parse_args(sys.argv[1:])
     logging.basicConfig(
         level=getattr(logging, args.log.upper(), None),
-        format='%(levelname)s: %(message)s')
+        format='%(levelname)s: %(message)s'
+    )
     del opts, group
     if args.mat is False and args.eng is False:
         args.eng = True
@@ -121,23 +106,15 @@ def main():
         sys.exit(1)
     # Set the output method.
     out = lp.text_output
-    header = noop
-    footer = noop
     if args.latex:
         out = lp.latex_output
     elif args.html:
         out = lp.html_output
-    elif args.rtf:
-        header = lp.rtf_header
-        out = lp.rtf_output
-        footer = lp.rtf_footer
-    header()
     for f in args.files:
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
         for curlam in laminates:
-            out(curlam, args.eng, args.mat)
-    footer()
+            print(*out(curlam, args.eng, args.mat), sep='\n')
 
 
 if __name__ == '__main__':
