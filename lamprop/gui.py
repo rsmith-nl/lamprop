@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2019-01-01T00:23:39+0100
+# Last modified: 2020-02-29T14:15:26+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -94,7 +94,12 @@ class LampropUI(tk.Tk):
 
     def do_fileopen(self):
         if not self.directory:
-            self.directory = os.environ['HOME']
+            self.directory = ''
+            available = [
+                os.environ[k] for k in ('HOME', 'HOMEDRIVE') if k in os.environ
+            ]
+            if available:
+                self.directory = available[0]
         fn = filedialog.askopenfile(
             title='Lamprop file to open', parent=self, defaultextension='.lam',
             filetypes=(('lamprop files', '*.lam'), ('all files', '*.*')),
