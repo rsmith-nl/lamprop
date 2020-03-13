@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-02-29T14:15:26+0100
+# Last modified: 2020-03-13T21:27:52+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -49,6 +49,8 @@ class LampropUI(tk.Tk):
         self.option_add("*Font", default_font)
         # General commands and bindings
         self.bind_all('q', self.do_exit)
+        self.rowconfigure(5, weight=1)
+        self.columnconfigure(3, weight=1)
         # Create widgets.
         # First row
         prbut = ttk.Button(self, text="File:", command=self.do_fileopen)
@@ -80,7 +82,7 @@ class LampropUI(tk.Tk):
         fixed = nametofont('TkFixedFont')
         fixed['size'] = 12
         res = ScrolledText(self, state='disabled', font=fixed)
-        res.grid(row=5, column=0, columnspan=5, sticky='ew')
+        res.grid(row=5, column=0, columnspan=5, sticky='nsew')
         self.result = res
 
     # Callbacks
