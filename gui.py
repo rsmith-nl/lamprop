@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-03-13T21:27:52+0100
+# Last modified: 2020-10-03T09:22:54+0200
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -21,7 +21,7 @@ from tkinter import ttk
 from tkinter.font import nametofont
 from tkinter.scrolledtext import ScrolledText
 from tkinter import filedialog
-import lamprop as lp
+import lp
 
 __version__ = lp.__version__
 

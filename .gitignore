@@ -1,8 +1,8 @@
 *.pyc
 __pycache__
 *~
-build/
-dist/
+lamprop
+lamprop-gui
 lamprop.egg-info/
 .ropeproject/
 .cache/

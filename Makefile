@@ -7,9 +7,9 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2019-05-05T11:28:53+0200
+# Last modified: 2020-10-03T10:25:37+0200
 
-.PHONY: all install uninstall dist clean check tags format test doc
+.PHONY: all uninstall dist clean check tags format test doc
 
 # Installation locations
 PREFIX:=/usr/local
@@ -25,6 +25,7 @@ DISTFILES:=README.rst
 all::
 	@echo 'you can use the following commands:'
 	@echo '* test: run the built-in tests.'
+	@echo '* build: create the self-contained programs.'
 	@echo '* install'
 	@echo '* uninstall'
 	@echo '* dist: create a distribution file.'
@@ -35,17 +36,21 @@ all::
 	@echo '* doc: build the documentation using LaTeX.'
 
 # Install lamprop and its documentation.
-install::
+install: build
 	@if [ `id -u` != 0 ]; then \
 		echo "You must be root to install the software!"; \
 		exit 1; \
 	fi
-# Let Python do the install work.
-	python3 -B setup.py install
+# Install the programs
+	install lamprop $(BINDIR)
+	install lamprop-gui $(BINDIR)
 	rm -rf build dist *.egg-info
 # Install the manual.
 	mkdir -p $(DOCDIR)
 	install -m 644 doc/lamprop-manual.pdf $(DOCDIR)
+
+build: console.py gui.py lp/*.py
+	./build.py
 
 # Remove an installed lamprop completely
 uninstall::
@@ -63,6 +68,7 @@ dist:
 	rm -f MANIFEST
 
 clean:
+	rm -f lamprop lamprop-gui
 	rm -rf backup-*.tar* build dist MANIFEST *.egg-info
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name __pycache__ -delete

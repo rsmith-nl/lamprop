@@ -4,7 +4,7 @@
 # Copyright © 2014-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2019-01-01T00:26:50+0100
+# Last modified: 2020-10-03T09:23:30+0200
 """
 Core functions of lamprop.
 
@@ -56,7 +56,7 @@ The following references were used in coding this module:
 
 from types import SimpleNamespace
 import math
-import lamprop.matrix as m
+import lp.matrix as m
 
 
 def fiber(E1, ν12, α1, ρ, name):
