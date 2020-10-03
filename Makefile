@@ -7,7 +7,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2020-10-03T10:25:37+0200
+# Last modified: 2020-10-03T12:31:46+0200
 
 .PHONY: all uninstall dist clean check tags format test doc
 
@@ -68,23 +68,22 @@ dist:
 	rm -f MANIFEST
 
 clean:
-	rm -f lamprop lamprop-gui
-	rm -rf backup-*.tar* build dist MANIFEST *.egg-info
+	rm -f lamprop lamprop-gui backup-*.tar*
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name __pycache__ -delete
 
 # The targets below are mostly for the maintainer.
 check:: .IGNORE
-	pylama -i E501,W605 lamprop/*.py test/*.py setup.py tools/*.py
+	pylama -i E501,E741,C901,W605 lp/*.py test/*.py console.py gui.py build.py tools/*.py
 
 tags::
 	uctags -R --verbose
 
 format::
-	yapf-3.7 -i lamprop/*.py test/*.py setup.py tools/*.py
+	yapf -i lp/*.py test/*.py console.py gui.py build.py tools/*.py
 
 test::
-	py.test-3.7 -v
+	py.test -v
 
 doc::
 	cd $(SUBDIR); make
