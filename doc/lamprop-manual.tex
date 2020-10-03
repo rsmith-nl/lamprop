@@ -3,7 +3,7 @@
 %
 % Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2019-01-01T22:36:40+0100
+% Last modified: 2020-10-03T12:56:01+0200
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -263,7 +263,7 @@ check the code when it is saved.
 
 \section{Requirements} % {{{2
 
-The only requirement is Python (version 3.4 or later). Currently the
+The only requirement is Python (version 3.6 or later). Currently the
 development is done using Python 3.7.
 
 For developers: You will need pytest\footnote{\url{https://docs.pytest.org/}}
@@ -279,8 +279,8 @@ ms-windows.
 You can try both versions without installing them first, with the following
 invocations in a shell from the root directory of the repository.
 
-Use \texttt{python3 -m lamprop.console -h} for the console version, and
-\texttt{python3 -m lamprop.gui} for the \textsc{gui} version.
+Use \texttt{python3 console.py -h} for the console version, and
+\texttt{python3 gui.py} for the \textsc{gui} version.
 
 \section{Installation} % {{{2
 
@@ -291,40 +291,34 @@ There are Python binaries for ms-windows available from
 python.org\footnote{\url{https://www.python.org/downloads/}}, and those should
 work fine for lamprop.
 
-Building Python extensions (written in C) on ms-windows can be a real pain. So
-if you are using ms-windows and you decide you also want to use Python for
-other things, it is easiest to get a ready-built complete Python
-3 distributions like
-Anaconda\footnote{\url{https://store.continuum.io/cshop/anaconda/}},
-ActivePython\footnote{\url{https://www.activestate.com/products/activepython/}}
-or Canopy\footnote{\url{https://www.enthought.com/product/canopy/}}. The main
-reason for this is that they include a lot of useful modules and programs to
-manage them en keep them up to date.
-
 Once the requirements are met, you can proceed with the installation of lamprop.
 
 \begin{itemize}
     \item Unpack the tarball or zipfile, or clone the github repository.
     \item Open a terminal window or (on ms-windows a \texttt{cmd} window).
     \item Change into the directory where lamprop was unpacked or cloned.
-    \item Run \texttt{python3 setup.py install}. This will install both the module and
-        the scripts that use it. If you get an error message that the command
+    \item Run \texttt{python3 build.py}. This will create both self-contained
+        scripts. If you get an error message that the command
         \texttt{python3} is not recognized, try \texttt{python} instead.
+    \item On \textsc{posix} operating systems, run \texttt{make install} as
+        root to install the programs. By default they are installed in
+        \verb|\usr\local\bin|.
+    \item On ms-windows, copy \texttt{lamprop.pyz} and
+        \texttt{lamprop-gui.pyz} to the \texttt{Scripts} subdirectory of your
+        Python installation.
 \end{itemize}
 
 
 \chapter{Using the program} % {{{1
 
-There are basically three ways to use lamprop.
+There are basically two ways to use lamprop.
 
 \begin{enumerate}
-    \item Use the command-line front-end \texttt{lamprop}.
-    \item Use the \textsc{gui}-frontend \texttt{lamprop-gui}.
-    \item Use the lamprop module directly from Python 3.
+    \item Use the command-line program \texttt{lamprop}.
+    \item Use the \textsc{gui}-program \texttt{lamprop-gui}.
 \end{enumerate}
 
-The first and second method depend on files written in a domain-specific
-language.
+They depend on files written in a domain-specific language.
 
 \section{The lamprop file format} % {{{2
 
@@ -357,7 +351,7 @@ Below an example for standard e-glass fiber.\\
 Usually, $E_1$ and other properties in the fibre length direction are easily
 obtained from a fiber supplier. Previous versions of this program also
 required the Young's modulus perpendicular to the fiber to calculate
-transverse properties of the lamina. Since this values is generally not given
+transverse properties of the lamina. Since this value is generally not given
 in the manufacturer documentation, it has been replaced by the modulus of the
 matrix multiplied by a factor, according to \citet{Tsai:1992}. However, the
 author has found that the factor provided by Tsai overestimates $E_2$,
@@ -497,7 +491,7 @@ Several resins are shown in \tref{tb:resins}. For resins, $\nu$ is estimated
   \end{tabular}
 \end{table}
 
-\section{Using the command-line front-end} % {{{2
+\section{Using the command-line program} % {{{2
 
 The command \texttt{lamrop -h} produces the following overview of the options.
 
@@ -530,9 +524,9 @@ processor documents) has been removed. Since most word processors can read
 \textsc{html}, use that instead.
 
 
-\section{Using the \textsc{gui} front-end} % {{{2
+\section{Using the \textsc{gui} program} % {{{2
 
-The \textsc{gui} front-end was written (using \texttt{tkinter}) primarily for
+The \textsc{gui} program was written (using \texttt{tkinter}) primarily for
 users of ms-windows, since they are generally not used to the command-line
 interface. The contents of its window are shown in \fref{fig:lamprop-gui}. The
 image shows the looks of the widgets on \textsc{unix}-like operating systems.
@@ -551,111 +545,48 @@ a laminate to display. The textbox at the bottom shows the lamprop output as
 text.
 Pressing the \texttt{q}-key terminates the program.
 
-\section{Using the \texttt{lamprop} module from Python 3} % {{{2
 
-An example reproducing the results from \fref{fig:lamprop-gui} is shown
-below.
+\section{Meaning of the ABD and abd matrices} % {{{2
 
-\begin{lstlisting}
-import lamprop as la
+The stiffness or ABD matrix and compliance or abd matrix are what converts
+strains into forces and the other way around, see
+\tref{tab:quasi-isotropic-mat}.  Both are 6×6 matrices that can be divided
+into three 3×3 matrices; A, B and D or a, b and d.
+The expansions below reveal the symmetries in these matrices.
 
-t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
-epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')
+\[
+    ABD = \left|\begin{array}{cccccc}
+        A_{11} & A_{12} & A_{16} & B_{11} & B_{12} & B_{16}\\
+        A_{12} & A_{22} & A_{26} & B_{12} & B_{22} & B_{26}\\
+        A_{16} & A_{26} & A_{66} & B_{16} & B_{26} & B_{66}\\
+        B_{11} & B_{12} & B_{16} & D_{11} & D_{12} & D_{16}\\
+        B_{12} & B_{22} & B_{26} & D_{12} & D_{22} & D_{26}\\
+        B_{16} & B_{26} & B_{66} & D_{16} & D_{26} & D_{66}\\
+    \end{array}\right|\quad
+    abd = \left|\begin{array}{cccccc}
+        a_{11} & a_{12} & a_{16} & b_{11} & b_{12} & b_{16}\\
+        a_{12} & a_{22} & a_{26} & b_{12} & b_{22} & b_{26}\\
+        a_{16} & a_{26} & a_{66} & b_{16} & b_{26} & b_{66}\\
+        b_{11} & b_{12} & b_{16} & d_{11} & d_{12} & d_{16}\\
+        b_{12} & b_{22} & b_{26} & d_{12} & d_{22} & d_{26}\\
+        b_{16} & b_{26} & b_{66} & d_{16} & d_{26} & d_{66}\\
+    \end{array}\right|
+\]
 
-L0 = la.Lamina(t300, epr04908, 100, 0, 0.50)
-L90 = la.Lamina(t300, epr04908, 100, 90, 0.50)
+The units of the parts of the ABD and abd matrix are as follows (where $i$ and
+$j$ are 1, 2 or 6): $A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}
+= \si{N}.  $D_{ij}$ is in \si{N.mm}.  $a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is
+in \si{1/N}.  $d_{ij}$ is in \si{1/Nmm}. This clearly shows that abd is the
+inverse of ABD.
 
-cd0200 = la.Laminate('CD0200-2', (L0, L90, L90, L0))
+The stress resultants $N$ are units of force per unit of width (\si{N/mm}).
+Moment resultants $m$ are in units of torque per unit of width (\si{Nmm/mm}
+= \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
 
-print(la.text.engprop(cd0200))
-\end{lstlisting}
+The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
+behavior of a square piece of laminate small enough that the stress and strain
+resultants can be considered constant over its dimensions.
 
-This is probably the most powerful way to use it, since you could use Python
-to generate large and complex laminates. In the code shown below, a symmetric
-and balanced quasi-isotropic laminate with layers every 15\textdegree{} (26 in
-all) is generated in \emph{two lines of Python code}.
-
-\begin{lstlisting}
-import lamprop as la
-
-t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
-epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')
-
-layers = [la.Lamina(t300, epr04908, 100, a, 0.50) for a in range(-90, 95, 15)]
-layers += layers[::-1]
-
-qi = la.Laminate('quasi-isotropic', layers)
-
-print(la.latex.out(qi, eng=True, mat=False))
-print(la.latex.out(qi, eng=False, mat=True))
-\end{lstlisting}
-
-The resulting \LaTeX{} code basically produces \tref{tab:quasi-isotropic} and
-\trefpi{tab:quasi-isotropic-mat}; the content was separated into two tables to
-fit on the page.
-%\clearpage
-
-\begin{table}[!htbp]
-  \renewcommand{\arraystretch}{1.2}
-  \caption{\label{tab:quasi-isotropic}Layers and engineering properties of quasi-isotropic}
-  \centering\footnotesize{\rule{0pt}{10pt}
-  \tiny calculated by lamprop 3.7\\[3pt]}
-    \begin{tabular}[t]{rcrrl}
-      \multicolumn{4}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
-      \toprule %% \usepackage{booktabs}
-      Layer & Weight & Angle & vf & Fiber type\\
-            & [g/m$^2$] & [$\circ$] & [\%]\\
-      \midrule
-      1 &  100 &   -90 & 50 & T300-2\\
-      2 &  100 &   -75 & 50 & T300-2\\
-      3 &  100 &   -60 & 50 & T300-2\\
-      4 &  100 &   -45 & 50 & T300-2\\
-      5 &  100 &   -30 & 50 & T300-2\\
-      6 &  100 &   -15 & 50 & T300-2\\
-      7 &  100 &     0 & 50 & T300-2\\
-      8 &  100 &    15 & 50 & T300-2\\
-      9 &  100 &    30 & 50 & T300-2\\
-      10 &  100 &    45 & 50 & T300-2\\
-      11 &  100 &    60 & 50 & T300-2\\
-      12 &  100 &    75 & 50 & T300-2\\
-      13 &  100 &    90 & 50 & T300-2\\
-      14 &  100 &    90 & 50 & T300-2\\
-      15 &  100 &    75 & 50 & T300-2\\
-      16 &  100 &    60 & 50 & T300-2\\
-      17 &  100 &    45 & 50 & T300-2\\
-      18 &  100 &    30 & 50 & T300-2\\
-      19 &  100 &    15 & 50 & T300-2\\
-      20 &  100 &     0 & 50 & T300-2\\
-      21 &  100 &   -15 & 50 & T300-2\\
-      22 &  100 &   -30 & 50 & T300-2\\
-      23 &  100 &   -45 & 50 & T300-2\\
-      24 &  100 &   -60 & 50 & T300-2\\
-      25 &  100 &   -75 & 50 & T300-2\\
-      26 &  100 &   -90 & 50 & T300-2\\
-      \bottomrule
-    \end{tabular}\hspace{0.02\textwidth}
-    \begin{tabular}[t]{rrl}
-      \multicolumn{3}{c}{\small\textbf{Engineering properties}}\\[0.1em]
-      \toprule
-      Property & Value & Dimension\\
-      \midrule
-      $\mathrm{v_f}$ & 50 &\%\\
-      $\mathrm{w_f}$ & 60.5 &\%\\
-      thickness & 2.95 & mm\\
-      density & 1.46 & g/cm$^3$\\
-      weight & 4299 & g/m$^2$\\
-      resin & 1699 & g/m$^2$\\
-      \midrule
-      $\mathrm{E_x}$ &    40924 & MPa\\
-      $\mathrm{E_y}$ &    48752 & MPa\\
-      $\mathrm{G_{xy}}$ &    15327 & MPa\\
-      $\mathrm{\nu_{xy}}$ & 0.266215 &-\\
-      $\mathrm{\nu_{yx}}$ & 0.317136 &-\\
-      $\mathrm{\alpha_x}$ & 3.11462e-06 & K$^{-1}$\\
-      $\mathrm{\alpha_y}$ & 2.12576e-06 & K$^{-1}$\\
-      \bottomrule
-    \end{tabular}
-\end{table}
 
 \begin{table}[!htbp]
   \renewcommand{\arraystretch}{1.2}
@@ -703,49 +634,6 @@ fit on the page.
     }
     }
 \end{table}
-
-\section{Meaning of the ABD and abd matrices} % {{{2
-
-The stiffness or ABD matrix and compliance or abd matrix are what converts
-strains into forces and the other way around, see
-\tref{tab:quasi-isotropic-mat}.  Both are 6×6 matrices that can be divided
-into three 3×3 matrices; A, B and D or a, b and d.
-The expansions below reveal the symmetries in these matrices.
-
-\[
-    ABD = \left|\begin{array}{cccccc}
-        A_{11} & A_{12} & A_{16} & B_{11} & B_{12} & B_{16}\\
-        A_{12} & A_{22} & A_{26} & B_{12} & B_{22} & B_{26}\\
-        A_{16} & A_{26} & A_{66} & B_{16} & B_{26} & B_{66}\\
-        B_{11} & B_{12} & B_{16} & D_{11} & D_{12} & D_{16}\\
-        B_{12} & B_{22} & B_{26} & D_{12} & D_{22} & D_{26}\\
-        B_{16} & B_{26} & B_{66} & D_{16} & D_{26} & D_{66}\\
-    \end{array}\right|\quad
-    abd = \left|\begin{array}{cccccc}
-        a_{11} & a_{12} & a_{16} & b_{11} & b_{12} & b_{16}\\
-        a_{12} & a_{22} & a_{26} & b_{12} & b_{22} & b_{26}\\
-        a_{16} & a_{26} & a_{66} & b_{16} & b_{26} & b_{66}\\
-        b_{11} & b_{12} & b_{16} & d_{11} & d_{12} & d_{16}\\
-        b_{12} & b_{22} & b_{26} & d_{12} & d_{22} & d_{26}\\
-        b_{16} & b_{26} & b_{66} & d_{16} & d_{26} & d_{66}\\
-    \end{array}\right|
-\]
-
-The units of the parts of the ABD and abd matrix are as follows (where $i$ and
-$j$ are 1, 2 or 6): $A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}
-= \si{N}.  $D_{ij}$ is in \si{N.mm}.  $a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is
-in \si{1/N}.  $d_{ij}$ is in \si{1/Nmm}. This clearly shows that abd is the
-inverse of ABD.
-
-The stress resultants $N$ are units of force per unit of width (\si{N/mm}).
-Moment resultants $m$ are in units of torque per unit of width (\si{Nmm/mm}
-= \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
-
-The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
-behavior of a square piece of laminate small enough that the stress and strain
-resultants can be considered constant over its dimensions.
-
-
 
 
 \chapter{Tips and tricks} % {{{1
