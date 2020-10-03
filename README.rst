@@ -30,11 +30,19 @@ If you install this program on UNIX-like systems with
 ``make install``, the manual will be installed automatically. For users of other
 systems, copy the manual to a convenient location.
 
-As of version 3, support for old style fiber properties (which also specified
-properties in the radial direction of the fiber) has been removed from the
-code. In the ``tools`` subdirectory of the source distribution a script called
+
+Of note
+-------
+
+As of version 3 (2017-02-25), support for old style fiber properties (which
+also specified properties in the radial direction of the fiber) has been
+removed from the code.
+In the ``tools`` subdirectory of the source distribution a script called
 ``convert-lamprop.py`` has been provided to convert old-style lamprop files to
 the new format.
+
+On 2020-10-03, lamprop has switched to using the release date as the version.
+So 4.2 became 2020-03-13.
 
 
 Requirements
