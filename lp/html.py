@@ -4,7 +4,7 @@
 # Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2019-01-01T00:26:17+0100
+# Last modified: 2020-10-03T12:33:22+0200
 """HTML output routines for lamprop."""
 
 from .version import __version__
@@ -105,7 +105,7 @@ def _engprop(l):  # {{{1
         '                </tr>',
         '                <tr>',
         '                  <td>weight</td><td>{:.0f}</td>'.format(
-            l.fiber_weight+l.resin_weight, l.resin_weight
+            l.fiber_weight+l.resin_weight
         ),
         '                  <td align="left">g/m&sup2;</td>',
         '                </tr>',
