@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2019-01-01T02:40:22+0100
+# Last modified: 2020-10-03T12:26:32+0200
 """Test for lamprop types"""
 
 
@@ -12,7 +12,7 @@ import sys
 # not an installed version!
 sys.path.insert(1, '.')
 
-from lamprop.core import fiber, resin, lamina, laminate  # noqa
+from lp.core import fiber, resin, lamina, laminate  # noqa
 
 hf = fiber(233000, 0.2, -0.54e-6, 1.76, "Hyer's carbon fiber")
 hr = resin(4620, 0.36, 41.4e-6, 1.1, "Hyer's resin")

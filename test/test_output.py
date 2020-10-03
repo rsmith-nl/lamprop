@@ -3,13 +3,13 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-12-30T01:32:58+0100
-# Last modified: 2019-01-01T02:38:36+0100
+# Last modified: 2020-10-03T12:27:05+0200
 """Compare output to reference output."""
 
-from lamprop.parser import parse
-import lamprop.text as text
-import lamprop.latex as latex
-import lamprop.html as html
+from lp.parser import parse
+import lp.text as text
+import lp.latex as latex
+import lp.html as html
 
 laminates = parse('test/hyer.lam')
 

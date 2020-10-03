@@ -3,9 +3,9 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-12-01T23:11:29+0100
-# Last modified: 2018-12-01T23:41:42+0100
+# Last modified: 2020-10-03T12:25:59+0200
 
-import lamprop as la
+import lp as la
 
 t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
 epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')

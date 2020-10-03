@@ -3,16 +3,16 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2019-01-01T02:38:49+0100
+# Last modified: 2020-10-03T12:27:16+0200
 """Test for lamprop parser."""
 
 import sys
 
 sys.path.insert(1, '.')
 
-from lamprop.parser import (_get_numbers, _get_components, _directives,
+from lp.parser import (_get_numbers, _get_components, _directives,
                             _get_lamina)  # noqa
-from lamprop.core import (fiber, resin)  # noqa
+from lp.core import (fiber, resin)  # noqa
 
 
 def test_directives():  # {{{1

@@ -3,10 +3,10 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2019-01-01T01:59:28+0100
-# Last modified: 2019-01-01T02:39:03+0100
+# Last modified: 2020-10-03T12:26:42+0200
 """Test of the matrix routines"""
 
-import lamprop.matrix as mat
+import lp.matrix as mat
 
 _rndm = [
     [0.21, 0.76, 0.07, 0.94, 0.33, 0.57],
