@@ -7,9 +7,9 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2020-10-03T12:31:46+0200
+# Last modified: 2020-10-03T14:08:48+0200
 
-.PHONY: all uninstall dist clean check tags format test doc
+.PHONY: all build uninstall dist clean check tags format test doc
 
 # Installation locations
 PREFIX:=/usr/local
@@ -44,12 +44,13 @@ install: build
 # Install the programs
 	install lamprop $(BINDIR)
 	install lamprop-gui $(BINDIR)
-	rm -rf build dist *.egg-info
 # Install the manual.
 	mkdir -p $(DOCDIR)
 	install -m 644 doc/lamprop-manual.pdf $(DOCDIR)
 
-build: console.py gui.py lp/*.py
+build: lamprop
+
+lamprop: console.py gui.py lp/*.py
 	./build.py
 
 # Remove an installed lamprop completely
@@ -58,7 +59,6 @@ uninstall::
 		echo "You must be root to uninstall the software!"; \
 		exit 1; \
 	fi
-	rm -rf $(PKGPATH)/lamprop*.egg
 	rm -rf $(BINDIR)/lamprop*
 	rm -rf $(DOCDIR)/lamprop-manual.pdf
 
