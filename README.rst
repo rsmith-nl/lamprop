@@ -26,9 +26,15 @@ plain text output.
 The program and its file format are documented by a manual. This can be found
 in the ``doc`` subdirectory.
 
-If you install this program on UNIX-like systems with
-``make install``, the manual will be installed automatically. For users of other
-systems, copy the manual to a convenient location.
+There are basically two versions of this program; a console version primarily
+meant for POSIX operating systems and a GUI version primarily meant for
+ms-windows.
+
+You can try both versions without installing them first, with the following
+invocations in a shell from the root directory of the repository.
+
+Use ``python console -h`` for the console version, and ``python gui`` for the
+GUI version.
 
 
 Of note
@@ -62,25 +68,24 @@ pylama_. Both should be invoked from the root directory of the repository.
 .. _py.test: https://docs.pytest.org/
 .. _pylama: http://pylama.readthedocs.io/en/latest/
 
-There are basically two versions of this program; a console version (installed
-as ``lamprop``) primarily meant for POSIX operating systems and a GUI version
-(installed as ``lamprop-gui``) primarily meant for ms-windows.
-
-You can try both versions without installing them first, with the following
-invocations in a shell from the root directory of the repository.
-
-Use ``python3 -m lamprop.console -h`` for the console version, and
-``python3 -m lamprop.gui`` for the GUI version.
 
 
 Installation
 ------------
 
-Run ``python3 setup.py install``. This will install both the module and the scripts
-that use it.
+Run ``python build.py``. This will create the self-contained scripts
+``lamprop`` and ``lamprop-gui`` on UNIX-like platforms and ``lamprop.pyz`` and
+``lamprop-gui.pyw`` on ms-windows.
 
-On a UNIX-like operating system, you can run ``make install`` instead. This
-will additionally install the manual.
+For ms-windows users, copy ``lamprop.pyz`` and ``lamprop-gui.pyw`` to the
+``Scripts`` directory of your Python installation. The manual
+``lamprop-manual.pdf`` can be found in the ``doc`` subdirectory. Save it
+wherever you like.
+
+On a UNIX-like operating system, you can run ``make install`` as root instead. This
+will additionally install the manual. By default, the install is done in the
+``/usr/local/`` tree. Change the PREFIX variable in the Makefile in case you
+want to install somewhere else.
 
 
 Vim

@@ -2,11 +2,11 @@
 __pycache__
 *~
 lamprop
+lamprop.pyz
 lamprop-gui
-lamprop.egg-info/
+lamprop-gui.pyw
+lamprop-*.zip
 .ropeproject/
 .cache/
 backup-*.tar.gz
-lamprop.?.ps
-lamprop.?.pdf
 .pytest_cache/
