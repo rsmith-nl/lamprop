@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2020-10-09T09:44:16+0200
+# Last modified: 2020-10-09T09:49:28+0200
 """Create runnable archives from program files and custom modules."""
 
 import os
@@ -52,11 +52,22 @@ def mkarchive(name, modules, main='__main__.py'):
     print("done.")
 
 
+def remove(path):
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
+
+
 if __name__ == '__main__':
     nm1 = "lamprop"
     nm2 = "lamprop-gui"
+    remove(nm1)
+    remove(nm2)
     if os.name == "nt":
         nm1 += ".pyz"
         nm2 += ".pyw"
+        remove(nm1)
+        remove(nm2)
     mkarchive(nm1, "lp", main="console.py")
     mkarchive(nm2, "lp", main="gui.py")
