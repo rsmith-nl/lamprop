@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2020-10-03T12:10:39+0200
+# Last modified: 2020-10-09T09:44:16+0200
 """Create runnable archives from program files and custom modules."""
 
 import os
@@ -57,6 +57,6 @@ if __name__ == '__main__':
     nm2 = "lamprop-gui"
     if os.name == "nt":
         nm1 += ".pyz"
-        nm2 += ".pyz"
+        nm2 += ".pyw"
     mkarchive(nm1, "lp", main="console.py")
     mkarchive(nm2, "lp", main="gui.py")
