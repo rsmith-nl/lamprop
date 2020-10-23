@@ -39,7 +39,9 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.""".format(__version__)
+SUCH DAMAGE.""".format(
+    __version__
+)
 
 
 class LicenseAction(argparse.Action):
@@ -53,43 +55,43 @@ class LicenseAction(argparse.Action):
 def main():
     """Entry point for lamprop console application."""
     # Process the command-line arguments
-    opts = argparse.ArgumentParser(prog='lamprop', description=__doc__)
+    opts = argparse.ArgumentParser(prog="lamprop", description=__doc__)
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
-        '-l',
-        '--latex',
-        action='store_true',
-        help="generate LaTeX output (the default is plain text)"
+        "-l",
+        "--latex",
+        action="store_true",
+        help="generate LaTeX output (the default is plain text)",
     )
-    group.add_argument('-H', '--html', action='store_true', help="generate HTML output")
+    group.add_argument("-H", "--html", action="store_true", help="generate HTML output")
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
-        '-e',
-        '--eng',
-        action='store_true',
-        help="output only the layers and engineering properties"
+        "-e",
+        "--eng",
+        action="store_true",
+        help="output only the layers and engineering properties",
     )
     group.add_argument(
-        '-m', '--mat', action='store_true', help="output only the ABD and abd matrices"
+        "-m", "--mat", action="store_true", help="output only the ABD and abd matrices"
     )
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
-        '-L', '--license', action=LicenseAction, nargs=0, help="print the license"
+        "-L", "--license", action=LicenseAction, nargs=0, help="print the license"
     )
-    group.add_argument('-v', '--version', action='version', version=__version__)
+    group.add_argument("-v", "--version", action="version", version=__version__)
     opts.add_argument(
-        '--log',
-        default='warning',
-        choices=['debug', 'info', 'warning', 'error'],
-        help="logging level (defaults to 'warning')"
+        "--log",
+        default="warning",
+        choices=["debug", "info", "warning", "error"],
+        help="logging level (defaults to 'warning')",
     )
     opts.add_argument(
-        "files", metavar='file', nargs='*', help="one or more files to process"
+        "files", metavar="file", nargs="*", help="one or more files to process"
     )
     args = opts.parse_args(sys.argv[1:])
     logging.basicConfig(
         level=getattr(logging, args.log.upper(), None),
-        format='%(levelname)s: %(message)s'
+        format="%(levelname)s: %(message)s",
     )
     del opts, group
     if args.mat is False and args.eng is False:
@@ -114,8 +116,8 @@ def main():
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
         for curlam in laminates:
-            print(*out(curlam, args.eng, args.mat), sep='\n')
+            print(*out(curlam, args.eng, args.mat), sep="\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

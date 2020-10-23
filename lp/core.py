@@ -77,11 +77,11 @@ def fiber(E1, ν12, α1, ρ, name):
     ρ = float(ρ)
     # Validate parameters
     if E1 <= 0:
-        raise ValueError('fiber E1 must be > 0')
+        raise ValueError("fiber E1 must be > 0")
     if ρ <= 0:
-        raise ValueError('fiber ρ must be > 0')
+        raise ValueError("fiber ρ must be > 0")
     if not isinstance(name, str) and not len(name) > 0:
-        raise ValueError('fiber name must be a non-empty string')
+        raise ValueError("fiber name must be a non-empty string")
     return SimpleNamespace(E1=E1, ν12=ν12, α1=α1, ρ=ρ, name=name)
 
 
@@ -102,11 +102,11 @@ def resin(E, ν, α, ρ, name):
     ρ = float(ρ)
     # Validate parameters
     if E <= 0:
-        raise ValueError('E must be > 0')
+        raise ValueError("E must be > 0")
     if ρ <= 0:
-        raise ValueError('resin ρ must be > 0')
+        raise ValueError("resin ρ must be > 0")
     if not isinstance(name, str) and not len(name) > 0:
-        raise ValueError('resin name must be a non-empty string')
+        raise ValueError("resin name must be a non-empty string")
     return SimpleNamespace(E=E, ν=ν, α=α, ρ=ρ, name=name)
 
 
@@ -142,14 +142,14 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     """
     fiber_weight = float(fiber_weight)
     if fiber_weight <= 0:
-        raise ValueError('fiber weight cannot be <=0!')
+        raise ValueError("fiber weight cannot be <=0!")
     vf = float(vf)
     if 1.0 < vf <= 100.0:
-        vf = vf/100.0
+        vf = vf / 100.0
     elif not 0.0 <= vf <= 1.0:
-        raise ValueError('vf must be in the ranges 0.0-1.0 or 1.0-100.0')
-    vm = (1.0 - vf)
-    fiber_thickness = fiber_weight/(fiber.ρ * 1000)
+        raise ValueError("vf must be in the ranges 0.0-1.0 or 1.0-100.0")
+    vm = 1.0 - vf
+    fiber_thickness = fiber_weight / (fiber.ρ * 1000)
     thickness = fiber_thickness * (1 + vm / vf)
     resin_weight = thickness * vm * resin.ρ * 1000  # Resin [g/m²]
     E1 = vf * fiber.E1 + resin.E * vm  # Hyer:1998, p. 115, (3.32)
@@ -172,7 +172,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     αx = α1 * m2 + α2 * n2
     αy = α1 * n2 + α2 * m2
     αxy = 2 * (α1 - α2) * m * n
-    denum = (1 - ν12 * ν21)
+    denum = 1 - ν12 * ν21
     Q11, Q12 = E1 / denum, ν12 * E2 / denum
     Q22, Q66 = E2 / denum, G12
     # Q̅ according to Hyer:1997, p. 182
@@ -186,12 +186,29 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     Q̅66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
     ρ = fiber.ρ * vf + resin.ρ * vm
 
-    return SimpleNamespace(fiber=fiber, resin=resin,
-                           fiber_weight=fiber_weight, angle=angle,
-                           vf=vf, thickness=thickness,
-                           resin_weight=resin_weight, E1=E1, E2=E2, G12=G12,
-                           ν12=ν12, αx=αx, αy=αy, αxy=αxy, Q̅11=Q̅11, Q̅12=Q̅12,
-                           Q̅16=Q̅16, Q̅22=Q̅22, Q̅26=Q̅26, Q̅66=Q̅66, ρ=ρ)
+    return SimpleNamespace(
+        fiber=fiber,
+        resin=resin,
+        fiber_weight=fiber_weight,
+        angle=angle,
+        vf=vf,
+        thickness=thickness,
+        resin_weight=resin_weight,
+        E1=E1,
+        E2=E2,
+        G12=G12,
+        ν12=ν12,
+        αx=αx,
+        αy=αy,
+        αxy=αxy,
+        Q̅11=Q̅11,
+        Q̅12=Q̅12,
+        Q̅16=Q̅16,
+        Q̅22=Q̅22,
+        Q̅26=Q̅26,
+        Q̅66=Q̅66,
+        ρ=ρ,
+    )
 
 
 def laminate(name, layers):
@@ -219,11 +236,11 @@ def laminate(name, layers):
         wf: Fiber weight fraction.
     """
     if not layers:
-        raise ValueError('no layers in the laminate')
+        raise ValueError("no layers in the laminate")
     if not isinstance(name, str):
-        raise ValueError('the name of a laminate must be a string')
+        raise ValueError("the name of a laminate must be a string")
     if len(name) == 0:
-        raise ValueError('the length of the name of a laminate must be >0')
+        raise ValueError("the length of the name of a laminate must be >0")
     layers = tuple(layers)
     thickness = sum(l.thickness for l in layers)
     fiber_weight = sum(l.fiber_weight for l in layers)
@@ -232,7 +249,7 @@ def laminate(name, layers):
     resin_weight = sum(l.resin_weight for l in layers)
     wf = fiber_weight / (fiber_weight + resin_weight)
     # Set z-values for lamina.
-    zs = -thickness/2
+    zs = -thickness / 2
     lz2, lz3 = [], []
     for l in layers:
         ze = zs + l.thickness
@@ -243,7 +260,7 @@ def laminate(name, layers):
     ABD = m.zeros(6)
     for l, z2, z3 in zip(layers, lz2, lz3):
         # first row
-        ABD[0][0] += l.Q̅11 * l.thickness      # Hyer:1998, p. 290
+        ABD[0][0] += l.Q̅11 * l.thickness  # Hyer:1998, p. 290
         ABD[0][1] += l.Q̅12 * l.thickness
         ABD[0][2] += l.Q̅16 * l.thickness
         ABD[0][3] += l.Q̅11 * z2
@@ -286,12 +303,9 @@ def laminate(name, layers):
         ABD[5][5] += l.Q̅66 * z3
         # Calculate unit thermal stress resultants.
         # Hyer:1998, p. 445
-        Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy +
-                l.Q̅16 * l.αxy) * l.thickness
-        Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy +
-                l.Q̅26 * l.αxy) * l.thickness
-        Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy +
-                 l.Q̅66 * l.αxy) * l.thickness
+        Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy + l.Q̅16 * l.αxy) * l.thickness
+        Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy + l.Q̅26 * l.αxy) * l.thickness
+        Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy + l.Q̅66 * l.αxy) * l.thickness
     # Finish the matrices, discarding very small νmbers in ABD.
     for i in range(6):
         for j in range(6):
@@ -302,11 +316,11 @@ def laminate(name, layers):
     # Nettles:1994, p. 34 e.v.
     dABD = m.det(ABD)
     dt1 = m.det(m.delete(ABD, 0, 0))
-    Ex = (dABD / (dt1 * thickness))
+    Ex = dABD / (dt1 * thickness)
     dt2 = m.det(m.delete(ABD, 1, 1))
-    Ey = (dABD / (dt2 * thickness))
+    Ey = dABD / (dt2 * thickness)
     dt3 = m.det(m.delete(ABD, 2, 2))
-    Gxy = (dABD / (dt3 * thickness))
+    Gxy = dABD / (dt3 * thickness)
     dt4 = m.det(m.delete(ABD, 0, 1))
     dt5 = m.det(m.delete(ABD, 1, 0))
     νxy = dt4 / dt1
@@ -316,7 +330,22 @@ def laminate(name, layers):
     # Hyer:1998, p. 451, (11.86)
     αx = abd[0][0] * Ntx + abd[0][1] * Nty + abd[0][2] * Ntxy
     αy = abd[1][0] * Ntx + abd[1][1] * Nty + abd[1][2] * Ntxy
-    return SimpleNamespace(name=name, layers=layers, thickness=thickness,
-                           fiber_weight=fiber_weight, ρ=ρ, vf=vf,
-                           resin_weight=resin_weight, ABD=ABD, abd=abd, Ex=Ex,
-                           Ey=Ey, Gxy=Gxy, νxy=νxy, νyx=νyx, αx=αx, αy=αy, wf=wf)
+    return SimpleNamespace(
+        name=name,
+        layers=layers,
+        thickness=thickness,
+        fiber_weight=fiber_weight,
+        ρ=ρ,
+        vf=vf,
+        resin_weight=resin_weight,
+        ABD=ABD,
+        abd=abd,
+        Ex=Ex,
+        Ey=Ey,
+        Gxy=Gxy,
+        νxy=νxy,
+        νyx=νyx,
+        αx=αx,
+        αy=αy,
+        wf=wf,
+    )
