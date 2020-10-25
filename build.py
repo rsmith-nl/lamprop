@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2020-10-09T09:49:28+0200
+# Last modified: 2020-10-25T11:09:39+0100
 """Create runnable archives from program files and custom modules."""
 
 import os
@@ -36,7 +36,7 @@ def mkarchive(name, modules, main="__main__.py"):
     # Forcibly compile __main__.py lest we use an old version!
     py_compile.compile(std)
     tmpf = tempfile.TemporaryFile()
-    with z.PyZipFile(tmpf, mode="w", compression=z.ZIP_DEFLATED) as zf:
+    with z.PyZipFile(tmpf, mode="w", compression=z.ZIP_DEFLATED, optimize=2) as zf:
         zf.writepy(std)
         for m in modules:
             zf.writepy(m)

@@ -50,11 +50,16 @@ the new format.
 On 2020-10-03, lamprop has switched to using the release date as the version.
 So 4.2 became 2020-03-13.
 
+The installed scripts are an archive of compiled Python bytecode.
+This means that you have to re-install lamprop after updating Python to a new
+version.
+
 
 Requirements
 ------------
 
 This program requires at least Python 3.6. It is *not* compatible with Python 2!
+It has no library requirments outside of the Python standard library.
 This version was developed and tested using Python 3.7 and 3.9.
 
 
