@@ -54,9 +54,8 @@ So 4.2 became 2020-03-13.
 Requirements
 ------------
 
-This program requires at least Python 3. It is *not* compatible with Python 2!
-This version was developed and tested using Python 3.7. Older versions of
-Python 3 will probably work fine.
+This program requires at least Python 3.6. It is *not* compatible with Python 2!
+This version was developed and tested using Python 3.7 and 3.9.
 
 
 Developers
@@ -67,7 +66,6 @@ pylama_. Both should be invoked from the root directory of the repository.
 
 .. _py.test: https://docs.pytest.org/
 .. _pylama: http://pylama.readthedocs.io/en/latest/
-
 
 
 Installation
