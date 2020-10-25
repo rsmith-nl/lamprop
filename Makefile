@@ -7,7 +7,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2020-10-09T21:48:29+0200
+# Last modified: 2020-10-25T10:22:14+0100
 
 .PHONY: all build uninstall dist clean check tags format test doc
 
@@ -30,7 +30,7 @@ all::
 	@echo '* clean: remove all generated files.'
 	@echo '* check: run pylama on all python files.'
 	@echo '* tags: run uctags.'
-	@echo '* format: format the source with yapf.'
+	@echo '* format: format the source with black.'
 	@echo '* doc: build the documentation using LaTeX.'
 
 # Install lamprop and its documentation.
@@ -73,7 +73,7 @@ tags::
 	uctags -R --verbose
 
 format::
-	yapf -i lp/*.py test/*.py console.py gui.py build.py tools/*.py
+	black lp/*.py test/*.py console.py gui.py build.py tools/*.py
 
 test::
 	py.test -v
