@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-04-24 17:06:48 +0200
-# Last modified: 2020-10-25T19:18:14+0100
+# Last modified: 2020-10-25T19:36:07+0100
 """Install script for lamprop."""
 
 import os
@@ -100,7 +100,7 @@ def remove(path):
     """Remove a file, ignoring directories and nonexistant files."""
     try:
         os.remove(path)
-    except (FileNotFoundError, PermissionError, IsADirectoryError):
+    except (FileNotFoundError, PermissionError, IsADirectoryError, OSError):
         pass
 
 
