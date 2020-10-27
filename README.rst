@@ -76,19 +76,21 @@ pylama_. Both should be invoked from the root directory of the repository.
 Installation
 ------------
 
-Run ``python build.py``. This will create the self-contained scripts
-``lamprop`` and ``lamprop-gui`` on UNIX-like platforms and ``lamprop.pyz`` and
-``lamprop-gui.pyw`` on ms-windows.
+To install it for the local user, run::
 
-For ms-windows users, copy ``lamprop.pyz`` and ``lamprop-gui.pyw`` to the
-``Scripts`` directory of your Python installation. The manual
-``lamprop-manual.pdf`` can be found in the ``doc`` subdirectory. Save it
-wherever you like.
+    python setup.py install
 
-On a UNIX-like operating system, you can run ``make install`` as root instead. This
-will additionally install the manual. By default, the install is done in the
-``/usr/local/`` tree. Change the PREFIX variable in the Makefile in case you
-want to install somewhere else.
+This will install it in the user path for Python scripts.
+For POSIX operating systems this is ususally ``~/.local/bin``.
+For ms-windows this is the ``Scripts`` directory of your Python installation
+or another local directory.
+Make sure that this directory is in your ``$PATH`` environment variable.
+
+On a UNIX-like operating system, you can run ``make install`` as root instead
+for a system-wide install. This will additionally install the manual.
+By default, this install is done in the ``/usr/local/`` tree.
+Change the PREFIX variable in the Makefile in case you want to install
+somewhere else.
 
 
 Vim
