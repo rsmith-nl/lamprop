@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-10-03T09:22:54+0200
+# Last modified: 2020-12-02T23:56:09+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -47,7 +47,6 @@ class LampropUI(tk.Tk):
         default_font["size"] = 12
         self.option_add("*Font", default_font)
         # General commands and bindings
-        self.bind_all("q", self.do_exit)
         self.rowconfigure(5, weight=1)
         self.columnconfigure(3, weight=1)
         # Create widgets.
@@ -83,14 +82,6 @@ class LampropUI(tk.Tk):
         self.result = res
 
     # Callbacks
-    def do_exit(self, event):
-        """
-        Callback to handle quitting.
-
-        This is necessary since the quit method does not take arguments.
-        """
-        self.quit()
-
     def do_fileopen(self):
         if not self.directory:
             self.directory = ""
