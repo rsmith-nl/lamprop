@@ -4,7 +4,7 @@
 #
 # Copyright © 2020 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2020-10-25T12:18:04+0100
-# Last modified: 2020-10-27T18:50:44+0100
+# Last modified: 2020-12-08T20:22:52+0100
 """Script to install scripts for the local user."""
 
 import os
@@ -25,7 +25,7 @@ def main():
     remove(nm2)
     mkarchive(nm1, "lp", main="console.py")
     mkarchive(nm2, "lp", main="gui.py")
-    scripts = [(nm1, ".pyz"), (nm2, ".pyw")]
+    scripts = [(nm1, ".py"), (nm2, ".pyw")]
     # Preparation
     if os.name == "posix":
         destdir = sysconfig.get_path("scripts", "posix_user")
