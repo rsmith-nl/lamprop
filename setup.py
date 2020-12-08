@@ -4,7 +4,7 @@
 #
 # Copyright © 2020 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2020-10-25T12:18:04+0100
-# Last modified: 2020-12-08T20:22:52+0100
+# Last modified: 2020-12-08T21:57:34+0100
 """Script to install scripts for the local user."""
 
 import os
@@ -18,14 +18,11 @@ import zipfile as z
 
 def main():
     """Entry point for the setup script."""
-    # Building the archives
-    nm1 = "lamprop"
-    nm2 = "lamprop-gui"
-    remove(nm1)
-    remove(nm2)
-    mkarchive(nm1, "lp", main="console.py")
-    mkarchive(nm2, "lp", main="gui.py")
-    scripts = [(nm1, ".py"), (nm2, ".pyw")]
+    # What to install; (name, module, main, nt-extension)
+    scripts = [
+        ("lamprop", "lp", "console.py", ".py"),
+        ("lamprop-gui", "lp", "gui.py", ".pyw"),
+    ]
     # Preparation
     if os.name == "posix":
         destdir = sysconfig.get_path("scripts", "posix_user")
@@ -47,8 +44,10 @@ def main():
 
 def do_install(install, scripts, destdir, destdir2):
     # Actual installation.
-    for script, nt_ext in scripts:
-        base = os.path.splitext(script)[0]
+    for nm, module, main, nt_ext in scripts:
+        remove(nm)
+        mkarchive(nm, module, main=main)
+        base = os.path.splitext(nm)[0]
         if os.name == "posix":
             destname = destdir + os.sep + base
             destname2 = ""
@@ -58,16 +57,16 @@ def do_install(install, scripts, destdir, destdir2):
         if install:
             for d in (destname, destname2):
                 try:
-                    shutil.copyfile(script, d)
-                    print(f"* installed '{script}' as '{destname}'.")
+                    shutil.copyfile(nm, d)
+                    print(f"* installed '{nm}' as '{destname}'.")
                     os.chmod(d, 0o700)
                     break
                 except (OSError, PermissionError, FileNotFoundError):
                     pass  # Can't write to destination
             else:
-                print(f"! installation of '{script}' has failed.")
+                print(f"! installation of '{nm}' has failed.")
         else:
-            print(f"* '{script}' would be installed as '{destname}'")
+            print(f"* '{nm}' would be installed as '{destname}'")
             if destname2:
                 print(f"  or '{destname2}'")
 
