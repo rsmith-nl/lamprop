@@ -3,14 +3,13 @@
 # Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2019-01-01T00:29:02+0100
+# Last modified: 2020-12-09T13:10:08+0100
 """Text output routines for lamprop."""
 
-# import sys
+import os
 from .version import __version__
 
 # Data
-
 _t = [
     "thickness: {0:.2f} mm, density: {1:4.2f} g/cm³",
     "laminate weight: {0:.0f} g/m², resin consumption: {1:.0f} g/m²",
@@ -20,15 +19,14 @@ _t = [
     "    [g/m²]   [°]  [%]",
 ]
 
-# Platforms that don't support UTF-8 get ASCII text.
-# enc = sys.stdout.encoding
-# if not enc or enc.lower() != 'utf-8':
-#     _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
-#           "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
-#           "v_xy = {0:7.5f}",
-#           "v_yx = {0:7.5f}",
-#           "a_x = {0:9.4g} 1/K, a_y = {1:9.4g} 1/K",
-#           "    [g/m2] [deg]  [%]"]
+# ms-windows gets ASCII.
+if os.name == "nt":
+    _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
+          "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
+          "v_xy = {0:7.5f}",
+          "v_yx = {0:7.5f}",
+          "a_x = {0:9.4g} 1/K, a_y = {1:9.4g} 1/K",
+          "    [g/m2] [deg]  [%]"]
 
 
 def out(lam, eng, mat):  # {{{1
