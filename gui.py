@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-12-02T23:56:09+0100
+# Last modified: 2020-12-10T22:59:24+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -47,38 +47,47 @@ class LampropUI(tk.Tk):
         default_font["size"] = 12
         self.option_add("*Font", default_font)
         # General commands and bindings
-        self.rowconfigure(5, weight=1)
-        self.columnconfigure(3, weight=1)
+        self.rowconfigure(6, weight=1)
+        self.columnconfigure(4, weight=1)
         # Create widgets.
-        # First row
+        # Row
         prbut = ttk.Button(self, text="File:", command=self.do_fileopen)
         prbut.grid(row=0, column=0, sticky="w")
         fnlabel = ttk.Label(self, anchor="w", textvariable=self.lamfile)
         fnlabel.grid(row=0, column=1, columnspan=4, sticky="ew")
-        # Second row
+        # Row
         rldbut = ttk.Button(self, text="Reload", command=self.do_reload)
         rldbut.grid(row=1, column=0, sticky="w")
-        # Third row
+        # Row
+        sal = ttk.Label(self, text="Save as:")
+        sal.grid(row=2, column=0, sticky="w")
+        txtbtn = ttk.Button(self, text="text", command=self.do_savetxt, state="disabled")
+        txtbtn.grid(row=2, column=1, sticky="w")
+        self.txtbtn = txtbtn
+        htmlbtn = ttk.Button(self, text="html", command=self.do_savehtml, state="disabled")
+        self.htmlbtn = htmlbtn
+        htmlbtn.grid(row=2, column=2, sticky="w")
+        # Row
         cb = partial(self.on_laminate, event=0)
         chkengprop = ttk.Checkbutton(
             self, text="Engineering properties", variable=self.engprop, command=cb
         )
-        chkengprop.grid(row=2, column=0, columnspan=3, sticky="w")
-        # Fourth row
+        chkengprop.grid(row=3, column=0, columnspan=3, sticky="w")
+        # Row
         chkmat = ttk.Checkbutton(
             self, text="ABD & abd matrices", variable=self.matrices, command=cb
         )
-        chkmat.grid(row=3, column=0, columnspan=3, sticky="w")
-        # Fifth row
+        chkmat.grid(row=4, column=0, columnspan=3, sticky="w")
+        # Row
         cxlam = ttk.Combobox(self, state="readonly", justify="left")
-        cxlam.grid(row=4, column=0, columnspan=5, sticky="we")
+        cxlam.grid(row=5, column=0, columnspan=5, sticky="we")
         cxlam.bind("<<ComboboxSelected>>", self.on_laminate)
         self.cxlam = cxlam
-        # Sixth row
+        # Row
         fixed = nametofont("TkFixedFont")
         fixed["size"] = 12
         res = ScrolledText(self, state="disabled", font=fixed)
-        res.grid(row=5, column=0, columnspan=5, sticky="nsew")
+        res.grid(row=6, column=0, columnspan=5, sticky="nsew")
         self.result = res
 
     # Callbacks
@@ -102,6 +111,8 @@ class LampropUI(tk.Tk):
         self.directory = os.path.dirname(fn.name)
         self.lamfile.set(fn.name)
         self.do_reload()
+        self.txtbtn["state"] = "enabled"
+        self.htmlbtn["state"] = "enabled"
 
     def do_reload(self):
         """Reload the laminates."""
@@ -113,8 +124,7 @@ class LampropUI(tk.Tk):
         self.cxlam.current(0)
         self.on_laminate(0)
 
-    def on_laminate(self, event):
-        """Laminate choice has changed."""
+    def gentxt(self):
         name = self.cxlam.get()
         text = ""
         if self.engprop.get():
@@ -123,9 +133,51 @@ class LampropUI(tk.Tk):
             if text:
                 text += "\n"
             text += "\n".join(lp.text.matrices(self.laminates[name]))
+        return text
+
+    def on_laminate(self, event):
+        """Laminate choice has changed."""
+        text = self.gentxt()
         self.result["state"] = "normal"
         self.result.replace("1.0", "end", text)
         self.result["state"] = "disabled"
+
+    def do_savetxt(self):
+        res = filedialog.asksaveasfile(
+            title="Save as text",
+            parent=self,
+            defaultextension=".txt",
+            filetypes=(("text files", "*.txt"), ("all files", "*.*")),
+            initialdir=self.directory,
+            initialfile=self.cxlam.get()+".txt",
+        )
+        fn = res.name
+        if fn:
+            text = self.gentxt()
+            with open(fn, "w") as tf:
+                tf.write(text)
+
+    def do_savehtml(self):
+        res = filedialog.asksaveasfile(
+            title="Save as HTML",
+            parent=self,
+            defaultextension=".html",
+            filetypes=(("HTML files", "*.html"), ("all files", "*.*")),
+            initialdir=self.directory,
+            initialfile=self.cxlam.get()+".html",
+        )
+        fn = res.name
+        if fn:
+            name = self.cxlam.get()
+            html = ""
+            if self.engprop.get():
+                html += "\n".join(lp.html._engprop(self.laminates[name]))
+            if self.matrices.get():
+                if html:
+                    html += "\n"
+                html += "\n".join(lp.html._matrices(self.laminates[name]))
+            with open(fn, "w") as hf:
+                hf.write(html)
 
 
 def main():
