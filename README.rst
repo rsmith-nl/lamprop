@@ -14,6 +14,15 @@ equations and formulas can be readily found in the available composite
 literature) the calculation is time-consuming and error-prone when done by
 hand.
 
+As of version 2020-12-22. the internals have been updated to use
+
+* Halpin-Tsai approximation for E2 and to help calculate Ez,
+* periodic micromechanics model for single plies and
+* first order shear deformation theory for laminates.
+
+This helps yield better data for FEA.
+
+
 This program can _not_ calculate the strength of composite laminates;
 because there are many different failure modes, strengths of composite
 laminates cannot readily be calculated from the strengths of the separate

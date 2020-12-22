@@ -1,21 +1,31 @@
 # file: core.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 #
-# Copyright © 2014-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-10-03T09:23:30+0200
+# Last modified: 2020-12-22T20:17:06+0100
 """
 Core functions of lamprop.
 
 The following references were used in coding this module:
+
+@Book{Barbero:2018,
+    author = {Ever J. Barbero},
+    title = {Introduction to composite materials design},
+    edition   = 3,
+    publisher = {CRC Press},
+    year = {2018},
+    isbn = {9781138196803}
+    note = {hardcover}
+}
 
 @Book{Hyer:1998,
   author =       {Micheal W. Hyer},
   title =        {Stress analysis of fiber-reinforced composite materials},
   publisher =    {McGraw--Hill},
   year =         {1998},
-  note =         {ISBN~0~07~115983~5}
+  isbn =         {0071159835}
 }
 
 @Book{Tsai:1992,
@@ -23,7 +33,7 @@ The following references were used in coding this module:
   title =        {Theory of composites design},
   publisher =    {Think Composites},
   year =         {1992},
-  note =         {ISBN~0~9618090~3~5}
+  isbn =         {0961809035}
 }
 
 @Article{1992WeiEn..52...29H,
@@ -42,7 +52,8 @@ The following references were used in coding this module:
   title =        {The behavior of structures composed of composite materials},
   publisher =    {Martinus Nijhoff Publishers},
   year =         {1987},
-  note =         {ISBN~90~247~3125~90 (hardcover)}
+  isbn =         {90247312590}
+  note =         {hardcover}
 }
 
 @Techreport{Nettles:1994,
@@ -60,7 +71,7 @@ import lp.matrix as m
 
 
 def fiber(E1, ν12, α1, ρ, name):
-    """Create a fiber.
+    """Create a fiber as a SimpleNamespace.
 
     The arguments with subscript "1" are in the length direction of the fiber.
 
@@ -86,7 +97,7 @@ def fiber(E1, ν12, α1, ρ, name):
 
 
 def resin(E, ν, α, ρ, name):
-    """Create a resin.
+    """Create a resin as a SimpleNamespace.
 
     Arguments/properties of a Resin:
         E (float): Young's modulus in MPa. Must be >0.
@@ -153,13 +164,22 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     thickness = fiber_thickness * (1 + vm / vf)
     resin_weight = thickness * vm * resin.ρ * 1000  # Resin [g/m²]
     E1 = vf * fiber.E1 + resin.E * vm  # Hyer:1998, p. 115, (3.32)
-    # Originally a factor of 3 (conform Tsai:1992, p. 3-13) was used in
-    # the following line. From practical experience this has been reduced
-    # to 2.
-    E2 = 2 * resin.E
-    G12 = E2 / 2  # Tsai:1992, p. 3-13
-    ν12 = 0.3  # Tsai:1992, p. 3-13
+    # As of version 2020-12-22, use the Halpin-Tsai formula for E2.
+    ζ = 2  # Assume fibers with a round cross-section.
+    η = (fiber.E1 / resin.E - 1) / (fiber.E1 / resin.E + ζ)
+    E2 = resin.E * ((1 + ζ * η * vf) / (1 - η * vf))  # Barbero:2018, p. 117
+    E3 = E2  # Assumed for UD layers.
+    ν12 = fiber.ν12 * vf + resin.ν * vm  # Barbero:2018, p. 118
+    # The matrix-dominated cylindrical assemblage model is used for G12.
+    Gm = resin.E / (2 * (1 + resin.ν))
+    G12 = Gm * (1 + vf) / (1 - vf)
     ν21 = ν12 * E2 / E1  # Nettles:1994, p. 4
+    # Calculate G23
+    Kf = fiber.E1 / (3 * (1 - 2 * fiber.ν12))
+    Km = resin.E / (3 * (1 - 2 * resin.ν))
+    K = 1 / (vf / Kf + vm / Km)
+    ν23 = 1 - ν21 - E2 / (3 * K)
+    G23 = E2 / (2 * (1 + ν23))
     a = math.radians(float(angle))
     m, n = math.cos(a), math.sin(a)
     # The powers of the sine and cosine are often used later.
@@ -175,6 +195,8 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     denum = 1 - ν12 * ν21
     Q11, Q12 = E1 / denum, ν12 * E2 / denum
     Q22, Q66 = E2 / denum, G12
+    Qs44 = G23
+    Qs55 = G12
     # Q̅ according to Hyer:1997, p. 182
     Q̅11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
     QA = Q11 - Q12 - 2 * Q66
@@ -184,8 +206,12 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     Q̅22 = Q11 * n4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * m4
     Q̅26 = QA * n3 * m + QB * n * m3
     Q̅66 = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * n2 * m2 + Q66 * (n4 + m4)
+    # Qstar (Qs) according to Barbero:2018, p. 167
+    Q̅s44 = Qs44 * m2 + Qs55 * n2
+    Q̅s55 = Qs44 * n2 + Qs55 * m2
+    Q̅s45 = (Q̅s55 - Q̅s44) * n * m
+    # Calculate density
     ρ = fiber.ρ * vf + resin.ρ * vm
-
     return SimpleNamespace(
         fiber=fiber,
         resin=resin,
@@ -196,6 +222,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         resin_weight=resin_weight,
         E1=E1,
         E2=E2,
+        E3=E3,
         G12=G12,
         ν12=ν12,
         αx=αx,
@@ -207,6 +234,9 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         Q̅22=Q̅22,
         Q̅26=Q̅26,
         Q̅66=Q̅66,
+        Q̅s44=Q̅s44,
+        Q̅s55=Q̅s55,
+        Q̅s45=Q̅s45,
         ρ=ρ,
     )
 
@@ -228,6 +258,7 @@ def laminate(name, layers):
         abd: Compliance matrix.
         Ex: Young's modulus in the x-direction.
         Ey: Young's modulus in the y-direction.
+        Ez: Young's modulus in the z-direction.
         Gxy: In-plane shear modulus.
         νxy: Poisson constant.
         νyx: Poisson constant.
@@ -258,6 +289,8 @@ def laminate(name, layers):
         zs = ze
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = m.zeros(6)
+    H = m.zeros(2)
+    c3 = 0
     for l, z2, z3 in zip(layers, lz2, lz3):
         # first row
         ABD[0][0] += l.Q̅11 * l.thickness  # Hyer:1998, p. 290
@@ -306,12 +339,25 @@ def laminate(name, layers):
         Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy + l.Q̅16 * l.αxy) * l.thickness
         Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy + l.Q̅26 * l.αxy) * l.thickness
         Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy + l.Q̅66 * l.αxy) * l.thickness
-    # Finish the matrices, discarding very small νmbers in ABD.
+        # Calculate H matrix
+        sb = 5 / 4 * (l.thickness - 4 * z3 / thickness ** 2)
+        H[0][0] += l.Q̅s44 * sb
+        H[0][1] += l.Q̅s45 * sb
+        H[1][0] += l.Q̅s45 * sb
+        H[1][1] += l.Q̅s55 * sb
+        # Calculate E3
+        c3 += l.thickness / l.E3
+    # Finish the matrices, discarding very small numbers in ABD and H.
     for i in range(6):
         for j in range(6):
             if math.fabs(ABD[i][j]) < 1e-7:
                 ABD[i][j] = 0.0
+    for i in range(2):
+        for j in range(2):
+            if math.fabs(H[i][j]) < 1e-7:
+                H[i][j] = 0.0
     abd = m.inv(ABD)
+    h = m.inv(H)
     # Calculate the engineering properties.
     # Nettles:1994, p. 34 e.v.
     dABD = m.det(ABD)
@@ -325,6 +371,11 @@ def laminate(name, layers):
     dt5 = m.det(m.delete(ABD, 1, 0))
     νxy = dt4 / dt1
     νyx = dt5 / dt2
+    # See Barbero:2018, p. 197
+    Gyz = H[0][0] / thickness
+    Gxz = H[1][1] / thickness
+    # All layers experience the same force in Z-direction.
+    Ez = thickness / c3
     # Calculate the coefficients of thermal expansion.
     # *Technically* only valid for a symmetric laminate!
     # Hyer:1998, p. 451, (11.86)
@@ -340,9 +391,14 @@ def laminate(name, layers):
         resin_weight=resin_weight,
         ABD=ABD,
         abd=abd,
+        H=H,
+        h=h,
         Ex=Ex,
         Ey=Ey,
+        Ez=Ez,
         Gxy=Gxy,
+        Gyz=Gyz,
+        Gxz=Gxz,
         νxy=νxy,
         νyx=νyx,
         αx=αx,

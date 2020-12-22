@@ -45,8 +45,8 @@ def inv(m):
     # Empty left-bottom triangle
     copy, rv = _topright(m)
     # Empty top-right triangle.
-    for k in range(size - 1, -1, -1):
-        for p in range(k - 1, -1, -1):
+    for k in range(size-1, -1, -1):
+        for p in range(k-1, -1, -1):
             fact = copy[p][k] / copy[k][k]
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
@@ -63,10 +63,10 @@ def inv(m):
 def delete(m, r, k):
     """Delete row r and column r from matrix m."""
     size = _square_size(m)
-    if r < 0 or r > size - 1:
-        raise ValueError("invalid row")
-    if k < 0 or k > size - 1:
-        raise ValueError("invalid column")
+    if r < 0 or r > size-1:
+        raise ValueError('invalid row')
+    if k < 0 or k > size-1:
+        raise ValueError('invalid column')
     rv = deepcopy(m)
     rv.pop(r)
     for r in rv:
@@ -80,7 +80,7 @@ def _topright(m):
     copy = deepcopy(m)
     rv = ident(size)
     for k in range(size):
-        for p in range(k + 1, size):
+        for p in range(k+1, size):
             fact = copy[p][k] / copy[k][k]
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
@@ -103,5 +103,5 @@ def _square_size(m):
     size = len(m)
     for row in m:
         if len(row) != size:
-            raise ValueError("invalid row length")
+            raise ValueError('invalid row length')
     return size

@@ -9,7 +9,7 @@
 import logging
 from .core import fiber, resin, lamina, laminate
 
-msg = logging.getLogger("parser")
+msg = logging.getLogger('parser')
 
 
 def parse(filename):
@@ -31,9 +31,10 @@ def parse(filename):
     msg.info("found {} fibers in '{}'".format(len(fdict), filename))
     rdict = _get_components(rd, resin)
     msg.info("found {} resins in '{}'".format(len(rdict), filename))
-    boundaries = [j for j in range(len(ld)) if ld[j][1][0] == "t"] + [len(ld)]
+    boundaries = [j for j in range(len(ld)) if ld[j][1][0] == 't'] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
-    msg.info("found {} possible laminates in '{}'".format(len(bpairs), filename))
+    msg.info("found {} possible laminates in '{}'".format(
+        len(bpairs), filename))
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
@@ -54,18 +55,16 @@ def _directives(filename):
     Returns:
         A 3-tuple (resin directives, fiber directives, laminate directives)
     """
-    with open(filename, encoding="utf-8") as df:
+    with open(filename, encoding='utf-8') as df:
         data = [ln.strip() for ln in df]
     # Filter out lines with directives.
     directives = [
-        (num, ln)
-        for num, ln in enumerate(data, start=1)
-        if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlsfr"
-    ]
+        (num, ln) for num, ln in enumerate(data, start=1)
+        if len(ln) > 1 and ln[1] == ':' and ln[0] in 'tmlsfr']
     msg.info("found {} directives in '{}'".format(len(directives), filename))
-    rd = [(num, ln) for num, ln in directives if ln[0] == "r"]
-    fd = [(num, ln) for num, ln in directives if ln[0] == "f"]
-    ld = [(num, ln) for num, ln in directives if ln[0] in "tmls"]
+    rd = [(num, ln) for num, ln in directives if ln[0] == 'r']
+    fd = [(num, ln) for num, ln in directives if ln[0] == 'f']
+    ld = [(num, ln) for num, ln in directives if ln[0] in 'tmls']
     return rd, fd, ld
 
 
@@ -82,11 +81,11 @@ def _get_numbers(directive):
     num, line = directive
     numbers = []
     for j in line.split()[1:]:
-        if j[0] in "0123456789.+-":
+        if j[0] in '0123456789.+-':
             numbers.append(float(j))
         else:
             break
-    remain = line.split(maxsplit=len(numbers) + 1)[-1]
+    remain = line.split(maxsplit=len(numbers)+1)[-1]
     return tuple(numbers), remain
 
 
@@ -106,13 +105,13 @@ def _laminate(ld, resins, fibers):
         A laminate dictionary, or None.
     """
     sym = False
-    if ld[0][1].startswith("t"):
+    if ld[0][1].startswith('t'):
         lname = ld[0][1][2:].strip()
     else:
         msg.warning("no 't' directive on line {}".format(ld[0][0]))
         return None
     try:
-        if not ld[1][1].startswith("m"):
+        if not ld[1][1].startswith('m'):
             raise ValueError
         common_vf, rname = ld[1][1][2:].split(maxsplit=1)
         common_vf = float(common_vf)
@@ -122,9 +121,9 @@ def _laminate(ld, resins, fibers):
     except ValueError:
         msg.warning("no valid 'm' directive on line {}".format(ld[1][0]))
         return None
-    if ld[-1][1].startswith("s"):
+    if ld[-1][1].startswith('s'):
         sym = True
-        del ld[-1]
+        del(ld[-1])
     llist = []
     for directive in ld[2:]:
         lamina = _get_lamina(directive, fibers, resins[rname], common_vf)
@@ -153,9 +152,9 @@ def _get_components(directives, tp):
     rv = []
     names = []
     tname = tp.__name__
-    w1 = "expected 4 numbers for a {} on line {}, found {}; skipping."
+    w1 = 'expected 4 numbers for a {} on line {}, found {}; skipping.'
     w2 = 'duplicate {} "{}" on line {} ignored.'
-    w3 = "{} must be >0 on line {}; skipping."
+    w3 = '{} must be >0 on line {}; skipping.'
     w4 = "Poisson's ratio on line {} should be  >0 and <0.5; skipping."
     for directive in directives:
         ln = directive[0]
@@ -172,7 +171,7 @@ def _get_components(directives, tp):
             msg.warning(w3.format("Young's modulus", ln))
             continue
         if ρ < 0:
-            msg.warning(w3.format("Density", ln))
+            msg.warning(w3.format('Density', ln))
             continue
         if ν < 0 or ν >= 0.5:
             msg.warning(w4.format(ln))
