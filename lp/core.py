@@ -4,7 +4,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-22T20:17:06+0100
+# Last modified: 2020-12-23T22:21:29+0100
 """
 Core functions of lamprop.
 
@@ -67,7 +67,7 @@ The following references were used in coding this module:
 
 from types import SimpleNamespace
 import math
-import lp.matrix as m
+import lp.matrix as lpm
 
 
 def fiber(E1, ν12, α1, ρ, name):
@@ -150,6 +150,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         Q̅26: Transformed lamina stiffness matrix component.
         Q̅66: Transformed lamina stiffness matrix component.
         ρ: Specific gravity of the lamina in g/cm³.
+        S: 3D stiffness matrix for the lamina in global coordinates.
     """
     fiber_weight = float(fiber_weight)
     if fiber_weight <= 0:
@@ -170,18 +171,35 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     E2 = resin.E * ((1 + ζ * η * vf) / (1 - η * vf))  # Barbero:2018, p. 117
     E3 = E2  # Assumed for UD layers.
     ν12 = fiber.ν12 * vf + resin.ν * vm  # Barbero:2018, p. 118
+    ν13 = ν12
     # The matrix-dominated cylindrical assemblage model is used for G12.
     Gm = resin.E / (2 * (1 + resin.ν))
     G12 = Gm * (1 + vf) / (1 - vf)
+    G13 = G12
     ν21 = ν12 * E2 / E1  # Nettles:1994, p. 4
-    # Calculate G23
+    # Calculate G23, necessary for Qs44
     Kf = fiber.E1 / (3 * (1 - 2 * fiber.ν12))
     Km = resin.E / (3 * (1 - 2 * resin.ν))
     K = 1 / (vf / Kf + vm / Km)
     ν23 = 1 - ν21 - E2 / (3 * K)
-    G23 = E2 / (2 * (1 + ν23))
+    G23 = E2 / (2 * (1 + ν23))  # Barbero:2018, p. 504
     a = math.radians(float(angle))
     m, n = math.cos(a), math.sin(a)
+    # Calculate the stiffness matrix for this lamina
+    # First, the compliance matrix in lamina coordinates
+    C = [
+        [1/E1, -ν12/E1, -ν13/E1, 0, 0, 0],
+        [-ν12/E1, 1/E2, -ν23/E2, 0, 0, 0],
+        [-ν13/E1, -ν23/E2, 1/E3, 0, 0, 0],
+        [0, 0, 0, 1/G23, 0, 0],
+        [0, 0, 0, 0, 1/G13, 0],
+        [0, 0, 0, 0, 0, 1/G12],
+    ]
+    # Invert it to the stiffness matrix in lamina coordinates
+    Sp = lpm.inv(C)
+    # Convert to global coordinates, scale with thickness.
+    Tbar = tbar(angle)
+    S = lpm.mul(lpm.matmul(lpm.matmul(lpm.transp(Tbar), Sp), Tbar), thickness)
     # The powers of the sine and cosine are often used later.
     m2 = m * m
     m3, m4 = m2 * m, m2 * m2
@@ -192,11 +210,12 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     αx = α1 * m2 + α2 * n2
     αy = α1 * n2 + α2 * m2
     αxy = 2 * (α1 - α2) * m * n
+    # Barbero:2018, p. 159
     denum = 1 - ν12 * ν21
     Q11, Q12 = E1 / denum, ν12 * E2 / denum
     Q22, Q66 = E2 / denum, G12
     Qs44 = G23
-    Qs55 = G12
+    Qs55 = G12  # Assuming transverse isotropy.
     # Q̅ according to Hyer:1997, p. 182
     Q̅11 = Q11 * m4 + 2 * (Q12 + 2 * Q66) * n2 * m2 + Q22 * n4
     QA = Q11 - Q12 - 2 * Q66
@@ -224,7 +243,11 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         E2=E2,
         E3=E3,
         G12=G12,
+        G13=G12,
+        G23=G23,
         ν12=ν12,
+        ν13=ν13,
+        ν23=ν23,
         αx=αx,
         αy=αy,
         αxy=αxy,
@@ -238,6 +261,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         Q̅s55=Q̅s55,
         Q̅s45=Q̅s45,
         ρ=ρ,
+        S=S
     )
 
 
@@ -265,6 +289,7 @@ def laminate(name, layers):
         αx: CTE in x-direction.
         αy: CTE in y-direction.
         wf: Fiber weight fraction.
+        S: 3D Stiffness matrix for the laminate in global coordinates.
     """
     if not layers:
         raise ValueError("no layers in the laminate")
@@ -282,14 +307,17 @@ def laminate(name, layers):
     # Set z-values for lamina.
     zs = -thickness / 2
     lz2, lz3 = [], []
+    S = lpm.zeros(6)
     for l in layers:
         ze = zs + l.thickness
         lz2.append((ze * ze - zs * zs) / 2)
         lz3.append((ze * ze * ze - zs * zs * zs) / 3)
         zs = ze
+        S = lpm.add(S, l.S)
+    S = lpm.mul(S, 1/thickness)
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
-    ABD = m.zeros(6)
-    H = m.zeros(2)
+    ABD = lpm.zeros(6)
+    H = lpm.zeros(2)
     c3 = 0
     for l, z2, z3 in zip(layers, lz2, lz3):
         # first row
@@ -339,7 +367,7 @@ def laminate(name, layers):
         Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy + l.Q̅16 * l.αxy) * l.thickness
         Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy + l.Q̅26 * l.αxy) * l.thickness
         Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy + l.Q̅66 * l.αxy) * l.thickness
-        # Calculate H matrix
+        # Calculate H matrix (derived from Barbero:2018, p. 181)
         sb = 5 / 4 * (l.thickness - 4 * z3 / thickness ** 2)
         H[0][0] += l.Q̅s44 * sb
         H[0][1] += l.Q̅s45 * sb
@@ -352,23 +380,27 @@ def laminate(name, layers):
         for j in range(6):
             if math.fabs(ABD[i][j]) < 1e-7:
                 ABD[i][j] = 0.0
+    for i in range(6):
+        for j in range(6):
+            if math.fabs(S[i][j]) < 1e-7:
+                S[i][j] = 0.0
     for i in range(2):
         for j in range(2):
             if math.fabs(H[i][j]) < 1e-7:
                 H[i][j] = 0.0
-    abd = m.inv(ABD)
-    h = m.inv(H)
+    abd = lpm.inv(ABD)
+    h = lpm.inv(H)
     # Calculate the engineering properties.
     # Nettles:1994, p. 34 e.v.
-    dABD = m.det(ABD)
-    dt1 = m.det(m.delete(ABD, 0, 0))
+    dABD = lpm.det(ABD)
+    dt1 = lpm.det(lpm.delete(ABD, 0, 0))
     Ex = dABD / (dt1 * thickness)
-    dt2 = m.det(m.delete(ABD, 1, 1))
+    dt2 = lpm.det(lpm.delete(ABD, 1, 1))
     Ey = dABD / (dt2 * thickness)
-    dt3 = m.det(m.delete(ABD, 2, 2))
+    dt3 = lpm.det(lpm.delete(ABD, 2, 2))
     Gxy = dABD / (dt3 * thickness)
-    dt4 = m.det(m.delete(ABD, 0, 1))
-    dt5 = m.det(m.delete(ABD, 1, 0))
+    dt4 = lpm.det(lpm.delete(ABD, 0, 1))
+    dt5 = lpm.det(lpm.delete(ABD, 1, 0))
     νxy = dt4 / dt1
     νyx = dt5 / dt2
     # See Barbero:2018, p. 197
@@ -404,4 +436,24 @@ def laminate(name, layers):
         αx=αx,
         αy=αy,
         wf=wf,
+        S=S,
     )
+
+
+def tbar(degrees):
+    theta = math.radians(degrees)
+    c, s = math.cos(theta), math.sin(theta)
+    T = [
+        [c*c, s*s, 0, 0, 0, 2*c*s],
+        [s*s, c*c, 0, 0, 0, -2*c*s],
+        [0, 0, 1, 0, 0, 0],
+        [0, 0, 0, c, s, 0],
+        [0, 0, 0, -s, c, 0],
+        [-c*s, c*s, 0, 0, 0, c*c-s*s],
+    ]
+    R = lpm.ident(6)
+    R[3][3] = R[4][4] = R[5][5] = 2
+    Rinv = lpm.inv(R)
+    Tbar = lpm.matmul(R, T)
+    Tbar = lpm.matmul(Tbar, Rinv)
+    return Tbar

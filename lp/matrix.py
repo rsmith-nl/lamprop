@@ -1,10 +1,11 @@
 # file: matrix.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
+# Library for square matrices.
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2019-01-01T00:27:44+0100
+# Last modified: 2020-12-23T20:32:16+0100
 
 from copy import deepcopy
 
@@ -29,6 +30,15 @@ def zeros(num):
     return matrix
 
 
+def copy(m):
+    s = len(m)
+    c = zeros(s)
+    for i in range(s):
+        for j in range(s):
+            c[i][j] = m[i][j]
+    return c
+
+
 def det(m):
     """Calculate the determinant of a matrix."""
     tr, _ = _topright(m)
@@ -45,8 +55,8 @@ def inv(m):
     # Empty left-bottom triangle
     copy, rv = _topright(m)
     # Empty top-right triangle.
-    for k in range(size-1, -1, -1):
-        for p in range(k-1, -1, -1):
+    for k in range(size - 1, -1, -1):
+        for p in range(k - 1, -1, -1):
             fact = copy[p][k] / copy[k][k]
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
@@ -60,13 +70,58 @@ def inv(m):
     return rv
 
 
+def add(a, b):
+    """Return the sum of matrices a and b."""
+    s, sb = _square_size(a), _square_size(b)
+    if s != sb:
+        raise ValueError("matrices cannot be multiplied")
+    res = zeros(s)
+    for i in range(s):
+        for j in range(s):
+            res[i][j] = a[i][j] + b[i][j]
+    return res
+
+
+def matmul(a, b):
+    """Returns the matrix product of square matrices a and b."""
+    s, sb = _square_size(a), _square_size(b)
+    if s != sb:
+        raise ValueError("matrices cannot be multiplied")
+    res = zeros(s)
+    for i in range(s):
+        for j in range(s):
+            for k in range(s):
+                res[i][j] += a[i][k] * b[k][j]
+    return res
+
+
+def mul(m, s):
+    """Multiply matrix m by scalar s."""
+    s = _square_size(m)
+    res = zeros(s)
+    for i in range(s):
+        for j in range(s):
+            res[i][j] = m[i][j] * s
+    return res
+
+
+def transp(m):
+    """Return the transpose of m."""
+    s = len(m)
+    r = zeros(s)
+    for i in range(s):
+        for j in range(s):
+            r[i][j] = m[j][i]
+    return r
+
+
 def delete(m, r, k):
     """Delete row r and column r from matrix m."""
     size = _square_size(m)
-    if r < 0 or r > size-1:
-        raise ValueError('invalid row')
-    if k < 0 or k > size-1:
-        raise ValueError('invalid column')
+    if r < 0 or r > size - 1:
+        raise ValueError("invalid row")
+    if k < 0 or k > size - 1:
+        raise ValueError("invalid column")
     rv = deepcopy(m)
     rv.pop(r)
     for r in rv:
@@ -80,7 +135,7 @@ def _topright(m):
     copy = deepcopy(m)
     rv = ident(size)
     for k in range(size):
-        for p in range(k+1, size):
+        for p in range(k + 1, size):
             fact = copy[p][k] / copy[k][k]
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
@@ -103,5 +158,5 @@ def _square_size(m):
     size = len(m)
     for row in m:
         if len(row) != size:
-            raise ValueError('invalid row length')
+            raise ValueError("invalid row length")
     return size
