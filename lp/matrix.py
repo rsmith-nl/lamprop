@@ -5,7 +5,7 @@
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-23T20:32:16+0100
+# Last modified: 2020-12-24T00:49:46+0100
 
 from copy import deepcopy
 
@@ -71,7 +71,7 @@ def inv(m):
 
 
 def add(a, b):
-    """Return the sum of matrices a and b."""
+    """Return the sum of square matrices a and b."""
     s, sb = _square_size(a), _square_size(b)
     if s != sb:
         raise ValueError("matrices cannot be multiplied")

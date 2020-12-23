@@ -4,7 +4,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-23T22:21:29+0100
+# Last modified: 2020-12-24T00:41:10+0100
 """
 Core functions of lamprop.
 
