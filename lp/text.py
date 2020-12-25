@@ -3,7 +3,7 @@
 # Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2020-12-24T00:25:20+0100
+# Last modified: 2020-12-24T18:34:31+0100
 """Text output routines for lamprop."""
 
 # import sys
@@ -119,7 +119,7 @@ def fea(l, header=False):  # {{{1
     else:
         lines = ["** Material data for Abaqus / Calculix (SI units)"]
     # Convert to SI
-    D = lpm.mul(l.S, 1e6)
+    D = lpm.mul(l.C, 1e6)
     lines.append(f"*MATERIAL,NAME={l.name}")
     lines.append("*ELASTIC,TYPE=ORTHO")
     lines.append(
@@ -142,13 +142,13 @@ def experimental(l, header=False):
     else:
         lines = ["Stiffness matrix"]
     # Calculate compliance matrix
-    C = lpm.inv(l.S)
-    E1 = 1/C[0][0]
-    E2 = 1/C[1][1]
-    E3 = 1/C[2][2]
-    G12 = 1/C[5][5]
-    G13 = 1/C[4][4]
-    G23 = 1/C[3][3]
+    S = lpm.inv(l.C)
+    E1 = 1/S[0][0]
+    E2 = 1/S[1][1]
+    E3 = 1/S[2][2]
+    G12 = 1/S[5][5]
+    G13 = 1/S[4][4]
+    G23 = 1/S[3][3]
     lines.append(f"E1 = {E1/1000:.2f} GPa")
     lines.append(f"E2 = {E2/1000:.2f} GPa")
     lines.append(f"E3 = {E3/1000:.2f} GPa")

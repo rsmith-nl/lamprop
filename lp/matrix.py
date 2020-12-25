@@ -5,7 +5,7 @@
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-24T00:49:46+0100
+# Last modified: 2020-12-25T00:55:48+0100
 
 from copy import deepcopy
 
@@ -16,7 +16,7 @@ def ident(num):
     """Create num×num identity matrix."""
     matrix = []
     for i in range(num):
-        row = [1 if i == j else 0 for j in range(num)]
+        row = [1.0 if i == j else 0.0 for j in range(num)]
         matrix.append(row)
     return matrix
 
@@ -25,7 +25,7 @@ def zeros(num):
     """Create a num×num 0-filled matrix."""
     matrix = []
     for i in range(num):
-        row = [0 for j in range(num)]
+        row = [0.0 for j in range(num)]
         matrix.append(row)
     return matrix
 

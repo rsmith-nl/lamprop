@@ -4,11 +4,20 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-24T00:41:10+0100
+# Last modified: 2020-12-25T01:09:37+0100
 """
 Core functions of lamprop.
 
 The following references were used in coding this module:
+
+@Book{Barbero:2008,
+    author = {Ever J. Barbero},
+    title = {Finite element analysis of composite materials},
+    publisher = {CRC Press},
+    year = {2008},
+    isbn = {9781420054330},
+    note = {hardcover}
+}
 
 @Book{Barbero:2018,
     author = {Ever J. Barbero},
@@ -16,7 +25,16 @@ The following references were used in coding this module:
     edition   = 3,
     publisher = {CRC Press},
     year = {2018},
-    isbn = {9781138196803}
+    isbn = {9781138196803},
+    note = {hardcover}
+}
+
+@Book{Bower:2010,
+    author = {Allan F. Bower},
+    title = {Applied Mechanics of Solids},
+    publisher = {CRC Press},
+    year = {2010},
+    isbn = {9781439802472a},
     note = {hardcover}
 }
 
@@ -186,8 +204,12 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     a = math.radians(float(angle))
     m, n = math.cos(a), math.sin(a)
     # Calculate the stiffness matrix for this lamina
+    # Note about terminology: in the literature, the stiffness matrix is
+    # generally named C, while its inverse the compliance matrix is called S.
+    # This is confusing IMO, but I will follow convention here for the sake of
+    # clarity.
     # First, the compliance matrix in lamina coordinates
-    C = [
+    Sp = [
         [1/E1, -ν12/E1, -ν13/E1, 0, 0, 0],
         [-ν12/E1, 1/E2, -ν23/E2, 0, 0, 0],
         [-ν13/E1, -ν23/E2, 1/E3, 0, 0, 0],
@@ -196,10 +218,10 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         [0, 0, 0, 0, 0, 1/G12],
     ]
     # Invert it to the stiffness matrix in lamina coordinates
-    Sp = lpm.inv(C)
+    Cp = lpm.inv(Sp)
     # Convert to global coordinates, scale with thickness.
     Tbar = tbar(angle)
-    S = lpm.mul(lpm.matmul(lpm.matmul(lpm.transp(Tbar), Sp), Tbar), thickness)
+    C = lpm.matmul(lpm.matmul(lpm.transp(Tbar), Cp), Tbar)
     # The powers of the sine and cosine are often used later.
     m2 = m * m
     m3, m4 = m2 * m, m2 * m2
@@ -261,7 +283,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         Q̅s55=Q̅s55,
         Q̅s45=Q̅s45,
         ρ=ρ,
-        S=S
+        C=C
     )
 
 
@@ -289,7 +311,7 @@ def laminate(name, layers):
         αx: CTE in x-direction.
         αy: CTE in y-direction.
         wf: Fiber weight fraction.
-        S: 3D Stiffness matrix for the laminate in global coordinates.
+        C: 3D Stiffness matrix for the laminate in global coordinates.
     """
     if not layers:
         raise ValueError("no layers in the laminate")
@@ -307,14 +329,13 @@ def laminate(name, layers):
     # Set z-values for lamina.
     zs = -thickness / 2
     lz2, lz3 = [], []
-    S = lpm.zeros(6)
+    C = lpm.zeros(6)
     for l in layers:
         ze = zs + l.thickness
         lz2.append((ze * ze - zs * zs) / 2)
         lz3.append((ze * ze * ze - zs * zs * zs) / 3)
         zs = ze
-        S = lpm.add(S, l.S)
-    S = lpm.mul(S, 1/thickness)
+        C = lpm.add(C, lpm.mul(l.C, l.thickness/thickness))
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = lpm.zeros(6)
     H = lpm.zeros(2)
@@ -380,10 +401,10 @@ def laminate(name, layers):
         for j in range(6):
             if math.fabs(ABD[i][j]) < 1e-7:
                 ABD[i][j] = 0.0
-    for i in range(6):
-        for j in range(6):
-            if math.fabs(S[i][j]) < 1e-7:
-                S[i][j] = 0.0
+#    for i in range(6):
+#        for j in range(6):
+#            if math.fabs(C[i][j]) < 1e-7:
+#                C[i][j] = 0.0
     for i in range(2):
         for j in range(2):
             if math.fabs(H[i][j]) < 1e-7:
@@ -436,24 +457,21 @@ def laminate(name, layers):
         αx=αx,
         αy=αy,
         wf=wf,
-        S=S,
+        C=C,
     )
 
 
 def tbar(degrees):
-    theta = math.radians(degrees)
-    c, s = math.cos(theta), math.sin(theta)
-    T = [
-        [c*c, s*s, 0, 0, 0, 2*c*s],
-        [s*s, c*c, 0, 0, 0, -2*c*s],
+    """Matrix for rotating lamina coordinates around the z-axis."""
+    θ = math.radians(degrees)
+    c, s = math.cos(θ), math.sin(θ)
+    # Barbero:2008 p. 12 & 15
+    Tbar = [
+        [c*c, s*s, 0, 0, 0, c*s],
+        [s*s, c*c, 0, 0, 0, -c*s],
         [0, 0, 1, 0, 0, 0],
-        [0, 0, 0, c, s, 0],
-        [0, 0, 0, -s, c, 0],
-        [-c*s, c*s, 0, 0, 0, c*c-s*s],
+        [0, 0, 0, c, -s, 0],
+        [0, 0, 0, s, c, 0],
+        [-2*c*s, 2*c*s, 0, 0, 0, c*c-s*s],
     ]
-    R = lpm.ident(6)
-    R[3][3] = R[4][4] = R[5][5] = 2
-    Rinv = lpm.inv(R)
-    Tbar = lpm.matmul(R, T)
-    Tbar = lpm.matmul(Tbar, Rinv)
     return Tbar
