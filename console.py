@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2020-10-25T11:12:04+0100
+# Last modified: 2020-12-26T23:47:17+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -74,6 +74,9 @@ def main():
     group.add_argument(
         "-m", "--mat", action="store_true", help="output only the ABD and abd matrices"
     )
+    group.add_argument(
+        "-f", "--fea", action="store_true", help="output only material data for FEA"
+    )
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
         "-L", "--license", action=LicenseAction, nargs=0, help="print the license"
@@ -94,15 +97,10 @@ def main():
         format="%(levelname)s: %(message)s",
     )
     del opts, group
-    if args.mat is False and args.eng is False:
+    if args.mat is False and args.eng is False and args.fea is False:
         args.eng = True
         args.mat = True
-    elif args.mat and args.eng:
-        pass
-    elif args.eng:
-        args.mat = False
-    else:
-        args.eng = False
+        args.fea = True
     # No files given to process.
     if len(args.files) == 0:
         sys.exit(1)
@@ -116,7 +114,7 @@ def main():
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
         for curlam in laminates:
-            print(*out(curlam, args.eng, args.mat), sep="\n")
+            print(*out(curlam, args.eng, args.mat, args.fea), sep="\n")
 
 
 if __name__ == "__main__":
