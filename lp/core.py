@@ -4,7 +4,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-25T01:09:37+0100
+# Last modified: 2020-12-26T14:23:40+0100
 """
 Core functions of lamprop.
 
@@ -85,7 +85,8 @@ The following references were used in coding this module:
 
 from types import SimpleNamespace
 import math
-import lp.matrix as lpm
+# import lp.matrix as lpm
+import matrix as lpm
 
 
 def fiber(E1, ν12, α1, ρ, name):
@@ -219,7 +220,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     ]
     # Invert it to the stiffness matrix in lamina coordinates
     Cp = lpm.inv(Sp)
-    # Convert to global coordinates, scale with thickness.
+    # Convert to global coordinates.
     Tbar = tbar(angle)
     C = lpm.matmul(lpm.matmul(lpm.transp(Tbar), Cp), Tbar)
     # The powers of the sine and cosine are often used later.
@@ -320,82 +321,82 @@ def laminate(name, layers):
     if len(name) == 0:
         raise ValueError("the length of the name of a laminate must be >0")
     layers = tuple(layers)
-    thickness = sum(l.thickness for l in layers)
-    fiber_weight = sum(l.fiber_weight for l in layers)
-    ρ = sum(l.ρ * l.thickness for l in layers) / thickness
-    vf = sum(l.vf * l.thickness for l in layers) / thickness
-    resin_weight = sum(l.resin_weight for l in layers)
+    thickness = sum(la.thickness for la in layers)
+    fiber_weight = sum(la.fiber_weight for la in layers)
+    ρ = sum(la.ρ * la.thickness for la in layers) / thickness
+    vf = sum(la.vf * la.thickness for la in layers) / thickness
+    resin_weight = sum(la.resin_weight for la in layers)
     wf = fiber_weight / (fiber_weight + resin_weight)
     # Set z-values for lamina.
     zs = -thickness / 2
     lz2, lz3 = [], []
     C = lpm.zeros(6)
-    for l in layers:
-        ze = zs + l.thickness
+    for la in layers:
+        ze = zs + la.thickness
         lz2.append((ze * ze - zs * zs) / 2)
         lz3.append((ze * ze * ze - zs * zs * zs) / 3)
         zs = ze
-        C = lpm.add(C, lpm.mul(l.C, l.thickness/thickness))
+        C = lpm.add(C, lpm.mul(la.C, la.thickness/thickness))
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = lpm.zeros(6)
     H = lpm.zeros(2)
     c3 = 0
-    for l, z2, z3 in zip(layers, lz2, lz3):
+    for la, z2, z3 in zip(layers, lz2, lz3):
         # first row
-        ABD[0][0] += l.Q̅11 * l.thickness  # Hyer:1998, p. 290
-        ABD[0][1] += l.Q̅12 * l.thickness
-        ABD[0][2] += l.Q̅16 * l.thickness
-        ABD[0][3] += l.Q̅11 * z2
-        ABD[0][4] += l.Q̅12 * z2
-        ABD[0][5] += l.Q̅16 * z2
+        ABD[0][0] += la.Q̅11 * la.thickness  # Hyer:1998, p. 290
+        ABD[0][1] += la.Q̅12 * la.thickness
+        ABD[0][2] += la.Q̅16 * la.thickness
+        ABD[0][3] += la.Q̅11 * z2
+        ABD[0][4] += la.Q̅12 * z2
+        ABD[0][5] += la.Q̅16 * z2
         # second row
-        ABD[1][0] += l.Q̅12 * l.thickness
-        ABD[1][1] += l.Q̅22 * l.thickness
-        ABD[1][2] += l.Q̅26 * l.thickness
-        ABD[1][3] += l.Q̅12 * z2
-        ABD[1][4] += l.Q̅22 * z2
-        ABD[1][5] += l.Q̅26 * z2
+        ABD[1][0] += la.Q̅12 * la.thickness
+        ABD[1][1] += la.Q̅22 * la.thickness
+        ABD[1][2] += la.Q̅26 * la.thickness
+        ABD[1][3] += la.Q̅12 * z2
+        ABD[1][4] += la.Q̅22 * z2
+        ABD[1][5] += la.Q̅26 * z2
         # third row
-        ABD[2][0] += l.Q̅16 * l.thickness
-        ABD[2][1] += l.Q̅26 * l.thickness
-        ABD[2][2] += l.Q̅66 * l.thickness
-        ABD[2][3] += l.Q̅16 * z2
-        ABD[2][4] += l.Q̅26 * z2
-        ABD[2][5] += l.Q̅66 * z2
+        ABD[2][0] += la.Q̅16 * la.thickness
+        ABD[2][1] += la.Q̅26 * la.thickness
+        ABD[2][2] += la.Q̅66 * la.thickness
+        ABD[2][3] += la.Q̅16 * z2
+        ABD[2][4] += la.Q̅26 * z2
+        ABD[2][5] += la.Q̅66 * z2
         # fourth row
-        ABD[3][0] += l.Q̅11 * z2
-        ABD[3][1] += l.Q̅12 * z2
-        ABD[3][2] += l.Q̅16 * z2
-        ABD[3][3] += l.Q̅11 * z3
-        ABD[3][4] += l.Q̅12 * z3
-        ABD[3][5] += l.Q̅16 * z3
+        ABD[3][0] += la.Q̅11 * z2
+        ABD[3][1] += la.Q̅12 * z2
+        ABD[3][2] += la.Q̅16 * z2
+        ABD[3][3] += la.Q̅11 * z3
+        ABD[3][4] += la.Q̅12 * z3
+        ABD[3][5] += la.Q̅16 * z3
         # fifth row
-        ABD[4][0] += l.Q̅12 * z2
-        ABD[4][1] += l.Q̅22 * z2
-        ABD[4][2] += l.Q̅26 * z2
-        ABD[4][3] += l.Q̅12 * z3
-        ABD[4][4] += l.Q̅22 * z3
-        ABD[4][5] += l.Q̅26 * z3
+        ABD[4][0] += la.Q̅12 * z2
+        ABD[4][1] += la.Q̅22 * z2
+        ABD[4][2] += la.Q̅26 * z2
+        ABD[4][3] += la.Q̅12 * z3
+        ABD[4][4] += la.Q̅22 * z3
+        ABD[4][5] += la.Q̅26 * z3
         # sixth row
-        ABD[5][0] += l.Q̅16 * z2
-        ABD[5][1] += l.Q̅26 * z2
-        ABD[5][2] += l.Q̅66 * z2
-        ABD[5][3] += l.Q̅16 * z3
-        ABD[5][4] += l.Q̅26 * z3
-        ABD[5][5] += l.Q̅66 * z3
+        ABD[5][0] += la.Q̅16 * z2
+        ABD[5][1] += la.Q̅26 * z2
+        ABD[5][2] += la.Q̅66 * z2
+        ABD[5][3] += la.Q̅16 * z3
+        ABD[5][4] += la.Q̅26 * z3
+        ABD[5][5] += la.Q̅66 * z3
         # Calculate unit thermal stress resultants.
         # Hyer:1998, p. 445
-        Ntx += (l.Q̅11 * l.αx + l.Q̅12 * l.αy + l.Q̅16 * l.αxy) * l.thickness
-        Nty += (l.Q̅12 * l.αx + l.Q̅22 * l.αy + l.Q̅26 * l.αxy) * l.thickness
-        Ntxy += (l.Q̅16 * l.αx + l.Q̅26 * l.αy + l.Q̅66 * l.αxy) * l.thickness
+        Ntx += (la.Q̅11 * la.αx + la.Q̅12 * la.αy + la.Q̅16 * la.αxy) * la.thickness
+        Nty += (la.Q̅12 * la.αx + la.Q̅22 * la.αy + la.Q̅26 * la.αxy) * la.thickness
+        Ntxy += (la.Q̅16 * la.αx + la.Q̅26 * la.αy + la.Q̅66 * la.αxy) * la.thickness
         # Calculate H matrix (derived from Barbero:2018, p. 181)
-        sb = 5 / 4 * (l.thickness - 4 * z3 / thickness ** 2)
-        H[0][0] += l.Q̅s44 * sb
-        H[0][1] += l.Q̅s45 * sb
-        H[1][0] += l.Q̅s45 * sb
-        H[1][1] += l.Q̅s55 * sb
+        sb = 5 / 4 * (la.thickness - 4 * z3 / thickness ** 2)
+        H[0][0] += la.Q̅s44 * sb
+        H[0][1] += la.Q̅s45 * sb
+        H[1][0] += la.Q̅s45 * sb
+        H[1][1] += la.Q̅s55 * sb
         # Calculate E3
-        c3 += l.thickness / l.E3
+        c3 += la.thickness / la.E3
     # Finish the matrices, discarding very small numbers in ABD and H.
     for i in range(6):
         for j in range(6):
