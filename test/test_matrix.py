@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2019-01-01T01:59:28+0100
-# Last modified: 2020-10-03T12:26:42+0200
+# Last modified: 2020-12-26T14:09:32+0100
 """Test of the matrix routines"""
 
 import lp.matrix as mat
@@ -46,25 +46,25 @@ def test_zeros():  # {{{1
             assert m[j][k] == 0
 
 
-def test_det_dia():
+def test_det_dia():  # {{{1
     m = [[1, 0, 0], [0, 2, 0], [0, 0, 3]]
     assert mat.det(m) == 6
 
 
-def test_det_3():
+def test_det_3():  # {{{1
     """From https://www.mathsisfun.com/algebra/matrix-determinant.html"""
     m = [[6, 1, 1], [4, -2, 5], [2, 8, 7]]
     assert mat.det(m) == -306
 
 
-def test_det_6():
+def test_det_6():  # {{{1
     """Using a random generated matrix and
     https://www.mathsisfun.com/algebra/matrix-calculator.html
     """
     assert round(mat.det(_rndm), 2) == -0.45
 
 
-def test_inv_6():
+def test_inv_6():  # {{{1
     """Using a random generated matrix and
     https://www.mathsisfun.com/algebra/matrix-calculator.html
     """
@@ -72,7 +72,7 @@ def test_inv_6():
     assert inv == _invm
 
 
-def test_delete():
+def test_delete():  # {{{1
     smaller = [
         [0.21, 0.76, 0.07, 0.33, 0.57],
         [0.07, 0.94, 0.33, 0.98, 0.49],
