@@ -5,7 +5,7 @@
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-25T00:55:48+0100
+# Last modified: 2020-12-26T14:32:39+0100
 
 from copy import deepcopy
 
@@ -95,13 +95,13 @@ def matmul(a, b):
     return res
 
 
-def mul(m, s):
-    """Multiply matrix m by scalar s."""
+def mul(m, sc):
+    """Multiply matrix m by scalar sc."""
     s = _square_size(m)
     res = zeros(s)
     for i in range(s):
         for j in range(s):
-            res[i][j] = m[i][j] * s
+            res[i][j] = m[i][j] * sc
     return res
 
 
