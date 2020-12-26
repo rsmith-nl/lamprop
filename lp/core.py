@@ -4,7 +4,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-26T22:04:23+0100
+# Last modified: 2020-12-26T23:15:33+0100
 """
 Core functions of lamprop.
 
@@ -337,6 +337,7 @@ def laminate(name, layers):
         zs = ze
         C = lpm.add(C, lpm.mul(la.C, la.thickness / thickness))
     C = lpm.clean(C)
+    S = lpm.inv(C)
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = lpm.zeros(6)
     H = lpm.zeros(2)
@@ -425,6 +426,10 @@ def laminate(name, layers):
     # Hyer:1998, p. 451, (11.86)
     αx = abd[0][0] * Ntx + abd[0][1] * Nty + abd[0][2] * Ntxy
     αy = abd[1][0] * Ntx + abd[1][1] * Nty + abd[1][2] * Ntxy
+    # Calculate tensor engineering properties
+    tEx, tEy, tEz = 1 / S[0][0], 1 / S[1][1], 1 / S[2][2]
+    tGxy, tGxz, tGyz = 1 / S[5][5], 1 / S[4][4], 1 / S[3][3]
+    tνxy, tνxz, tνyz = -S[1][0] / S[0][0], -S[2][0] / S[0][0], -S[2][1] / S[1][1]
     return SimpleNamespace(
         name=name,
         layers=layers,
@@ -449,6 +454,16 @@ def laminate(name, layers):
         αy=αy,
         wf=wf,
         C=C,
+        S=S,
+        tEx=tEx,
+        tEy=tEy,
+        tEz=tEz,
+        tGxy=tGxy,
+        tGyz=tGyz,
+        tGxz=tGxz,
+        tνxy=tνxy,
+        tνxz=tνxz,
+        tνyz=tνyz,
     )
 
 
