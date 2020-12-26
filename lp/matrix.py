@@ -5,11 +5,11 @@
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-26T14:32:39+0100
+# Last modified: 2020-12-26T18:14:41+0100
 
 from copy import deepcopy
 
-_LIMIT = 1e-7  # Numbers smaller than abs(_LIMIT) are set to 0.
+_LIMIT = 1e-10  # Numbers smaller than abs(_LIMIT) are set to 0.
 
 
 def ident(num):
@@ -61,13 +61,14 @@ def inv(m):
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
                 if abs(copy[p][j]) < _LIMIT:
-                    copy[p][j] = 0
+                    copy[p][j] = 0.0
                 rv[p][j] -= fact * rv[k][j]
     # Divide by the diagonals.
     for r in range(size):
         for k in range(size):
             rv[r][k] /= copy[r][r]
-    return rv
+    # Discard small numbers.
+    return clean(rv)
 
 
 def add(a, b):
@@ -126,6 +127,17 @@ def delete(m, r, k):
     rv.pop(r)
     for r in rv:
         r.pop(k)
+    return rv
+
+
+def clean(m):
+    """Set matrix numbers < _LIMIT with 0."""
+    rv = deepcopy(m)
+    sz = len(rv)
+    for i in range(sz):
+        for j in range(sz):
+            if abs(rv[i][j]) < _LIMIT:
+                rv[i][j] = 0.0
     return rv
 
 

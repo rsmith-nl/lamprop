@@ -4,20 +4,11 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2020-12-26T14:35:24+0100
+# Last modified: 2020-12-26T18:11:34+0100
 """
 Core functions of lamprop.
 
 The following references were used in coding this module:
-
-@Book{Barbero:2008,
-    author = {Ever J. Barbero},
-    title = {Finite element analysis of composite materials},
-    publisher = {CRC Press},
-    year = {2008},
-    isbn = {9781420054330},
-    note = {hardcover}
-}
 
 @Book{Barbero:2018,
     author = {Ever J. Barbero},
@@ -26,6 +17,15 @@ The following references were used in coding this module:
     publisher = {CRC Press},
     year = {2018},
     isbn = {9781138196803},
+    note = {hardcover}
+}
+
+@Book{Barbero:2008,
+    author = {Ever J. Barbero},
+    title = {Finite element analysis of composite materials},
+    publisher = {CRC Press},
+    year = {2008},
+    isbn = {9781420054330},
     note = {hardcover}
 }
 
@@ -140,7 +140,8 @@ def resin(E, ν, α, ρ, name):
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):
-    """Create a lamina.
+    """Create a lamina of unidirectional fibers in resin.
+    This can be considered as a transversely isotropic material.
 
     Arguments:
         fiber: The Fiber used in the lamina
@@ -195,27 +196,27 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     G12 = Gm * (1 + vf) / (1 - vf)
     G13 = G12
     ν21 = ν12 * E2 / E1  # Nettles:1994, p. 4
-    # Calculate G23, necessary for Qs44
+    # Calculate G23, necessary for Qs44.
     Kf = fiber.E1 / (3 * (1 - 2 * fiber.ν12))
     Km = resin.E / (3 * (1 - 2 * resin.ν))
     K = 1 / (vf / Kf + vm / Km)
     ν23 = 1 - ν21 - E2 / (3 * K)
-    G23 = E2 / (2 * (1 + ν23))  # Barbero:2018, p. 504
+    G23 = E2 / (2 * (1 + ν23))  # Barbero:2008, p. 23, Barbero:2018, p. 504
     a = math.radians(float(angle))
     m, n = math.cos(a), math.sin(a)
-    # Calculate the stiffness matrix for this lamina
+    # Calculate the 3D stiffness matrix for this lamina
     # Note about terminology: in the literature, the stiffness matrix is
     # generally named C, while its inverse the compliance matrix is called S.
     # This is confusing IMO, but I will follow convention here for the sake of
     # clarity.
     # First, the compliance matrix in lamina coordinates
     Sp = [
-        [1/E1, -ν12/E1, -ν13/E1, 0, 0, 0],
-        [-ν12/E1, 1/E2, -ν23/E2, 0, 0, 0],
-        [-ν13/E1, -ν23/E2, 1/E3, 0, 0, 0],
-        [0, 0, 0, 1/G23, 0, 0],
-        [0, 0, 0, 0, 1/G13, 0],
-        [0, 0, 0, 0, 0, 1/G12],
+        [1 / E1, -ν12 / E1, -ν13 / E1, 0, 0, 0],
+        [-ν12 / E1, 1 / E2, -ν23 / E2, 0, 0, 0],
+        [-ν13 / E1, -ν23 / E2, 1 / E3, 0, 0, 0],
+        [0, 0, 0, 1 / G23, 0, 0],
+        [0, 0, 0, 0, 1 / G13, 0],
+        [0, 0, 0, 0, 0, 1 / G12],
     ]
     # Invert it to the stiffness matrix in lamina coordinates
     Cp = lpm.inv(Sp)
@@ -283,7 +284,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         Q̅s55=Q̅s55,
         Q̅s45=Q̅s45,
         ρ=ρ,
-        C=C
+        C=C,
     )
 
 
@@ -335,7 +336,8 @@ def laminate(name, layers):
         lz2.append((ze * ze - zs * zs) / 2)
         lz3.append((ze * ze * ze - zs * zs * zs) / 3)
         zs = ze
-        C = lpm.add(C, lpm.mul(la.C, la.thickness/thickness))
+        C = lpm.add(C, lpm.mul(la.C, la.thickness / thickness))
+    C = lpm.clean(C)
     Ntx, Nty, Ntxy = 0.0, 0.0, 0.0
     ABD = lpm.zeros(6)
     H = lpm.zeros(2)
@@ -397,18 +399,8 @@ def laminate(name, layers):
         # Calculate E3
         c3 += la.thickness / la.E3
     # Finish the matrices, discarding very small numbers in ABD and H.
-    for i in range(6):
-        for j in range(6):
-            if math.fabs(ABD[i][j]) < 1e-7:
-                ABD[i][j] = 0.0
-#    for i in range(6):
-#        for j in range(6):
-#            if math.fabs(C[i][j]) < 1e-7:
-#                C[i][j] = 0.0
-    for i in range(2):
-        for j in range(2):
-            if math.fabs(H[i][j]) < 1e-7:
-                H[i][j] = 0.0
+    ABD = lpm.clean(ABD)
+    H = lpm.clean(H)
     abd = lpm.inv(ABD)
     h = lpm.inv(H)
     # Calculate the engineering properties.
@@ -467,11 +459,59 @@ def tbar(degrees):
     c, s = math.cos(θ), math.sin(θ)
     # Barbero:2008 p. 12 & 15
     Tbar = [
-        [c*c, s*s, 0, 0, 0, c*s],
-        [s*s, c*c, 0, 0, 0, -c*s],
+        [c * c, s * s, 0, 0, 0, c * s],
+        [s * s, c * c, 0, 0, 0, -c * s],
         [0, 0, 1, 0, 0, 0],
         [0, 0, 0, c, -s, 0],
         [0, 0, 0, s, c, 0],
-        [-2*c*s, 2*c*s, 0, 0, 0, c*c-s*s],
+        [-2 * c * s, 2 * c * s, 0, 0, 0, c * c - s * s],
     ]
     return Tbar
+
+
+def isortho(C):
+    """Determine if a stiffness matrix is orthotropic."""
+    zero_indices = [
+        (0, 3),
+        (0, 4),
+        (0, 5),
+        (1, 3),
+        (1, 4),
+        (1, 5),
+        (2, 3),
+        (2, 4),
+        (2, 5),
+        (3, 0),
+        (3, 1),
+        (3, 2),
+        (3, 4),
+        (3, 5),
+        (4, 0),
+        (4, 1),
+        (4, 2),
+        (4, 3),
+        (4, 5),
+        (5, 0),
+        (5, 1),
+        (5, 2),
+        (5, 3),
+        (5, 4),
+    ]
+    count = 0
+    for i, j in zero_indices:
+        if math.isclose(C[i][j], 0.0):
+            count += 1
+    if count == len(zero_indices):
+        return True
+    return False
+
+
+def isti(C):
+    """Determine if the stiffness matrix C is transversely isotropic."""
+    if not isortho(C):
+        return False
+    if math.isclose(C[4][4], C[5][5]) and math.isclose(
+        C[3][3], 2 * (C[1][1] - C[1][2])
+    ):
+        return True
+    return False
