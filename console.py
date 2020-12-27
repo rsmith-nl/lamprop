@@ -4,7 +4,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2020-12-26T23:47:17+0100
+# Last modified: 2020-12-27T19:20:07+0100
 """
 Calculate the elastic properties of a fibrous composite laminate.
 
@@ -64,17 +64,16 @@ def main():
         help="generate LaTeX output (the default is plain text)",
     )
     group.add_argument("-H", "--html", action="store_true", help="generate HTML output")
-    group = opts.add_mutually_exclusive_group()
-    group.add_argument(
+    opts.add_argument(
         "-e",
         "--eng",
         action="store_true",
         help="output only the layers and engineering properties",
     )
-    group.add_argument(
+    opts.add_argument(
         "-m", "--mat", action="store_true", help="output only the ABD and abd matrices"
     )
-    group.add_argument(
+    opts.add_argument(
         "-f", "--fea", action="store_true", help="output only material data for FEA"
     )
     group = opts.add_mutually_exclusive_group()
