@@ -3,7 +3,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2020-12-27T00:43:53+0100
+# Last modified: 2020-12-27T12:36:37+0100
 """Text output routines for lamprop."""
 
 # import sys
@@ -99,7 +99,7 @@ def _matrices(l):  # {{{1
     for n in range(2):
         h = hstr.format(l.h[n][0], l.h[n][1])
         lines.append(h)
-    lines = ["3D stiffness matrix [C], contracted notation:"]
+    lines += ["3D stiffness matrix [C], contracted notation:"]
     lines.append("(indices for stress/strain are in the order 11, 22, 33, 23, 13, 12)")
     matstr = "|{:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4}|"
     for row in l.C:
