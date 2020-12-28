@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-12-28T21:16:38+0100
+# Last modified: 2020-12-28T22:40:58+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -62,10 +62,14 @@ class LampropUI(tk.Tk):
         # Row
         sal = ttk.Label(self, text="Save as:")
         sal.grid(row=2, column=0, sticky="w")
-        txtbtn = ttk.Button(self, text="text", command=self.do_savetxt, state="disabled")
+        txtbtn = ttk.Button(
+            self, text="text", command=self.do_savetxt, state="disabled"
+        )
         txtbtn.grid(row=2, column=1, sticky="w")
         self.txtbtn = txtbtn
-        htmlbtn = ttk.Button(self, text="html", command=self.do_savehtml, state="disabled")
+        htmlbtn = ttk.Button(
+            self, text="html", command=self.do_savehtml, state="disabled"
+        )
         self.htmlbtn = htmlbtn
         htmlbtn.grid(row=2, column=2, sticky="w")
         # Row
@@ -132,17 +136,14 @@ class LampropUI(tk.Tk):
 
     def gentxt(self):
         name = self.cxlam.get()
-        text = "\n".join(lp.text.out(self.laminates[name], False, False, False))
-        if self.engprop.get():
-            text += "\n".join(lp.text._engprop(self.laminates[name]))
-        if self.matrices.get():
-            if text:
-                text += "\n"
-            text += "\n".join(lp.text._matrices(self.laminates[name]))
-        if self.fea.get():
-            if text:
-                text += "\n"
-            text += "\n".join(lp.text._fea(self.laminates[name]))
+        text = "\n".join(
+            lp.text.out(
+                self.laminates[name],
+                bool(self.engprop.get()),
+                bool(self.matrices.get()),
+                bool(self.fea.get()),
+            )
+        )
         return text
 
     def on_laminate(self, event):
@@ -159,13 +160,13 @@ class LampropUI(tk.Tk):
             defaultextension=".txt",
             filetypes=(("text files", "*.txt"), ("all files", "*.*")),
             initialdir=self.directory,
-            initialfile=self.cxlam.get()+".txt",
+            initialfile=self.cxlam.get() + ".txt",
         )
-        fn = res.name
-        if fn:
-            text = self.gentxt()
-            with open(fn, "w") as tf:
-                tf.write(text)
+        if not res:
+            return
+        text = self.gentxt()
+        with open(res.name, "w") as tf:
+            tf.write(text)
 
     def do_savehtml(self):
         res = filedialog.asksaveasfile(
@@ -174,24 +175,21 @@ class LampropUI(tk.Tk):
             defaultextension=".html",
             filetypes=(("HTML files", "*.html"), ("all files", "*.*")),
             initialdir=self.directory,
-            initialfile=self.cxlam.get()+".html",
+            initialfile=self.cxlam.get() + ".html",
         )
-        fn = res.name
-        if fn:
-            name = self.cxlam.get()
-            html = "\n".join(lp.html.out(self.laminates[name], False, False, False))
-            if self.engprop.get():
-                html += "\n".join(lp.html._engprop(self.laminates[name]))
-            if self.matrices.get():
-                if html:
-                    html += "\n"
-                html += "\n".join(lp.html._matrices(self.laminates[name]))
-            if self.fea.get():
-                if html:
-                    html += "\n"
-                html += "\n".join(lp.html._fea(self.laminates[name]))
-            with open(fn, "w") as hf:
-                hf.write(html)
+        if not res:
+            return
+        name = self.cxlam.get()
+        html = "\n".join(
+            lp.html.out(
+                self.laminates[name],
+                bool(self.engprop.get()),
+                bool(self.matrices.get()),
+                bool(self.fea.get()),
+            )
+        )
+        with open(res.name, "w") as hf:
+            hf.write(html)
 
 
 def main():
