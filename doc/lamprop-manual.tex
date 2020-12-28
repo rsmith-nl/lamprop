@@ -1,9 +1,9 @@
 % file: lamprop-manual.tex
 % vim:fileencoding=utf-8:fdm=marker:ft=tex:spelllang=en
 %
-% Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+% Copyright © 2018,2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2020-10-03T12:56:01+0200
+% Last modified: 2020-12-28T21:11:13+0100
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -255,6 +255,10 @@ were replaced with properties derived from the matrix.
 
 The books from \citet{Hyer:1998} and \citet{Tsai:1992} and the report from
 \citet{Nettles:1994} were instrumental in writing the code.
+More recently, the books from \citet{Bower:2010} and
+\citet{Barbero:2008,Barbero:2018} have proved crucial for the
+author's understanding of the subject matter and thus improvements in the
+code.
 
 All the important code is covered by tests using pytest, and pylama is used to
 check the code when it is saved.
@@ -264,7 +268,7 @@ check the code when it is saved.
 \section{Requirements} % {{{2
 
 The only requirement is Python (version 3.6 or later). Currently the
-development is done using Python 3.7.
+development is done using Python 3.9.
 
 For developers: You will need pytest\footnote{\url{https://docs.pytest.org/}}
 to run the provided tests. Code checks are done using
@@ -292,21 +296,28 @@ python.org\footnote{\url{https://www.python.org/downloads/}}, and those should
 work fine for lamprop.
 
 Once the requirements are met, you can proceed with the installation of lamprop.
-
 \begin{itemize}
     \item Unpack the tarball or zipfile, or clone the github repository.
     \item Open a terminal window or (on ms-windows a \texttt{cmd} window).
     \item Change into the directory where lamprop was unpacked or cloned.
-    \item Run \texttt{python3 build.py}. This will create both self-contained
-        scripts. If you get an error message that the command
-        \texttt{python3} is not recognized, try \texttt{python} instead.
-    \item On \textsc{posix} operating systems, run \texttt{make install} as
-        root to install the programs. By default they are installed in
-        \verb|\usr\local\bin|.
-    \item On ms-windows, copy \texttt{lamprop.pyz} and
-        \texttt{lamprop-gui.pyz} to the \texttt{Scripts} subdirectory of your
-        Python installation.
+    \item Run \texttt{python setup.py}.
+        This will tell you where it will try to install the programs.
+        It will also create both self-contained scripts.
+    \item Run \texttt{python setup.py install}. This will install the
+        self-contained scripts in the standard location for your operating
+        system.
 \end{itemize}
+
+The installation locations are:
+\begin{itemize}
+    \item \verb|$HOME/.local/bin| for \textsc{posix} operating systems.
+    \item The \verb|Scripts| folder of your Python installation on
+        ms-windows
+\end{itemize}
+If the \verb|Scripts| folder isn't writable on ms-windows, the installer will
+try a different location in your documents folder.
+For Python scripts to work well, the installation location should be named in
+your \textsc{path} environment variable.
 
 
 \chapter{Using the program} % {{{1
@@ -342,7 +353,7 @@ contain the following values, separated by white space:
     \item[$\rho$] Density of the fiber in \si{g/cm^3}.
     \item[$name$] The identifier for the resin. This should be unique in all
         the files read. Contrary to the previous values, this may contain
-        white space.
+        whitespace.
 \end{description}
 
 Below an example for standard e-glass fiber.\\
@@ -352,12 +363,12 @@ Usually, $E_1$ and other properties in the fibre length direction are easily
 obtained from a fiber supplier. Previous versions of this program also
 required the Young's modulus perpendicular to the fiber to calculate
 transverse properties of the lamina. Since this value is generally not given
-in the manufacturer documentation, it has been replaced by the modulus of the
-matrix multiplied by a factor, according to \citet{Tsai:1992}. However, the
-author has found that the factor provided by Tsai overestimates $E_2$,
-especially when using glass fibers. So from lamprop version 3.6 onwards, this
-factor has been reduced. All users of previous versions are encouraged to
-upgrade.
+in the manufacturer documentation, it has been replaced by
+a value calculated with the Halpin-Tsai formula from
+\citet[p.  117]{Barbero:2018} as of version 2020-12-26.
+Previously the modulus of the matrix multiplied by a factor was used,
+according to \citet{Tsai:1992}. However, the author has found that the factor
+provided by Tsai overestimates $E_2$.
 
 In the \texttt{tools} subdirectory of the source distribution you will find
 a script called \texttt{convert-lamprop.py} to convert old-style fiber lines
@@ -439,7 +450,7 @@ than Python running out of memory. The author has used laminates with up to
 Over the years, the author has gathered a lot of data for different fibers
 from data sheets provided by the manufacturers. Data for different
 fibers is given in \tref{tb:fibers}. In case the $\nu_{12}$ is not
-known for a carbon fiber, it is estimated at 0.25. Similarly, if the
+known for a carbon fiber, it is estimated at 0.2. Similarly, if the
 $\alpha_1$ is not known, it is estimated at \SI{-0.12e-6}{K^{-1}}. For glass
 fibers, $\nu_{12}$ is estimated 0.33 unless known and $\alpha_1$ is estimated
 \SI{5e-6}{K^{-1}} unless known.
@@ -451,12 +462,12 @@ fibers, $\nu_{12}$ is estimated 0.33 unless known and $\alpha_1$ is estimated
       Name & $E_1$ & $\nu_{12}$ & $\alpha_1$ & $\rho$ & Type\\
       & [\si{MPa}] & [-] & [\si{K^{-1}}] & [\si{g/cm^3}]\\
     \midrule
-      Tenax HTA & 238000 & 0.25 & -0.1e-6 & 1.76 & carbon\\
-Tenax HTS & 240000 & 0.25 & -0.1e-6 & 1.77 & carbon\\
-Tenax STS40 & 240000 & 0.25 & -0.12e-6 & 1.78 & carbon\\
+      Tenax HTA & 238000 & 0.20 & -0.1e-6 & 1.76 & carbon\\
+Tenax HTS & 240000 & 0.20 & -0.1e-6 & 1.77 & carbon\\
+Tenax STS40 & 240000 & 0.20 & -0.12e-6 & 1.78 & carbon\\
 Toracya T300 & 230000 & 0.27 & -0.41e-6 & 1.76 & carbon\\
 Torayca T700SC & 230000 & 0.27 & -0.38e-6 & 1.80 & carbon\\
-pyrofil TR30S & 235000 & 0.25 & -0.5e-6 & 1.79 & carbon\\
+pyrofil TR30S & 235000 & 0.20 & -0.5e-6 & 1.79 & carbon\\
 sigrafil CT24-5.0-270/E100 & 270000 & 0.25 & -0.12e-6 & 1.79 & carbon\\
 K63712 & 640000 & 0.234 & -1.47e-6 & 2.12 & carbon\\
 K63A12 & 790000 & 0.23 & -1.2e-6 & 2.15 & carbon\\
@@ -496,11 +507,7 @@ Several resins are shown in \tref{tb:resins}. For resins, $\nu$ is estimated
 The command \texttt{lamrop -h} produces the following overview of the options.
 
 \begin{lstlisting}[style=plain]
-usage: lamprop [-h] [-l | -H | -r] [-e | -m] [-L | -v]
-               [--log {debug,info,warning,error}]
-               [file [file ...]]
-
-Calculate the elastic properties of a fibrous composite laminate.
+usage: lamprop [-h] [-l | -H] [-e] [-m] [-f] [-L | -v] [--log {debug,info,warning,error}] [file ...]
 
 positional arguments:
   file                  one or more files to process
@@ -511,6 +518,7 @@ optional arguments:
   -H, --html            generate HTML output
   -e, --eng             output only the layers and engineering properties
   -m, --mat             output only the ABD and abd matrices
+  -f, --fea             output only material data for FEA
   -L, --license         print the license
   -v, --version         show program's version number and exit
   --log {debug,info,warning,error}
@@ -530,29 +538,32 @@ The \textsc{gui} program was written (using \texttt{tkinter}) primarily for
 users of ms-windows, since they are generally not used to the command-line
 interface. The contents of its window are shown in \fref{fig:lamprop-gui}. The
 image shows the looks of the widgets on \textsc{unix}-like operating systems.
-On ms-windows follow the native look.
-
-\begin{figure}[!htbp]
-  \centerline{\includegraphics[scale=1]{lamprop-gui.png}}
-  \caption{\label{fig:lamprop-gui}lamprop \textsc{gui}}
-\end{figure}
+On ms-windows it follows the native look.
 
 The \textsf{File} button allows you to load a lamprop file. If a file is
 loaded its name is shown right of the button. The \textsf{Reload} button
-re-loads a file. The checkboxes below determine which results are shown. If
+re-loads a file.
+If a file is loaded, the \textsf{text} and \textsf{html} buttons allow you
+to save the output as a file.
+The checkboxes below determine which results are shown. If
 a file contains different laminates, the dropbox allows you to select
 a laminate to display. The textbox at the bottom shows the lamprop output as
 text.
-Pressing the \texttt{q}-key terminates the program.
+
+\begin{figure}[!htbp]
+  \centerline{\includegraphics[scale=0.5]{lamprop-gui.png}}
+  \caption{\label{fig:lamprop-gui}lamprop \textsc{gui}}
+\end{figure}
 
 
-\section{Meaning of the ABD and abd matrices} % {{{2
 
-The stiffness or ABD matrix and compliance or abd matrix are what converts
-strains into forces and the other way around, see
-\tref{tab:quasi-isotropic-mat}.  Both are 6×6 matrices that can be divided
-into three 3×3 matrices; A, B and D or a, b and d.
-The expansions below reveal the symmetries in these matrices.
+\section{Meaning of the ABD, H and C matrices} % {{{2
+
+The stiffness or ABD matrix are what converts
+in-plane strains into forces and the other way around, see
+\tref{tab:quasi-isotropic-mat}.  It is a 6×6 matrix that can be divided
+into three 3×3 matrices; A, B and D.
+The expansions below reveal the symmetries in this matrix.
 
 \[
     ABD = \left|\begin{array}{cccccc}
@@ -562,77 +573,130 @@ The expansions below reveal the symmetries in these matrices.
         B_{11} & B_{12} & B_{16} & D_{11} & D_{12} & D_{16}\\
         B_{12} & B_{22} & B_{26} & D_{12} & D_{22} & D_{26}\\
         B_{16} & B_{26} & B_{66} & D_{16} & D_{26} & D_{66}\\
-    \end{array}\right|\quad
-    abd = \left|\begin{array}{cccccc}
-        a_{11} & a_{12} & a_{16} & b_{11} & b_{12} & b_{16}\\
-        a_{12} & a_{22} & a_{26} & b_{12} & b_{22} & b_{26}\\
-        a_{16} & a_{26} & a_{66} & b_{16} & b_{26} & b_{66}\\
-        b_{11} & b_{12} & b_{16} & d_{11} & d_{12} & d_{16}\\
-        b_{12} & b_{22} & b_{26} & d_{12} & d_{22} & d_{26}\\
-        b_{16} & b_{26} & b_{66} & d_{16} & d_{26} & d_{66}\\
     \end{array}\right|
 \]
 
-The units of the parts of the ABD and abd matrix are as follows (where $i$ and
+The units of the parts of the ABD matrix are as follows (where $i$ and
 $j$ are 1, 2 or 6): $A_{ij}$ is in \si{N/mm}. $B_{ij}$ is in \si{Nmm/mm}
-= \si{N}.  $D_{ij}$ is in \si{N.mm}.  $a_{ij}$ is in \si{mm/N}.  $b_{ij}$ is
-in \si{1/N}.  $d_{ij}$ is in \si{1/Nmm}. This clearly shows that abd is the
-inverse of ABD.
+= \si{N}.  $D_{ij}$ is in \si{N.mm}.
 
 The stress resultants $N$ are units of force per unit of width (\si{N/mm}).
 Moment resultants $m$ are in units of torque per unit of width (\si{Nmm/mm}
 = \si{N}). Both strains $\epsilon$ and $\kappa$ are dimensionless.
-
-The matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
+The ABD and H matrix equations in \tref{tab:quasi-isotropic-mat} basically show the
 behavior of a square piece of laminate small enough that the stress and strain
 resultants can be considered constant over its dimensions.
 
+If we ignore thermal effects, the most general form of linear elasticity is:
+\[
+    \sigma_{ij} = C_{ijkl}\epsilon_{kl}
+\]
+The matrix C shown below and in \tref{tab:quasi-isotropic-mat} is a contracted form of
+the stiffness tensor $C_{ijkl}$, see \citet[p. 78]{Bower:2010}.
+The indices first indicate the row, then the column.
+\[
+    C = \left|\begin{array}{cccccc}
+        c_{11} & c_{12} & c_{13} & c_{14} & c_{15} & c_{16}\\
+               & c_{22} & c_{23} & c_{24} & c_{25} & c_{26}\\
+               &        & c_{33} & c_{34} & c_{35} & c_{36}\\
+               &        &        & c_{44} & c_{45} & c_{46}\\
+               &  \mathrm{sym.}  &        &        & c_{55} & c_{56}\\
+               &        &        &        &        & c_{66}\\
+    \end{array}\right|
+\]
+The matrix indices use Voight notation, see \citet[p. 310]{Barbero:2008}.
+This contraction is possible because symmetries in the tensor reduce the
+number of independant material constants from 81 to 21.
+
+Note that the indices in the stress and strain vectors are not the same as
+those used in the C matrix!
+The two indices in the stress and strain vectors indicate respectively the
+plane whereupon the stress/strain operates and the direction in which said
+stress/strain points.
+In this case, 1 is x, 2 is y and 3 is z.
 
 \begin{table}[!htbp]
   \renewcommand{\arraystretch}{1.2}
-  \caption{\label{tab:quasi-isotropic-mat}Matrices of quasi-isotropic}
+  \caption{\label{tab:quasi-isotropic-mat}properties of quasi isotropic laminate}
   \centering\footnotesize{\rule{0pt}{10pt}
-  \tiny calculated by lamprop 3.7\\[3pt]}
-  \resizebox{.8\hsize}{!}{
+  \tiny calculated by lamprop 2020.12.26\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{5}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+      1 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      2 &  100 &    90 & 50 & Hyer's carbon fiber\\
+      3 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      4 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      5 &  100 &   -45 & 50 & Hyer's carbon fiber\\
+      6 &  100 &    45 & 50 & Hyer's carbon fiber\\
+      7 &  100 &    90 & 50 & Hyer's carbon fiber\\
+      8 &  100 &     0 & 50 & Hyer's carbon fiber\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrlrrl}
+      \multicolumn{3}{c}{\small\textbf{Physical properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 50 &\%\\
+      $\mathrm{w_f}$ & 61.5 &\%\\
+      thickness & 0.909 & mm\\
+      density & 1.43 & g/cm$^3$\\
+      weight & 1300 & g/m$^2$\\
+      resin & 500 & g/m$^2$\\
+      \bottomrule
+    \end{tabular}
   \vbox{
-    \vbox{\small\textbf{Stiffness (ABD) matrix}\\[-5mm]
+    \vbox{\small\textbf{In-plane stiffness (ABD) matrix}\\[-3mm]
       \tiny\[\left\{\begin{array}{c}
           N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
         \end{array}\right\} = 
       \left|\begin{array}{cccccc}
-           1.3206\times 10^{5} &  4.1882\times 10^{4} & 0 & 0 & 0 & 0\\
-           4.1882\times 10^{4} &  1.5732\times 10^{5} & 0 & 0 & 0 & 0\\
-          0 & 0 &  4.5286\times 10^{4} & 0 & 0 & 0\\
-          0 & 0 & 0 &  7.9688\times 10^{4} &  2.8649\times 10^{4} & -1.8401\times 10^{4}\\
-          0 & 0 & 0 &  2.8649\times 10^{4} &  1.3446\times 10^{5} & -2.9077\times 10^{4}\\
-          0 & 0 & 0 & -1.8401\times 10^{4} & -2.9077\times 10^{4} &  3.1125\times 10^{4}\\
+           5.02\times 10^{4} &  1.65\times 10^{4} & 0 & 0 & 0 & 0\\
+           1.65\times 10^{4} &  5.02\times 10^{4} & 0 & 0 & 0 & 0\\
+          0 & 0 &  1.68\times 10^{4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  4.99\times 10^{3} &  5.11\times 10^{2} &  1.51\times 10^{2}\\
+          0 & 0 & 0 &  5.11\times 10^{2} &  3.18\times 10^{3} &  1.51\times 10^{2}\\
+          0 & 0 & 0 &  1.51\times 10^{2} &  1.51\times 10^{2} &  5.29\times 10^{2}\\
           \end{array}\right| \times
         \left\{\begin{array}{c}
-            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
-            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
+            \epsilon_x\\[2pt] \epsilon_y\\[2pt] \gamma_{xy}\\[2pt]
+            \kappa_x\\[2pt] \kappa_y\\[2pt] \kappa_{xy}
           \end{array}\right\}\]
     }
-    \vbox{\small\textbf{Compliance (abd) matrix}\\[-5mm]
+    \vbox{\small\textbf{Transverse stiffness (H) matrix}\\[-2mm]
       \tiny\[\left\{\begin{array}{c}
-            \epsilon_x\\[3pt] \epsilon_y\\[3pt] \gamma_{xy}\\[3pt]
-            \kappa_x\\[3pt] \kappa_y\\[3pt] \kappa_{xy}
-          \end{array}\right\} = \left|\begin{array}{cccccc}
-           8.2705\times 10^{-6} & -2.2017\times 10^{-6} & 0 & 0 & 0 & 0\\
-          -2.2017\times 10^{-6} &  6.9425\times 10^{-6} & 0 & 0 & 0 & 0\\
-          0 & 0 &  2.2082\times 10^{-5} & 0 & 0 & 0\\
-          0 & 0 & 0 &  1.4796\times 10^{-5} & -1.5802\times 10^{-6} &
-          7.2712\times 10^{-6}\\
-          0 & 0 & 0 & -1.5802\times 10^{-6} &  9.4889\times 10^{-6} &
-          7.9304\times 10^{-6}\\
-          0 & 0 & 0 &  7.2712\times 10^{-6} &  7.9304\times 10^{-6} &
-          4.3835\times 10^{-5}\\
-          \end{array}\right|\times
+          V_y\\ V_x
+        \end{array}\right\} = 
+      \left|\begin{array}{cc}
+           4.1429\times 10^{3} & 0\\
+          0 &  4.2354\times 10^{3}\\
+          \end{array}\right| \times
         \left\{\begin{array}{c}
-            N_x\\ N_y\\ N_{xy}\\ M_x\\ M_y\\ M_{xy}
-          \end{array}\right\}\]\\
+            \gamma_{yz}\\[2pt] \gamma_{xz}
+          \end{array}\right\}\]
     }
+    \vbox{\small\textbf{3D stiffness tensor (C), contracted notation}\\[-3mm]
+      \tiny\[\left\{\begin{array}{c}
+          \sigma_{11}\\ \sigma_{22}\\ \sigma_{33}\\ \sigma_{23}\\ \sigma_{13}\\ \sigma_{12}
+        \end{array}\right\} = 
+      \left|\begin{array}{cccccc}
+           5.90\times 10^{4} &  2.20\times 10^{4} &  8.97\times 10^{3} & 0 & 0 & 0\\
+           2.20\times 10^{4} &  5.90\times 10^{4} &  8.97\times 10^{3} & 0 & 0 & 0\\
+           8.97\times 10^{3} &  8.97\times 10^{3} &  2.12\times 10^{4} & 0 & 0 & 0\\
+          0 & 0 & 0 &  5.52\times 10^{3} & 0 & 0\\
+          0 & 0 & 0 & 0 &  5.52\times 10^{3} & 0\\
+          0 & 0 & 0 & 0 & 0 &  1.85\times 10^{4}\\
+          \end{array}\right| \times
+        \left\{\begin{array}{c}
+            \epsilon_{11}\\[2pt] \epsilon_{22}\\[2pt] \epsilon_{33}\\[2pt]
+            2\cdot\epsilon_{23}\\[2pt] 2\cdot\epsilon_{13}\\[2pt] 2\cdot\epsilon_{12}
+          \end{array}\right\}\]
     }
-    }
+  }
 \end{table}
 
 
@@ -725,7 +789,7 @@ For unidirectional layers loaded in the fiber direction, the strain at which
 either the fibers or the matrix fail in tension multiplied by the laminate's
 Young's modulus is the maximum allowed tensile stress.
 
-The allowed compression stress for such layers is deemed to be 1/2 of the
+The allowed compression stress for such layers is deemed to be 50\%--60\% of the
 allowed tensile stress
 
 The strength of unidirectional layers in the \textpm 45\textdegree{} or
@@ -752,7 +816,5 @@ Alegreya\footnote{\url{https://github.com/huertatipografica/Alegreya}}.  The
 Heros}\footnote{\url{http://www.gust.org.pl/projects/e-foundry/tex-gyre}} font
 is used for sans-serif text, while \texttt{TeX Gyre Cursor} is used for
 program names and program output.
-
-
 
 \end{document}
