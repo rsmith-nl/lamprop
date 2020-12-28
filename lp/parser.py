@@ -1,9 +1,9 @@
 # file: parser.py
 # vim:fileencoding=utf-8:ft=python
-# Copyright © 2014-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2020-12-26T18:16:53+0100
+# Last modified: 2020-12-28T17:32:15+0100
 """Parser for lamprop files."""
 
 import logging

@@ -1,10 +1,10 @@
 # file: html.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 #
-# Copyright © 2011-2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2020-12-28T17:27:56+0100
+# Last modified: 2020-12-28T17:30:48+0100
 """HTML output routines for lamprop."""
 
 from .version import __version__

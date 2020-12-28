@@ -2,10 +2,10 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Library for square matrices.
 #
-# Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-26T18:14:41+0100
+# Last modified: 2020-12-28T17:32:00+0100
 
 from copy import deepcopy
 
