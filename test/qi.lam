@@ -12,30 +12,6 @@ Matrix definition
    Em   v    alpha   rho name
 r: 4620 0.36 41.4e-6 1.1  Hyer's resin
 
-t: unidirectional laminate
-4 UD layers
-m: 0.5 Hyer's resin
-l: 100 0 Hyer's carbon fiber
-l: 100 0 Hyer's carbon fiber
-l: 100 0 Hyer's carbon fiber
-l: 100 0 Hyer's carbon fiber
-
-t: [0/90]s laminate
-This is a standard symmetric cross-ply laminate. It has fine extensional
-moduli in the fiber directions, but a very low shear modulus.
-m: 0.5 Hyer's resin
-l: 100  0 Hyer's carbon fiber
-l: 100 90 Hyer's carbon fiber
-s:
-
-t: [+45/-45]s laminate
-The same laminate, rotated 45 degrees. Now the shear modulus is very high,
-but the extensional moduli are very low.
-m: 0.5 Hyer's resin
-l: 100  45 Hyer's carbon fiber
-l: 100 -45 Hyer's carbon fiber
-s:
-
 t: quasi isotropic laminate
 This is an attempt to make a laminate the has good extensional and shear
 moduli. If you add more layers, and make the angles between the layers
