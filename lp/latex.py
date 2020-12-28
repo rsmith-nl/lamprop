@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2020-12-27T23:25:14+0100
+# Last modified: 2020-12-28T12:09:02+0100
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -138,7 +138,7 @@ def _matrices(l):  # {{{1
         "    }",
     ]
     lines += [
-        "    \\vbox{\\small\\textbf{3D Stiffness matrix (C), contracted notation}\\\\[-3mm]",
+        "    \\vbox{\\small\\textbf{3D Stiffness tensor (C), contracted notation}\\\\[-3mm]",
         "      \\tiny\\[\\left\\{\\begin{array}{c}",
         "          \\sigma_{11}\\\\ \\sigma_{22}\\\\ \\sigma_{33}\\\\ \\sigma_{23}\\\\ \\sigma_{13}\\\\ \\sigma_{12}",
         "        \\end{array}\\right\\} = ",
