@@ -3,7 +3,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2020-12-28T12:09:23+0100
+# Last modified: 2020-12-28T17:44:36+0100
 """Text output routines for lamprop."""
 
 # import sys
@@ -89,23 +89,10 @@ def _matrices(l):  # {{{1
     for n in range(2):
         h = hstr.format(l.H[n][0], l.H[n][1])
         lines.append(h)
-    lines.append("In-plane compliance (abd) matrix:")
-    for n in range(6):
-        m = matstr.format(
-            l.abd[n][0], l.abd[n][1], l.abd[n][2], l.abd[n][3], l.abd[n][4], l.abd[n][5]
-        )
-        lines.append(m)
-    lines.append("Transverse (h) compliance matrix:")
-    for n in range(2):
-        h = hstr.format(l.h[n][0], l.h[n][1])
-        lines.append(h)
     lines += ["3D stiffness tensor [C], contracted notation:"]
     lines.append("(indices for stress/strain are in the order 11, 22, 33, 23, 13, 12)")
     matstr = "|{:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4} {:< 10.4}|"
     for row in l.C:
-        lines.append(matstr.format(row[0], row[1], row[2], row[3], row[4], row[5]))
-    lines.append("3D compliance matrix [S], contracted notation:")
-    for row in l.S:
         lines.append(matstr.format(row[0], row[1], row[2], row[3], row[4], row[5]))
     return lines
 
