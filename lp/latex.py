@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2020-12-28T12:09:02+0100
+# Last modified: 2020-12-28T13:28:25+0100
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -52,7 +52,7 @@ def _engprop(l):  # {{{1
     w = l.fiber_weight + l.resin_weight
     lines = [
         "    \\begin{tabular}[t]{rrlrrl}",
-        "      \\multicolumn{3}{c}{\\small\\textbf{Engineering properties}}\\\\[0.1em]",
+        "      \\multicolumn{3}{c}{\\small\\textbf{Physical properties}}\\\\[0.1em]",
         "      \\toprule",
         "      Property & Value & Dimension\\\\",
         "      \\midrule",
@@ -63,6 +63,7 @@ def _engprop(l):  # {{{1
         f"      weight & {w:.0f} & g/m$^2$\\\\",
         f"      resin & {l.resin_weight:.0f} & g/m$^2$\\\\",
         "      \\midrule",
+        "      \\multicolumn{6}{c}{\\small\\textbf{Engineering properties}}\\\\[0.1em]",
         "      \\multicolumn{3}{c}{\\small\\textbf{In-plane}} & ",
         "\\multicolumn{3}{c}{\\small\\textbf{3D stiffness tensor}}\\\\[0.1em]",
         f"      $\\mathrm{{E_x}}$ & {l.Ex:8.0f} & MPa & $\\mathrm{{E_x}}$ & {l.tEx:8.0f} & MPa\\\\",
@@ -74,13 +75,13 @@ def _engprop(l):  # {{{1
         f" $\\mathrm{{G_{{xz}}}}$ & {l.tGxz:8.0f} & MPa\\\\",
         f"      $\\mathrm{{G_{{yz}}}}$ & {l.Gyz:8.0f} & MPa & "
         f" $\\mathrm{{G_{{yz}}}}$ & {l.tGyz:8.0f} & MPa\\\\",
-        f"      $\\mathrm{{\\nu_{{xy}}}}$ & {l.νxy:g} &- &"
-        f"$\\mathrm{{\\nu_{{xy}}}}$ & {l.tνxy:g} &-\\\\",
-        f"      $\\mathrm{{\\nu_{{yx}}}}$ & {l.νyx:g} &- & "
-        f"$\\mathrm{{\\nu_{{xz}}}}$ & {l.tνxz:g} &-\\\\",
-        f"      $\\mathrm{{\\alpha_x}}$ & {l.αx:g} & K$^{{-1}}$ &"
-        f"$\\mathrm{{\\nu_{{yz}}}}$ & {l.tνyz:g} &-\\\\",
-        f"      $\\mathrm{{\\alpha_y}}$ & {l.αy:g} & K$^{{-1}}$\\\\",
+        f"      $\\mathrm{{\\nu_{{xy}}}}$ & {l.νxy:.4f} &- &"
+        f"$\\mathrm{{\\nu_{{xy}}}}$ & {l.tνxy:.4f} &-\\\\",
+        f"      $\\mathrm{{\\nu_{{yx}}}}$ & {l.νyx:.4f} &- & "
+        f"$\\mathrm{{\\nu_{{xz}}}}$ & {l.tνxz:.4f} &-\\\\",
+        f"      $\\mathrm{{\\alpha_x}}$ & {l.αx:.4g} & K$^{{-1}}$ &"
+        f"$\\mathrm{{\\nu_{{yz}}}}$ & {l.tνyz:.4f} &-\\\\",
+        f"      $\\mathrm{{\\alpha_y}}$ & {l.αy:.4g} & K$^{{-1}}$\\\\",
         "      \\bottomrule",
         "    \\end{tabular}",
     ]
