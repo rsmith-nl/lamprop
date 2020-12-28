@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-12-10T22:59:24+0100
+# Last modified: 2020-12-28T17:43:01+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 """
@@ -38,6 +38,7 @@ class LampropUI(tk.Tk):
         self.engprop.set(1)
         self.result = None
         self.matrices = tk.IntVar()
+        self.fea = tk.IntVar()
         self.initialize()
 
     def initialize(self):
@@ -47,7 +48,7 @@ class LampropUI(tk.Tk):
         default_font["size"] = 12
         self.option_add("*Font", default_font)
         # General commands and bindings
-        self.rowconfigure(6, weight=1)
+        self.rowconfigure(7, weight=1)
         self.columnconfigure(4, weight=1)
         # Create widgets.
         # Row
@@ -79,15 +80,20 @@ class LampropUI(tk.Tk):
         )
         chkmat.grid(row=4, column=0, columnspan=3, sticky="w")
         # Row
+        chkmat = ttk.Checkbutton(
+            self, text="FEA material data", variable=self.fea, command=cb
+        )
+        chkmat.grid(row=5, column=0, columnspan=3, sticky="w")
+        # Row
         cxlam = ttk.Combobox(self, state="readonly", justify="left")
-        cxlam.grid(row=5, column=0, columnspan=5, sticky="we")
+        cxlam.grid(row=6, column=0, columnspan=5, sticky="we")
         cxlam.bind("<<ComboboxSelected>>", self.on_laminate)
         self.cxlam = cxlam
         # Row
         fixed = nametofont("TkFixedFont")
         fixed["size"] = 12
         res = ScrolledText(self, state="disabled", font=fixed)
-        res.grid(row=6, column=0, columnspan=5, sticky="nsew")
+        res.grid(row=7, column=0, columnspan=5, sticky="nsew")
         self.result = res
 
     # Callbacks
@@ -126,13 +132,17 @@ class LampropUI(tk.Tk):
 
     def gentxt(self):
         name = self.cxlam.get()
-        text = ""
+        text = "\n".join(lp.text.out(self.laminates[name], False, False, False))
         if self.engprop.get():
-            text += "\n".join(lp.text.engprop(self.laminates[name]))
+            text += "\n".join(lp.text._engprop(self.laminates[name]))
         if self.matrices.get():
             if text:
                 text += "\n"
-            text += "\n".join(lp.text.matrices(self.laminates[name]))
+            text += "\n".join(lp.text._matrices(self.laminates[name]))
+        if self.fea.get():
+            if text:
+                text += "\n"
+            text += "\n".join(lp.text._fea(self.laminates[name]))
         return text
 
     def on_laminate(self, event):
