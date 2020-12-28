@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2020-12-28T13:28:25+0100
+# Last modified: 2020-12-28T15:51:28+0100
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -31,12 +31,29 @@ def out(lam, eng, mat, fea):  # {{{1
         s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
         texfname = la.fiber.name.replace('_', r'\_')
         lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
+    w = lam.fiber_weight + lam.resin_weight
     lines += [
         "      \\bottomrule",
         "    \\end{tabular}\\hspace{0.02\\textwidth}",
+        "    \\begin{tabular}[t]{rrlrrl}",
+        "      \\multicolumn{3}{c}{\\small\\textbf{Physical properties}}\\\\[0.1em]",
+        "      \\toprule",
+        "      Property & Value & Dimension\\\\",
+        "      \\midrule",
+        f"      $\\mathrm{{v_f}}$ & {lam.vf*100:.3g} &\\%\\\\",
+        f"      $\\mathrm{{w_f}}$ & {lam.wf*100:.3g} &\\%\\\\",
+        f"      thickness & {lam.thickness:.3g} & mm\\\\",
+        f"      density & {lam.ρ:.3g} & g/cm$^3$\\\\",
+        f"      weight & {w:.0f} & g/m$^2$\\\\",
+        f"      resin & {lam.resin_weight:.0f} & g/m$^2$\\\\",
     ]
+
     if eng:
         lines += _engprop(lam)
+    lines += [
+        "      \\bottomrule",
+        "    \\end{tabular}",
+    ]
     if mat:
         lines += _matrices(lam)
     if fea:
@@ -49,19 +66,7 @@ def out(lam, eng, mat, fea):  # {{{1
 def _engprop(l):  # {{{1
     """Return the engineering properties as a LaTeX table in the form of
     a list of lines."""
-    w = l.fiber_weight + l.resin_weight
     lines = [
-        "    \\begin{tabular}[t]{rrlrrl}",
-        "      \\multicolumn{3}{c}{\\small\\textbf{Physical properties}}\\\\[0.1em]",
-        "      \\toprule",
-        "      Property & Value & Dimension\\\\",
-        "      \\midrule",
-        f"      $\\mathrm{{v_f}}$ & {l.vf*100:.3g} &\\%\\\\",
-        f"      $\\mathrm{{w_f}}$ & {l.wf*100:.3g} &\\%\\\\",
-        f"      thickness & {l.thickness:.3g} & mm\\\\",
-        f"      density & {l.ρ:.3g} & g/cm$^3$\\\\",
-        f"      weight & {w:.0f} & g/m$^2$\\\\",
-        f"      resin & {l.resin_weight:.0f} & g/m$^2$\\\\",
         "      \\midrule",
         "      \\multicolumn{6}{c}{\\small\\textbf{Engineering properties}}\\\\[0.1em]",
         "      \\multicolumn{3}{c}{\\small\\textbf{In-plane}} & ",
@@ -82,8 +87,6 @@ def _engprop(l):  # {{{1
         f"      $\\mathrm{{\\alpha_x}}$ & {l.αx:.4g} & K$^{{-1}}$ &"
         f"$\\mathrm{{\\nu_{{yz}}}}$ & {l.tνyz:.4f} &-\\\\",
         f"      $\\mathrm{{\\alpha_y}}$ & {l.αy:.4g} & K$^{{-1}}$\\\\",
-        "      \\bottomrule",
-        "    \\end{tabular}",
     ]
     return lines
 
