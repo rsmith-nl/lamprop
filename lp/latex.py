@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2020-12-28T17:18:58+0100
+# Last modified: 2020-12-28T17:48:13+0100
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -164,13 +164,11 @@ def _matrices(l):  # {{{1
 def _fea(l):  # {{{1
     lines = [
         "  \\vbox{",
-        "  \\begin{centering}",
         "  \\begin{verbatim}",
     ]
     lines += _fea_text(l)
     lines += [
         "  \\end{verbatim}",
-        "  \\end{centering}",
         "  }",
     ]
     return lines
