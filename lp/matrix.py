@@ -5,7 +5,7 @@
 # Copyright © 2018-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-28T17:32:00+0100
+# Last modified: 2020-12-29T11:49:38+0100
 
 from copy import deepcopy
 
@@ -28,15 +28,6 @@ def zeros(num):
         row = [0.0 for j in range(num)]
         matrix.append(row)
     return matrix
-
-
-def copy(m):
-    s = len(m)
-    c = zeros(s)
-    for i in range(s):
-        for j in range(s):
-            c[i][j] = m[i][j]
-    return c
 
 
 def det(m):
