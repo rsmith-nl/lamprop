@@ -3,9 +3,10 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-12-30T01:32:58+0100
-# Last modified: 2020-12-29T11:55:15+0100
+# Last modified: 2020-12-29T12:58:39+0100
 """Compare output to reference output."""
 
+import zipfile
 from lp.parser import parse
 import lp.text as text
 import lp.latex as latex
@@ -16,8 +17,9 @@ laminates = parse('test/hyer.lam')
 
 def test_text_output():
     # Read reference. Remove "Generated" lines.
-    with open('test/reference/hyer-2020.12.28.txt') as orig:
-        origlines = orig.read().splitlines()
+    with zipfile.ZipFile("test/reference/reference.zip") as refz:
+        with refz.open("hyer-2020.12.28.txt") as orig:
+            origlines = orig.read().decode().splitlines()
     origlines = [ln for ln in origlines if 'Generated' not in ln]
     # Produce text output
     outlist = []
@@ -29,8 +31,9 @@ def test_text_output():
 
 def test_LaTeX_output():
     # Read reference. Remove "calculated by" lines.
-    with open('test/reference/hyer-2020.12.28.tex') as orig:
-        origlines = orig.read().splitlines()
+    with zipfile.ZipFile("test/reference/reference.zip") as refz:
+        with refz.open("hyer-2020.12.28.tex") as orig:
+            origlines = orig.read().decode().splitlines()
     origlines = [ln for ln in origlines if 'calculated' not in ln]
     # Produce LaTeX output
     outlist = []
@@ -42,8 +45,9 @@ def test_LaTeX_output():
 
 def test_html_output():
     # Read reference. Remove "calculated by" lines.
-    with open('test/reference/hyer-2020.12.28.html') as orig:
-        origlines = orig.read().splitlines()
+    with zipfile.ZipFile("test/reference/reference.zip") as refz:
+        with refz.open("hyer-2020.12.28.html") as orig:
+            origlines = orig.read().decode().splitlines()
     origlines = [ln for ln in origlines if 'created by' not in ln]
     # Produce LaTeX output
     outlist = []
