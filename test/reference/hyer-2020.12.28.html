@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head><meta charset="UTF-8"><meta name="description" content="lamprop output">
+<title>lamprop output</title>
+</head>
+<body>
+<!-- outer table -->
+<table cellpadding="10%">
+<caption><strong>Properties of unidirectional laminate</strong></caption>
+<tbody align="center">
+<tr><td  align="center" colspan="2">created by lamprop 2020.12.28.</td></tr>
+<!-- first row; tables -->
+<tr><td>
+<table border="1" frame="hsides"
+rules="groups" cellpadding="5%">
+<caption><strong>Laminate stacking</strong></caption>
+<thead align="right">
+<tr><td>Layer</td><td>weight</td>
+<td>angle</td><td>vf</td><td align="left">fiber type</td></tr>
+<tr><td></td><td>[g/m&sup2;]</td><td>[&deg;]</td><td>[%]</td></tr>
+</thead>
+<tbody align="right">
+<tr>
+<td>1</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>2</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>3</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>4</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table border="1" frame="hsides" rules="groups" cellpadding="5%">
+<caption><strong>Physical properties</strong></caption>
+<thead align="right">
+<tr><td>Property</td><td>Value</td><td align="left">Dimension</td></tr>
+</thead>
+<tbody align="right">
+<tr><td>v<sub>f</sub></td><td>50</td><td align="left">%</td></tr>
+<tr><td>w<sub>f</sub></td><td>61.5</td><td align="left">%</td></tr>
+<tr><td>thickness</td><td>0.455</td><td align="left">mm</td></tr>
+<tr><td>density</td><td>1.43</td><td align="left">g/cm&sup3;</td></tr>
+<tr><td>weight</td><td>650</td><td align="left">g/m&sup2;</td></tr>
+<tr><td>resin</td><td>250</td><td align="left">g/m&sup2;</td></tr>
+</tbody>
+<tbody>
+<tr><td colspan="6" align="center"><strong>Engineering properties</strong></td></tr>
+<tr><td colspan="3" align="center"><strong>In-plane</strong></td>
+<td colspan="3" align="center"><strong>3D stiffness tensor</strong></td></tr>
+<tr>
+<td>E<sub>x</sub></td><td>118810</td><td align="left">MPa</td>
+<td>E<sub>x</sub></td><td>118810</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>y</sub></td><td>16980</td><td align="left">MPa</td>
+<td>E<sub>y</sub></td><td>16980</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>z</sub></td><td>16980</td><td align="left">MPa</td>
+<td>E<sub>z</sub></td><td>16980</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xy</sub></td><td>5096</td><td align="left">MPa</td>
+<td>G<sub>xy</sub></td><td>5096</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xz</sub></td><td>4246</td><td align="left">MPa</td>
+<td>G<sub>xz</sub></td><td>5096</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>yz</sub></td><td>4970</td><td align="left">MPa</td>
+<td>G<sub>yz</sub></td><td>5964</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>&nu;<sub>xy</sub></td><td>0.280</td><td align="left">-</td>
+<td>&nu;<sub>xy</sub></td><td>0.280</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&nu;<sub>yx</sub></td><td>0.040</td><td align="left">-</td>
+<td>&nu;<sub>xz</sub></td><td>0.280</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>x</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+<td>&nu;<sub>yz</sub></td><td>0.424</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>y</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- second row, stiffness or ABD matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>In-plane stiffness (ABD) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>N<sub>x</sub></td>
+<td rowspan="6">=</td>
+          <td> 5.4617&times;10<sup>4</sup></td><td> 2.1856&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>x</sub></td>
+</tr>
+<tr>
+<td>N<sub>y</sub></td>
+          <td> 2.1856&times;10<sup>3</sup></td><td> 7.8056&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>y</sub></td>
+</tr>
+<tr>
+<td>N<sub>xy</sub></td>
+          <td>0</td><td>0</td><td> 2.3162&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&gamma;<sub>xy</sub></td>
+</tr>
+<tr>
+<td>M<sub>x</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 9.4037&times;10<sup>2</sup></td><td> 3.7630&times;10<sup>1</sup></td><td>0</td>
+<td>&kappa;<sub>x</sub></td>
+</tr>
+<tr>
+<td>M<sub>y</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 3.7630&times;10<sup>1</sup></td><td> 1.3439&times;10<sup>2</sup></td><td>0</td>
+<td>&kappa;<sub>y</sub></td>
+</tr>
+<tr>
+<td>M<sub>xy</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 3.9879&times;10<sup>1</sup></td>
+<td>&kappa;<sub>xy</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- third row, transverse stiffness or H matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>Transverse stiffness (H) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="2"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>V<sub>y</sub></td>
+<td rowspan="2">=</td>
+          <td> 2.2590&times;10<sup>3</sup></td><td>0</td>
+<td rowspan="2">&times;</td>
+<td>&gamma;<sub>yz</sub></td>
+</tr>
+<tr>
+<td>V<sub>x</sub></td>
+          <td>0</td><td> 1.9301&times;10<sup>3</sup></td>
+<td>&gamma;<sub>xz</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>3D stiffness (C) tensor, contracted notation</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>&sigma;<sub>11</sub></td>
+<td rowspan="6">=</td>
+          <td> 1.2362&times;10<sup>5</sup></td><td> 8.5817&times;10<sup>3</sup></td><td> 8.5817&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>11</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>22</sub></td>
+          <td> 8.5817&times;10<sup>3</sup></td><td> 2.1288&times;10<sup>4</sup></td><td> 9.3607&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>22</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>33</sub></td>
+          <td> 8.5817&times;10<sup>3</sup></td><td> 9.3607&times;10<sup>3</sup></td><td> 2.1288&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>33</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>23</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 5.9638&times;10<sup>3</sup></td><td>0</td><td>0</td>
+<td>2&epsilon;<sub>23</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>13</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td> 5.0956&times;10<sup>3</sup></td><td>0</td>
+<td>2&epsilon;<sub>13</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>12</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 5.0956&times;10<sup>3</sup></td>
+<td>2&epsilon;<sub>12</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2" align="left">
+<pre>
+** Material data for CalculiX / Abaqus (SI units):
+*MATERIAL,NAME=unidirectional laminate
+*ELASTIC,TYPE=ORTHO
+1.236e+11,8.582e+09,2.129e+10,8.582e+09,9.361e+09,2.129e+10,5.096e+09,5.096e+09,
+5.964e+09,293
+*DENSITY
+1430
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en-US">
+<head><meta charset="UTF-8"><meta name="description" content="lamprop output">
+<title>lamprop output</title>
+</head>
+<body>
+<!-- outer table -->
+<table cellpadding="10%">
+<caption><strong>Properties of [0/90]s laminate</strong></caption>
+<tbody align="center">
+<tr><td  align="center" colspan="2">created by lamprop 2020.12.28.</td></tr>
+<!-- first row; tables -->
+<tr><td>
+<table border="1" frame="hsides"
+rules="groups" cellpadding="5%">
+<caption><strong>Laminate stacking</strong></caption>
+<thead align="right">
+<tr><td>Layer</td><td>weight</td>
+<td>angle</td><td>vf</td><td align="left">fiber type</td></tr>
+<tr><td></td><td>[g/m&sup2;]</td><td>[&deg;]</td><td>[%]</td></tr>
+</thead>
+<tbody align="right">
+<tr>
+<td>1</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>2</td><td> 100</td><td>   90</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>3</td><td> 100</td><td>   90</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>4</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table border="1" frame="hsides" rules="groups" cellpadding="5%">
+<caption><strong>Physical properties</strong></caption>
+<thead align="right">
+<tr><td>Property</td><td>Value</td><td align="left">Dimension</td></tr>
+</thead>
+<tbody align="right">
+<tr><td>v<sub>f</sub></td><td>50</td><td align="left">%</td></tr>
+<tr><td>w<sub>f</sub></td><td>61.5</td><td align="left">%</td></tr>
+<tr><td>thickness</td><td>0.455</td><td align="left">mm</td></tr>
+<tr><td>density</td><td>1.43</td><td align="left">g/cm&sup3;</td></tr>
+<tr><td>weight</td><td>650</td><td align="left">g/m&sup2;</td></tr>
+<tr><td>resin</td><td>250</td><td align="left">g/m&sup2;</td></tr>
+</tbody>
+<tbody>
+<tr><td colspan="6" align="center"><strong>Engineering properties</strong></td></tr>
+<tr><td colspan="3" align="center"><strong>In-plane</strong></td>
+<td colspan="3" align="center"><strong>3D stiffness tensor</strong></td></tr>
+<tr>
+<td>E<sub>x</sub></td><td>68328</td><td align="left">MPa</td>
+<td>E<sub>x</sub></td><td>68336</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>y</sub></td><td>68328</td><td align="left">MPa</td>
+<td>E<sub>y</sub></td><td>68336</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>z</sub></td><td>16980</td><td align="left">MPa</td>
+<td>E<sub>z</sub></td><td>19302</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xy</sub></td><td>5096</td><td align="left">MPa</td>
+<td>G<sub>xy</sub></td><td>5096</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xz</sub></td><td>4744</td><td align="left">MPa</td>
+<td>G<sub>xz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>yz</sub></td><td>4472</td><td align="left">MPa</td>
+<td>G<sub>yz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>&nu;<sub>xy</sub></td><td>0.070</td><td align="left">-</td>
+<td>&nu;<sub>xy</sub></td><td>0.070</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&nu;<sub>yx</sub></td><td>0.070</td><td align="left">-</td>
+<td>&nu;<sub>xz</sub></td><td>0.392</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>x</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+<td>&nu;<sub>yz</sub></td><td>0.392</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>y</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- second row, stiffness or ABD matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>In-plane stiffness (ABD) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>N<sub>x</sub></td>
+<td rowspan="6">=</td>
+          <td> 3.1211&times;10<sup>4</sup></td><td> 2.1856&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>x</sub></td>
+</tr>
+<tr>
+<td>N<sub>y</sub></td>
+          <td> 2.1856&times;10<sup>3</sup></td><td> 3.1211&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>y</sub></td>
+</tr>
+<tr>
+<td>N<sub>xy</sub></td>
+          <td>0</td><td>0</td><td> 2.3162&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&gamma;<sub>xy</sub></td>
+</tr>
+<tr>
+<td>M<sub>x</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 8.3962&times;10<sup>2</sup></td><td> 3.7630&times;10<sup>1</sup></td><td>0</td>
+<td>&kappa;<sub>x</sub></td>
+</tr>
+<tr>
+<td>M<sub>y</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 3.7630&times;10<sup>1</sup></td><td> 2.3514&times;10<sup>2</sup></td><td>0</td>
+<td>&kappa;<sub>y</sub></td>
+</tr>
+<tr>
+<td>M<sub>xy</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 3.9879&times;10<sup>1</sup></td>
+<td>&kappa;<sub>xy</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- third row, transverse stiffness or H matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>Transverse stiffness (H) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="2"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>V<sub>y</sub></td>
+<td rowspan="2">=</td>
+          <td> 2.0329&times;10<sup>3</sup></td><td>0</td>
+<td rowspan="2">&times;</td>
+<td>&gamma;<sub>yz</sub></td>
+</tr>
+<tr>
+<td>V<sub>x</sub></td>
+          <td>0</td><td> 2.1562&times;10<sup>3</sup></td>
+<td>&gamma;<sub>xz</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>3D stiffness (C) tensor, contracted notation</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>&sigma;<sub>11</sub></td>
+<td rowspan="6">=</td>
+          <td> 7.2452&times;10<sup>4</sup></td><td> 8.5817&times;10<sup>3</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>11</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>22</sub></td>
+          <td> 8.5817&times;10<sup>3</sup></td><td> 7.2452&times;10<sup>4</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>22</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>33</sub></td>
+          <td> 8.9712&times;10<sup>3</sup></td><td> 8.9712&times;10<sup>3</sup></td><td> 2.1288&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>33</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>23</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td><td>0</td>
+<td>2&epsilon;<sub>23</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>13</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td>
+<td>2&epsilon;<sub>13</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>12</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 5.0956&times;10<sup>3</sup></td>
+<td>2&epsilon;<sub>12</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2" align="left">
+<pre>
+** Material data for CalculiX / Abaqus (SI units):
+*MATERIAL,NAME=[0/90]s laminate
+*ELASTIC,TYPE=ORTHO
+7.245e+10,8.582e+09,7.245e+10,8.971e+09,8.971e+09,2.129e+10,5.096e+09,5.53e+09,
+5.53e+09,293
+*DENSITY
+1430
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en-US">
+<head><meta charset="UTF-8"><meta name="description" content="lamprop output">
+<title>lamprop output</title>
+</head>
+<body>
+<!-- outer table -->
+<table cellpadding="10%">
+<caption><strong>Properties of [+45/-45]s laminate</strong></caption>
+<tbody align="center">
+<tr><td  align="center" colspan="2">created by lamprop 2020.12.28.</td></tr>
+<!-- first row; tables -->
+<tr><td>
+<table border="1" frame="hsides"
+rules="groups" cellpadding="5%">
+<caption><strong>Laminate stacking</strong></caption>
+<thead align="right">
+<tr><td>Layer</td><td>weight</td>
+<td>angle</td><td>vf</td><td align="left">fiber type</td></tr>
+<tr><td></td><td>[g/m&sup2;]</td><td>[&deg;]</td><td>[%]</td></tr>
+</thead>
+<tbody align="right">
+<tr>
+<td>1</td><td> 100</td><td>   45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>2</td><td> 100</td><td>  -45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>3</td><td> 100</td><td>  -45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>4</td><td> 100</td><td>   45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table border="1" frame="hsides" rules="groups" cellpadding="5%">
+<caption><strong>Physical properties</strong></caption>
+<thead align="right">
+<tr><td>Property</td><td>Value</td><td align="left">Dimension</td></tr>
+</thead>
+<tbody align="right">
+<tr><td>v<sub>f</sub></td><td>50</td><td align="left">%</td></tr>
+<tr><td>w<sub>f</sub></td><td>61.5</td><td align="left">%</td></tr>
+<tr><td>thickness</td><td>0.455</td><td align="left">mm</td></tr>
+<tr><td>density</td><td>1.43</td><td align="left">g/cm&sup3;</td></tr>
+<tr><td>weight</td><td>650</td><td align="left">g/m&sup2;</td></tr>
+<tr><td>resin</td><td>250</td><td align="left">g/m&sup2;</td></tr>
+</tbody>
+<tbody>
+<tr><td colspan="6" align="center"><strong>Engineering properties</strong></td></tr>
+<tr><td colspan="3" align="center"><strong>In-plane</strong></td>
+<td colspan="3" align="center"><strong>3D stiffness tensor</strong></td></tr>
+<tr>
+<td>E<sub>x</sub></td><td>17900</td><td align="left">MPa</td>
+<td>E<sub>x</sub></td><td>17900</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>y</sub></td><td>17900</td><td align="left">MPa</td>
+<td>E<sub>y</sub></td><td>17900</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>z</sub></td><td>16980</td><td align="left">MPa</td>
+<td>E<sub>z</sub></td><td>19302</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xy</sub></td><td>31928</td><td align="left">MPa</td>
+<td>G<sub>xy</sub></td><td>31935</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xz</sub></td><td>4608</td><td align="left">MPa</td>
+<td>G<sub>xz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>yz</sub></td><td>4608</td><td align="left">MPa</td>
+<td>G<sub>yz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>&nu;<sub>xy</sub></td><td>0.756</td><td align="left">-</td>
+<td>&nu;<sub>xy</sub></td><td>0.756</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&nu;<sub>yx</sub></td><td>0.756</td><td align="left">-</td>
+<td>&nu;<sub>xz</sub></td><td>0.103</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>x</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+<td>&nu;<sub>yz</sub></td><td>0.103</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>y</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- second row, stiffness or ABD matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>In-plane stiffness (ABD) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>N<sub>x</sub></td>
+<td rowspan="6">=</td>
+          <td> 1.9014&times;10<sup>4</sup></td><td> 1.4382&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>x</sub></td>
+</tr>
+<tr>
+<td>N<sub>y</sub></td>
+          <td> 1.4382&times;10<sup>4</sup></td><td> 1.9014&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>y</sub></td>
+</tr>
+<tr>
+<td>N<sub>xy</sub></td>
+          <td>0</td><td>0</td><td> 1.4513&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&gamma;<sub>xy</sub></td>
+</tr>
+<tr>
+<td>M<sub>x</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 3.2738&times;10<sup>2</sup></td><td> 2.4763&times;10<sup>2</sup></td><td> 1.5112&times;10<sup>2</sup></td>
+<td>&kappa;<sub>x</sub></td>
+</tr>
+<tr>
+<td>M<sub>y</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 2.4763&times;10<sup>2</sup></td><td> 3.2738&times;10<sup>2</sup></td><td> 1.5112&times;10<sup>2</sup></td>
+<td>&kappa;<sub>y</sub></td>
+</tr>
+<tr>
+<td>M<sub>xy</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 1.5112&times;10<sup>2</sup></td><td> 1.5112&times;10<sup>2</sup></td><td> 2.4987&times;10<sup>2</sup></td>
+<td>&kappa;<sub>xy</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- third row, transverse stiffness or H matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>Transverse stiffness (H) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="2"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>V<sub>y</sub></td>
+<td rowspan="2">=</td>
+          <td> 2.0946&times;10<sup>3</sup></td><td>0</td>
+<td rowspan="2">&times;</td>
+<td>&gamma;<sub>yz</sub></td>
+</tr>
+<tr>
+<td>V<sub>x</sub></td>
+          <td>0</td><td> 2.0946&times;10<sup>3</sup></td>
+<td>&gamma;<sub>xz</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>3D stiffness (C) tensor, contracted notation</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>&sigma;<sub>11</sub></td>
+<td rowspan="6">=</td>
+          <td> 4.5612&times;10<sup>4</sup></td><td> 3.5421&times;10<sup>4</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>11</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>22</sub></td>
+          <td> 3.5421&times;10<sup>4</sup></td><td> 4.5612&times;10<sup>4</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>22</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>33</sub></td>
+          <td> 8.9712&times;10<sup>3</sup></td><td> 8.9712&times;10<sup>3</sup></td><td> 2.1288&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>33</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>23</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td><td>0</td>
+<td>2&epsilon;<sub>23</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>13</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td>
+<td>2&epsilon;<sub>13</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>12</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 3.1935&times;10<sup>4</sup></td>
+<td>2&epsilon;<sub>12</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2" align="left">
+<pre>
+** Material data for CalculiX / Abaqus (SI units):
+*MATERIAL,NAME=[+45/-45]s laminate
+*ELASTIC,TYPE=ORTHO
+4.561e+10,3.542e+10,4.561e+10,8.971e+09,8.971e+09,2.129e+10,3.194e+10,5.53e+09,
+5.53e+09,293
+*DENSITY
+1430
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en-US">
+<head><meta charset="UTF-8"><meta name="description" content="lamprop output">
+<title>lamprop output</title>
+</head>
+<body>
+<!-- outer table -->
+<table cellpadding="10%">
+<caption><strong>Properties of quasi isotropic laminate</strong></caption>
+<tbody align="center">
+<tr><td  align="center" colspan="2">created by lamprop 2020.12.28.</td></tr>
+<!-- first row; tables -->
+<tr><td>
+<table border="1" frame="hsides"
+rules="groups" cellpadding="5%">
+<caption><strong>Laminate stacking</strong></caption>
+<thead align="right">
+<tr><td>Layer</td><td>weight</td>
+<td>angle</td><td>vf</td><td align="left">fiber type</td></tr>
+<tr><td></td><td>[g/m&sup2;]</td><td>[&deg;]</td><td>[%]</td></tr>
+</thead>
+<tbody align="right">
+<tr>
+<td>1</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>2</td><td> 100</td><td>   90</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>3</td><td> 100</td><td>   45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>4</td><td> 100</td><td>  -45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>5</td><td> 100</td><td>  -45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>6</td><td> 100</td><td>   45</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>7</td><td> 100</td><td>   90</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+<tr>
+<td>8</td><td> 100</td><td>    0</td>
+<td>50</td><td align="left">Hyer's carbon fiber</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table border="1" frame="hsides" rules="groups" cellpadding="5%">
+<caption><strong>Physical properties</strong></caption>
+<thead align="right">
+<tr><td>Property</td><td>Value</td><td align="left">Dimension</td></tr>
+</thead>
+<tbody align="right">
+<tr><td>v<sub>f</sub></td><td>50</td><td align="left">%</td></tr>
+<tr><td>w<sub>f</sub></td><td>61.5</td><td align="left">%</td></tr>
+<tr><td>thickness</td><td>0.909</td><td align="left">mm</td></tr>
+<tr><td>density</td><td>1.43</td><td align="left">g/cm&sup3;</td></tr>
+<tr><td>weight</td><td>1300</td><td align="left">g/m&sup2;</td></tr>
+<tr><td>resin</td><td>500</td><td align="left">g/m&sup2;</td></tr>
+</tbody>
+<tbody>
+<tr><td colspan="6" align="center"><strong>Engineering properties</strong></td></tr>
+<tr><td colspan="3" align="center"><strong>In-plane</strong></td>
+<td colspan="3" align="center"><strong>3D stiffness tensor</strong></td></tr>
+<tr>
+<td>E<sub>x</sub></td><td>49236</td><td align="left">MPa</td>
+<td>E<sub>x</sub></td><td>49243</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>y</sub></td><td>49236</td><td align="left">MPa</td>
+<td>E<sub>y</sub></td><td>49243</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>E<sub>z</sub></td><td>16980</td><td align="left">MPa</td>
+<td>E<sub>z</sub></td><td>19302</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xy</sub></td><td>18512</td><td align="left">MPa</td>
+<td>G<sub>xy</sub></td><td>18515</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>xz</sub></td><td>4659</td><td align="left">MPa</td>
+<td>G<sub>xz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>G<sub>yz</sub></td><td>4557</td><td align="left">MPa</td>
+<td>G<sub>yz</sub></td><td>5530</td><td align="left">MPa</td>
+</tr>
+<tr>
+<td>&nu;<sub>xy</sub></td><td>0.330</td><td align="left">-</td>
+<td>&nu;<sub>xy</sub></td><td>0.330</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&nu;<sub>yx</sub></td><td>0.330</td><td align="left">-</td>
+<td>&nu;<sub>xz</sub></td><td>0.282</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>x</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+<td>&nu;<sub>yz</sub></td><td>0.282</td><td align="left">-</td>
+</tr>
+<tr>
+<td>&alpha;<sub>y</sub></td><td>0.000</td><td align="left">K<sup>-1</sup></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- second row, stiffness or ABD matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>In-plane stiffness (ABD) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>N<sub>x</sub></td>
+<td rowspan="6">=</td>
+          <td> 5.0225&times;10<sup>4</sup></td><td> 1.6568&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>x</sub></td>
+</tr>
+<tr>
+<td>N<sub>y</sub></td>
+          <td> 1.6568&times;10<sup>4</sup></td><td> 5.0225&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>y</sub></td>
+</tr>
+<tr>
+<td>N<sub>xy</sub></td>
+          <td>0</td><td>0</td><td> 1.6829&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&gamma;<sub>xy</sub></td>
+</tr>
+<tr>
+<td>M<sub>x</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 4.9958&times;10<sup>3</sup></td><td> 5.1104&times;10<sup>2</sup></td><td> 1.5112&times;10<sup>2</sup></td>
+<td>&kappa;<sub>x</sub></td>
+</tr>
+<tr>
+<td>M<sub>y</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 5.1104&times;10<sup>2</sup></td><td> 3.1823&times;10<sup>3</sup></td><td> 1.5112&times;10<sup>2</sup></td>
+<td>&kappa;<sub>y</sub></td>
+</tr>
+<tr>
+<td>M<sub>xy</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 1.5112&times;10<sup>2</sup></td><td> 1.5112&times;10<sup>2</sup></td><td> 5.2903&times;10<sup>2</sup></td>
+<td>&kappa;<sub>xy</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- third row, transverse stiffness or H matrix -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>Transverse stiffness (H) matrix</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="2"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>V<sub>y</sub></td>
+<td rowspan="2">=</td>
+          <td> 4.1429&times;10<sup>3</sup></td><td>0</td>
+<td rowspan="2">&times;</td>
+<td>&gamma;<sub>yz</sub></td>
+</tr>
+<tr>
+<td>V<sub>x</sub></td>
+          <td>0</td><td> 4.2354&times;10<sup>3</sup></td>
+<td>&gamma;<sub>xz</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2">
+<table border="1" frame="vsides" rules="groups" cellpadding="5%%">
+<caption><strong>3D stiffness (C) tensor, contracted notation</strong></caption>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="6"></colgroup>
+<colgroup span="1"></colgroup>
+<colgroup span="1"></colgroup>
+<tbody align="center">
+<tr>
+<td>&sigma;<sub>11</sub></td>
+<td rowspan="6">=</td>
+          <td> 5.9032&times;10<sup>4</sup></td><td> 2.2001&times;10<sup>4</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td rowspan="6">&times;</td>
+<td>&epsilon;<sub>11</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>22</sub></td>
+          <td> 2.2001&times;10<sup>4</sup></td><td> 5.9032&times;10<sup>4</sup></td><td> 8.9712&times;10<sup>3</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>22</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>33</sub></td>
+          <td> 8.9712&times;10<sup>3</sup></td><td> 8.9712&times;10<sup>3</sup></td><td> 2.1288&times;10<sup>4</sup></td><td>0</td><td>0</td><td>0</td>
+<td>&epsilon;<sub>33</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>23</sub></td>
+          <td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td><td>0</td>
+<td>2&epsilon;<sub>23</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>13</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td> 5.5297&times;10<sup>3</sup></td><td>0</td>
+<td>2&epsilon;<sub>13</sub></td>
+</tr>
+<tr>
+<td>&sigma;<sub>12</sub></td>
+          <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td> 1.8515&times;10<sup>4</sup></td>
+<td>2&epsilon;<sub>12</sub></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<tr>
+<!-- next row, stiffness tensor -->
+<td colspan="2" align="left">
+<pre>
+** Material data for CalculiX / Abaqus (SI units):
+*MATERIAL,NAME=quasi isotropic laminate
+*ELASTIC,TYPE=ORTHO
+5.903e+10,2.2e+10,5.903e+10,8.971e+09,8.971e+09,2.129e+10,1.852e+10,5.53e+09,
+5.53e+09,293
+*DENSITY
+1430
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</body>
+</html>
