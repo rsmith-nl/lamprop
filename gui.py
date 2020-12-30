@@ -2,16 +2,11 @@
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 # lamprop GUI - main program.
 #
-# Copyright © 2018,2019 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018,2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-12-28T22:40:58+0100
+# Last modified: 2020-12-30T11:46:36+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
-"""
-Calculate the elastic properties of a fibrous composite laminate, using a GUI.
-
-See lamprop(5) for the manual of the data file format.
-"""
 
 from functools import partial
 import os
@@ -22,8 +17,6 @@ from tkinter.font import nametofont
 from tkinter.scrolledtext import ScrolledText
 from tkinter import filedialog
 import lp
-
-__version__ = lp.__version__
 
 
 class LampropUI(tk.Tk):
@@ -80,7 +73,7 @@ class LampropUI(tk.Tk):
         chkengprop.grid(row=3, column=0, columnspan=3, sticky="w")
         # Row
         chkmat = ttk.Checkbutton(
-            self, text="ABD & abd matrices", variable=self.matrices, command=cb
+            self, text="ABD & H matrices, stiffness tensor", variable=self.matrices, command=cb
         )
         chkmat.grid(row=4, column=0, columnspan=3, sticky="w")
         # Row
@@ -204,7 +197,7 @@ def main():
             "w",
         )
     root = LampropUI(None)
-    root.wm_title("Lamprop GUI v" + __version__)
+    root.wm_title("Lamprop GUI v" + lp.__version__)
     root.mainloop()
 
 
