@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2021-01-02T02:03:36+0100
+# Last modified: 2021-01-02T12:55:29+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -46,19 +46,31 @@ class LampropUI(tk.Tk):
         self.columnconfigure(4, weight=1)
         # Create menu.
         menubar = tk.Menu(self)
-        self.config(menu=menubar)
+        self["menu"] = menubar
         file_menu = tk.Menu(menubar)
-        file_menu.add_command(label="Open", command=self.do_fileopen)
-        file_menu.add_command(label="Reload", command=self.do_reload)
-        file_menu.add_command(label="Save as text", command=self.do_savetxt, state="disabled")
-        file_menu.add_command(label="Save as HTML", command=self.do_savehtml, state="disabled")
-        file_menu.add_command(label="Quit", command=self.quit)
-        menubar.add_cascade(label="File", menu=file_menu)
-
+        file_menu.add_command(label="Open", underline=0, command=self.do_fileopen)
+        file_menu.add_command(label="Reload", underline=0, command=self.do_reload)
+        file_menu.add_separator()
+        file_menu.add_command(
+            label="Export as text",
+            underline=10,
+            command=self.do_savetxt,
+            state="disabled",
+        )
+        file_menu.add_command(
+            label="Export as HTML",
+            underline=10,
+            command=self.do_savehtml,
+            state="disabled",
+        )
+        file_menu.add_separator()
+        file_menu.add_command(label="Quit", underline=0, command=self.quit)
+        menubar.add_cascade(label="File", underline=0, menu=file_menu)
+        self.file_menu = file_menu
         helpmenu = tk.Menu(menubar)
-        helpmenu.add_command(label="About")
-        helpmenu.add_command(label="License")
-        menubar.add_cascade(label="Help", menu=helpmenu)
+        helpmenu.add_command(label="About", underline=0, command=self.do_about)
+        helpmenu.add_command(label="License", underline=0, command=self.do_license)
+        menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
         # Create widgets.
         # Row
         prbut = ttk.Label(self, text="File:", anchor="w")
@@ -73,7 +85,10 @@ class LampropUI(tk.Tk):
         chkengprop.grid(row=1, column=0, columnspan=3, sticky="w")
         # Row
         chkmat = ttk.Checkbutton(
-            self, text="ABD & H matrices, stiffness tensor", variable=self.matrices, command=cb
+            self,
+            text="ABD & H matrices, stiffness tensor",
+            variable=self.matrices,
+            command=cb,
         )
         chkmat.grid(row=2, column=0, columnspan=3, sticky="w")
         # Row
@@ -114,8 +129,8 @@ class LampropUI(tk.Tk):
         self.directory = os.path.dirname(fn.name)
         self.lamfile.set(fn.name)
         self.do_reload()
-        self.txtbtn["state"] = "enabled"
-        self.htmlbtn["state"] = "enabled"
+        self.file_menu.entryconfigure("Export as text", state="normal")
+        self.file_menu.entryconfigure("Export as HTML", state="normal")
 
     def do_reload(self):
         """Reload the laminates."""
@@ -183,6 +198,35 @@ class LampropUI(tk.Tk):
         )
         with open(res.name, "w") as hf:
             hf.write(html)
+
+    def do_about(self):
+        message(
+            self,
+            "Lamprop is a program to calculate physical and mechanical properties\n"
+            "of continuous fiber reinforced composite laminates.\n\n"
+            "The latest version can be found online at:"
+            "https://github.com/rsmith-nl/lamprop\n"
+            "Look under “Releases”.\n\n"
+            "For more in-depth information, see “lamprop-manual.pdf” in the doc subdirectory.",
+            title="About",
+        )
+
+    def do_license(self):
+        message(self, lp.__license__, title="License", height=25)
+
+
+def message(parent, message, title="Message", width=80, height=10):
+    tl = tk.Toplevel(parent)
+    tl.title(title)
+    tl.rowconfigure(0, weight=1)
+    tl.columnconfigure(0, weight=1)
+    txt = tk.Text(tl, width=width, height=height)
+    txt['bg'] = "lightgrey"
+    txt.insert("1.0", message)
+    txt['state'] = 'disabled'
+    txt.grid(row=0, column=0, sticky="nesw")
+    ok = ttk.Button(tl, text="Ok", command=tl.destroy)
+    ok.grid(row=1, column=0)
 
 
 def main():
