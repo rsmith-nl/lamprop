@@ -2,9 +2,9 @@
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 # lamprop GUI - main program.
 #
-# Copyright © 2018,2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2020-12-30T11:46:36+0100
+# Last modified: 2021-01-02T02:03:36+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -40,57 +40,57 @@ class LampropUI(tk.Tk):
         default_font = nametofont("TkDefaultFont")
         default_font["size"] = 12
         self.option_add("*Font", default_font)
+        self.option_add("*tearOff", False)
         # General commands and bindings
-        self.rowconfigure(7, weight=1)
+        self.rowconfigure(5, weight=1)
         self.columnconfigure(4, weight=1)
+        # Create menu.
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+        file_menu = tk.Menu(menubar)
+        file_menu.add_command(label="Open", command=self.do_fileopen)
+        file_menu.add_command(label="Reload", command=self.do_reload)
+        file_menu.add_command(label="Save as text", command=self.do_savetxt, state="disabled")
+        file_menu.add_command(label="Save as HTML", command=self.do_savehtml, state="disabled")
+        file_menu.add_command(label="Quit", command=self.quit)
+        menubar.add_cascade(label="File", menu=file_menu)
+
+        helpmenu = tk.Menu(menubar)
+        helpmenu.add_command(label="About")
+        helpmenu.add_command(label="License")
+        menubar.add_cascade(label="Help", menu=helpmenu)
         # Create widgets.
         # Row
-        prbut = ttk.Button(self, text="File:", command=self.do_fileopen)
+        prbut = ttk.Label(self, text="File:", anchor="w")
         prbut.grid(row=0, column=0, sticky="w")
         fnlabel = ttk.Label(self, anchor="w", textvariable=self.lamfile)
         fnlabel.grid(row=0, column=1, columnspan=4, sticky="ew")
-        # Row
-        rldbut = ttk.Button(self, text="Reload", command=self.do_reload)
-        rldbut.grid(row=1, column=0, sticky="w")
-        # Row
-        sal = ttk.Label(self, text="Save as:")
-        sal.grid(row=2, column=0, sticky="w")
-        txtbtn = ttk.Button(
-            self, text="text", command=self.do_savetxt, state="disabled"
-        )
-        txtbtn.grid(row=2, column=1, sticky="w")
-        self.txtbtn = txtbtn
-        htmlbtn = ttk.Button(
-            self, text="html", command=self.do_savehtml, state="disabled"
-        )
-        self.htmlbtn = htmlbtn
-        htmlbtn.grid(row=2, column=2, sticky="w")
         # Row
         cb = partial(self.on_laminate, event=0)
         chkengprop = ttk.Checkbutton(
             self, text="Engineering properties", variable=self.engprop, command=cb
         )
-        chkengprop.grid(row=3, column=0, columnspan=3, sticky="w")
+        chkengprop.grid(row=1, column=0, columnspan=3, sticky="w")
         # Row
         chkmat = ttk.Checkbutton(
             self, text="ABD & H matrices, stiffness tensor", variable=self.matrices, command=cb
         )
-        chkmat.grid(row=4, column=0, columnspan=3, sticky="w")
+        chkmat.grid(row=2, column=0, columnspan=3, sticky="w")
         # Row
         chkmat = ttk.Checkbutton(
             self, text="FEA material data", variable=self.fea, command=cb
         )
-        chkmat.grid(row=5, column=0, columnspan=3, sticky="w")
+        chkmat.grid(row=3, column=0, columnspan=3, sticky="w")
         # Row
         cxlam = ttk.Combobox(self, state="readonly", justify="left")
-        cxlam.grid(row=6, column=0, columnspan=5, sticky="we")
+        cxlam.grid(row=4, column=0, columnspan=5, sticky="we")
         cxlam.bind("<<ComboboxSelected>>", self.on_laminate)
         self.cxlam = cxlam
         # Row
         fixed = nametofont("TkFixedFont")
         fixed["size"] = 12
         res = ScrolledText(self, state="disabled", font=fixed)
-        res.grid(row=7, column=0, columnspan=5, sticky="nsew")
+        res.grid(row=5, column=0, columnspan=5, sticky="nsew")
         self.result = res
 
     # Callbacks

@@ -1,6 +1,6 @@
-__version__ = "2020.12.28"
+__version__ = "2021.01.02"
 __license__ = f"""lamprop {__version__}
-Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
