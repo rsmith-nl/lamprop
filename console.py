@@ -2,9 +2,9 @@
 # vim:fileencoding=utf-8:ft=python
 # lamprop - main program.
 #
-# Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2020-12-30T11:43:36+0100
+# Last modified: 2021-01-02T23:42:39+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -25,8 +25,10 @@ class LicenseAction(argparse.Action):
 def main():
     """Entry point for lamprop console application."""
     # Process the command-line arguments
-    doc = "Calculate the elastic properties of a fibrous composite laminate. " \
-          "See the manual (lamprop-manual.pdf) for more in-depth information."
+    doc = (
+        "Calculate the elastic properties of a fibrous composite laminate. "
+        "See the manual (lamprop-manual.pdf) for more in-depth information."
+    )
     opts = argparse.ArgumentParser(prog="lamprop", description=doc)
     group = opts.add_mutually_exclusive_group()
     group.add_argument(
@@ -43,7 +45,10 @@ def main():
         help="output only the engineering properties",
     )
     opts.add_argument(
-        "-m", "--mat", action="store_true", help="output only the ABD matrix and stiffness tensor"
+        "-m",
+        "--mat",
+        action="store_true",
+        help="output only the ABD matrix and stiffness tensor",
     )
     opts.add_argument(
         "-f", "--fea", action="store_true", help="output only material data for FEA"
