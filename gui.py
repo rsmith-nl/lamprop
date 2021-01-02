@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2021-01-02T12:55:29+0100
+# Last modified: 2021-01-02T23:41:26+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -54,13 +54,13 @@ class LampropUI(tk.Tk):
         file_menu.add_command(
             label="Export as text",
             underline=10,
-            command=self.do_savetxt,
+            command=self.do_export_txt,
             state="disabled",
         )
         file_menu.add_command(
             label="Export as HTML",
             underline=10,
-            command=self.do_savehtml,
+            command=self.do_export_html,
             state="disabled",
         )
         file_menu.add_separator()
@@ -110,6 +110,7 @@ class LampropUI(tk.Tk):
 
     # Callbacks
     def do_fileopen(self):
+        """Open a lamprop file."""
         if not self.directory:
             self.directory = ""
             available = [
@@ -143,6 +144,7 @@ class LampropUI(tk.Tk):
         self.on_laminate(0)
 
     def gentxt(self):
+        """Generate text output."""
         name = self.cxlam.get()
         text = "\n".join(
             lp.text.out(
@@ -161,7 +163,8 @@ class LampropUI(tk.Tk):
         self.result.replace("1.0", "end", text)
         self.result["state"] = "disabled"
 
-    def do_savetxt(self):
+    def do_export_txt(self):
+        """Export current laminate as text."""
         res = filedialog.asksaveasfile(
             title="Save as text",
             parent=self,
@@ -176,7 +179,8 @@ class LampropUI(tk.Tk):
         with open(res.name, "w") as tf:
             tf.write(text)
 
-    def do_savehtml(self):
+    def do_export_html(self):
+        """Export current laminate as HTML."""
         res = filedialog.asksaveasfile(
             title="Save as HTML",
             parent=self,
@@ -216,14 +220,15 @@ class LampropUI(tk.Tk):
 
 
 def message(parent, message, title="Message", width=80, height=10):
+    """Create a toplevel window to display a long message."""
     tl = tk.Toplevel(parent)
     tl.title(title)
     tl.rowconfigure(0, weight=1)
     tl.columnconfigure(0, weight=1)
     txt = tk.Text(tl, width=width, height=height)
-    txt['bg'] = "lightgrey"
+    txt["bg"] = "lightgrey"
     txt.insert("1.0", message)
-    txt['state'] = 'disabled'
+    txt["state"] = "disabled"
     txt.grid(row=0, column=0, sticky="nesw")
     ok = ttk.Button(tl, text="Ok", command=tl.destroy)
     ok.grid(row=1, column=0)
