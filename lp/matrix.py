@@ -2,10 +2,10 @@
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 # Library for square matrices.
 #
-# Copyright © 2018-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2018-12-28T23:06:35+0100
-# Last modified: 2020-12-29T11:49:38+0100
+# Last modified: 2021-01-03T23:03:17+0100
 
 from copy import deepcopy
 
@@ -142,7 +142,7 @@ def _topright(m):
             fact = copy[p][k] / copy[k][k]
             for j in range(size):
                 copy[p][j] -= fact * copy[k][j]
-                if abs(copy[p][j]) < 1e-7:
+                if abs(copy[p][j]) < _LIMIT:
                     copy[p][j] = 0
                 rv[p][j] -= fact * rv[k][j]
     return copy, rv
