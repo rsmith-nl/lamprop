@@ -3,7 +3,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2020-12-28T17:32:15+0100
+# Last modified: 2021-05-24T01:55:29+0200
 """Parser for lamprop files."""
 
 import logging
@@ -60,12 +60,12 @@ def _directives(filename):
     directives = [
         (num, ln)
         for num, ln in enumerate(data, start=1)
-        if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlsfr"
+        if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlscfr"
     ]
     msg.info("found {} directives in '{}'".format(len(directives), filename))
     rd = [(num, ln) for num, ln in directives if ln[0] == "r"]
     fd = [(num, ln) for num, ln in directives if ln[0] == "f"]
-    ld = [(num, ln) for num, ln in directives if ln[0] in "tmls"]
+    ld = [(num, ln) for num, ln in directives if ln[0] in "tmlsc"]
     return rd, fd, ld
 
 
@@ -127,6 +127,9 @@ def _laminate(ld, resins, fibers):
         del ld[-1]
     llist = []
     for directive in ld[2:]:
+        if directive[1].startswith("c"):  # Comment line.
+            llist.append(directive[1][2:].strip())
+            continue
         lamina = _get_lamina(directive, fibers, resins[rname], common_vf)
         if lamina:
             llist.append(lamina)
@@ -135,6 +138,7 @@ def _laminate(ld, resins, fibers):
         return None
     if sym:
         msg.info("laminate '{}' is symmetric".format(lname))
+        # TODO: handle comment lines in list.
         llist = llist + list(reversed(llist))
     return laminate(lname, llist)
 

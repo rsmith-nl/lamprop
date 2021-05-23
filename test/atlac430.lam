@@ -13,15 +13,19 @@ r:  3600    0.36    60e-6   1.145   atlac-430
 
 t: atlac430-CSM450
 m: 0.22 atlac-430
+c: CSM 450
 l: 150  0 e-glas
 l: 150  60 e-glas
 l: 150  -60 e-glas
+c: CSM 450
 l: 150  0 e-glas
 l: 150  60 e-glas
 l: 150  -60 e-glas
+c: CSM 450
 l: 150  0 e-glas
 l: 150  60 e-glas
 l: 150  -60 e-glas
+c: CSM 450
 l: 150  0 e-glas
 l: 150  60 e-glas
 l: 150  -60 e-glas

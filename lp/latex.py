@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2020-12-28T17:48:13+0100
+# Last modified: 2021-05-24T01:52:59+0200
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -13,7 +13,7 @@ from lp.text import _fea as _fea_text
 
 def out(lam, eng, mat, fea):  # {{{1
     """Output function for LaTeX format. Returns a list of lines."""
-    texlname = lam.name.replace('_', r'\_')
+    texlname = lam.name.replace("_", r"\_")
     lines = [
         "\\begin{table}[!htbp]",
         "  \\renewcommand{\\arraystretch}{1.2}",
@@ -27,10 +27,15 @@ def out(lam, eng, mat, fea):  # {{{1
         "            & [g/m$^2$] & [$\\circ$] & [\\%]\\\\",
         "      \\midrule",
     ]
-    for ln, la in enumerate(lam.layers, start=1):
+    ln = 1
+    for la in lam.layers:
+        if isinstance(la, str):
+            lines.append(r"\multicolumn{5}{l}{" + la + r"}\\")
+            continue
         s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
-        texfname = la.fiber.name.replace('_', r'\_')
-        lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf*100, texfname))
+        texfname = la.fiber.name.replace("_", r"\_")
+        lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf * 100, texfname))
+        ln += 1
     w = lam.fiber_weight + lam.resin_weight
     lines += [
         "      \\bottomrule",
@@ -94,6 +99,7 @@ def _engprop(l):  # {{{1
 def _matrices(l):  # {{{1
     """Return the matrices as LaTeX arrays in the form of
     a list of lines."""
+
     def pm(mat, r=6):
         """Return the contents of a matrix."""
         lines = []
@@ -102,15 +108,16 @@ def _matrices(l):  # {{{1
             for m in range(r):
                 num = mat[t][m]
                 if num == 0.0:
-                    nums = '0'
+                    nums = "0"
                 else:
-                    nums, exp = "{:> 10.4e}".format(mat[t][m]).split('e')
+                    nums, exp = "{:> 10.4e}".format(mat[t][m]).split("e")
                     exp = int(exp)
                     if exp != 0:
-                        nums += '\\times 10^{{{}}}'.format(exp)
+                        nums += "\\times 10^{{{}}}".format(exp)
                 numl.append(nums)
-            lines.append('          ' + ' & '.join(numl) + r'\\')
+            lines.append("          " + " & ".join(numl) + r"\\")
         return lines
+
     lines = [
         "  \\vbox{",
         "    \\vbox{\\small\\textbf{In-plane stiffness (ABD) matrix}\\\\[-3mm]",
@@ -131,7 +138,7 @@ def _matrices(l):  # {{{1
         "      \\tiny\\[\\left\\{\\begin{array}{c}",
         "          V_y\\\\ V_x",
         "        \\end{array}\\right\\} = ",
-        "      \\left|\\begin{array}{cc}"
+        "      \\left|\\begin{array}{cc}",
     ]
     lines += pm(l.H, r=2)
     lines += [

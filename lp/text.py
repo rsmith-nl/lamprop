@@ -3,10 +3,9 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 13:59:17 +0200
-# Last modified: 2020-12-28T17:44:36+0100
+# Last modified: 2021-05-24T01:51:31+0200
 """Text output routines for lamprop."""
 
-# import sys
 from .version import __version__
 import lp.core as core
 
@@ -21,16 +20,6 @@ _t = [
     "    [g/m²]   [°]  [%]",
 ]
 
-# Platforms that don't support UTF-8 get ASCII text.
-# enc = sys.stdout.encoding
-# if not enc or enc.lower() != 'utf-8':
-#     _t = ["thickness: {0:.2f} mm, density: {1:4.2f} g/cm3",
-#           "laminate weight: {0:.0f} g/m2, resin consumption: {1:.0f} g/m2",
-#           "v_xy = {0:7.5f}",
-#           "v_yx = {0:7.5f}",
-#           "a_x = {0:9.4g} 1/K, a_y = {1:9.4g} 1/K",
-#           "    [g/m2] [deg]  [%]"]
-
 
 def out(lam, eng, mat, fea):  # {{{1
     """Return the output as a list of lines."""
@@ -44,10 +33,15 @@ def out(lam, eng, mat, fea):  # {{{1
         _t[5],
     ]
     s = "{0:3} {1:6g} {2:5g} {3:4.3g} {4}"
-    for ln, la in enumerate(lam.layers, start=1):
+    ln = 1
+    for la in lam.layers:
+        if isinstance(la, str):
+            lines.append(la)
+            continue
         lines.append(
             s.format(ln, la.fiber_weight, la.angle, la.vf * 100, la.fiber.name)
         )
+        ln += 1
     if eng:
         lines += _engprop(lam)
     if mat:
@@ -70,7 +64,9 @@ def _engprop(l):  # {{{1
     ]
     lines.append("Engineering properties derived from 3D stiffness matrix:")
     lines.append(f"E_x = {l.tEx:.0f} MPa, E_y = {l.tEy:.0f} MPa, E_z = {l.tEz:.0f} MPa")
-    lines.append(f"G_xy = {l.tGxy:.0f} MPa, G_xz = {l.tGxz:.0f} MPa, G_yz = {l.tGyz:.0f} MPa")
+    lines.append(
+        f"G_xy = {l.tGxy:.0f} MPa, G_xz = {l.tGxz:.0f} MPa, G_yz = {l.tGyz:.0f} MPa"
+    )
     lines.append(f"ν_xy = {l.tνxy:.3f}, ν_xz = {l.tνxz:.3f}, ν_yz = {l.tνyz:.3f}")
     return lines
 

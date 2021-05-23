@@ -4,7 +4,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2021-05-24T01:18:56+0200
+# Last modified: 2021-05-24T01:46:12+0200
 """
 Core functions of lamprop.
 
@@ -535,12 +535,12 @@ def isti(C):
 def toabaqusi(C):
     """Convert stiffness matrix to Abaqus format and SI units."""
     D = lpm.mul(C, 1e6)
-    D[0][3] = C[0][5]*1e6
-    D[0][5] = C[0][3]*1e6
-    D[1][3] = C[1][5]*1e6
-    D[1][5] = C[1][3]*1e6
-    D[2][3] = C[2][5]*1e6
-    D[2][5] = C[2][3]*1e6
-    D[3][3] = C[5][5]*1e6
-    D[5][5] = C[3][3]*1e6
+    D[0][3] = C[0][5] * 1e6
+    D[0][5] = C[0][3] * 1e6
+    D[1][3] = C[1][5] * 1e6
+    D[1][5] = C[1][3] * 1e6
+    D[2][3] = C[2][5] * 1e6
+    D[2][5] = C[2][3] * 1e6
+    D[3][3] = C[5][5] * 1e6
+    D[5][5] = C[3][3] * 1e6
     return D
