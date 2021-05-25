@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2020-10-03T12:27:16+0200
+# Last modified: 2021-05-25T11:30:15+0200
 """Test for lamprop parser."""
 
 import sys
@@ -11,8 +11,8 @@ import sys
 sys.path.insert(1, '.')
 
 from lp.parser import (_get_numbers, _get_components, _directives,
-                            _get_lamina)  # noqa
-from lp.core import (fiber, resin)  # noqa
+                       _get_lamina, _extended)  # noqa
+from lp.core import (fiber, resin, lamina)  # noqa
 
 
 def test_directives():  # {{{1
@@ -113,9 +113,23 @@ def test_good_lamina():  # {{{1
     fdict = {'carbon': fiber(240000, 0.2, -0.2e-6, 1.76, 'carbon'),
              'test 3': fiber(240000, 0.2, -0.2e-6, 1.76, 'test 3')}
     r = resin(3000, 0.3, 20e-6, 1.2, 'resin')
-    lamina = []
+    layers = []
     for d in directives:
         newlamina = _get_lamina(d, fdict, r, 0.5)
         if newlamina:
-            lamina.append(newlamina)
-    assert len(lamina) == 4
+            layers.append(newlamina)
+    assert len(layers) == 4
+
+
+def test_extended():  # {{{1
+    f = fiber(240000, 0.2, -0.2e-6, 1.76, 'carbon')
+    r = resin(3000, 0.3, 20e-6, 1.2, 'resin')
+    layers = [
+        "UD 300",
+        lamina(f, r, 300, 0, 0.50),
+        "pw 200 45",
+        lamina(f, r, 100, 45, 0.40),
+        lamina(f, r, 100, -45, 0.40),
+    ]
+    extended = _extended(layers)
+    assert len(extended) == 5

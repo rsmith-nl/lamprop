@@ -3,7 +3,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2021-05-25T10:20:58+0200
+# Last modified: 2021-05-25T12:02:10+0200
 """Parser for lamprop files."""
 
 import copy
@@ -148,6 +148,8 @@ def _extended(original):
     Create the extension to the `original` list to make the laminate symmetric.
     The position of the comments is taken into account.
     """
+    if sum(1 for la in original if isinstance(la, str)) == 0:
+        return original[::-1]
     layers = copy.deepcopy(original)
     if not isinstance(layers[-1], str):
         layers.append("__")
