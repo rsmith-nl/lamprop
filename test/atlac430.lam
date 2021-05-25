@@ -29,3 +29,15 @@ c: CSM 450
 l: 150  0 e-glas
 l: 150  60 e-glas
 l: 150  -60 e-glas
+
+t:atlac430-combi
+m: 0.22 atlac-430
+c: CSM 450
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
+c: UNIE640
+l: 600  0 0.50 e-glas
+l:  40 90 0.50 e-glas
+c: symmetric
+s:

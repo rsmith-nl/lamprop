@@ -3,9 +3,10 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2021-05-24T01:55:29+0200
+# Last modified: 2021-05-25T10:20:58+0200
 """Parser for lamprop files."""
 
+import copy
 import logging
 from .core import fiber, resin, lamina, laminate
 
@@ -138,9 +139,29 @@ def _laminate(ld, resins, fibers):
         return None
     if sym:
         msg.info("laminate '{}' is symmetric".format(lname))
-        # TODO: handle comment lines in list.
-        llist = llist + list(reversed(llist))
+        llist = llist + _extended(llist)
     return laminate(lname, llist)
+
+
+def _extended(original):
+    """
+    Create the extension to the `original` list to make the laminate symmetric.
+    The position of the comments is taken into account.
+    """
+    layers = copy.deepcopy(original)
+    if not isinstance(layers[-1], str):
+        layers.append("__")
+    if not isinstance(layers[0], str):
+        layers.insert(0, "unknown")
+    idx = [n for n, v in enumerate(layers) if isinstance(v, str)]
+    pairs = list(zip(idx[:-1], idx[1:]))[::-1]
+    extension = []
+    for s, e in pairs:
+        if layers[s] == "__":
+            extension += layers[s+1:e][::-1]
+        else:
+            extension += [layers[s]]+layers[s+1:e][::-1]
+    return extension
 
 
 def _get_components(directives, tp):
