@@ -3,7 +3,7 @@
 %
 % Copyright © 2018,2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2021-05-25T16:14:33+0200
+% Last modified: 2021-05-25T17:15:50+0200
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -474,13 +474,14 @@ c: -- symmetric --
 s:
 \end{lstlisting}
 
-This will yield the following output:
+This will yield the output shown in \trefpi{tab:atlac430-combi}.
 
 \begin{table}[!htbp]
   \renewcommand{\arraystretch}{1.2}
   \caption{\label{tab:atlac430-combi}properties of atlac430-combi}
   \centering\footnotesize{\rule{0pt}{10pt}
   \tiny calculated by lamprop 2021.05.25\\[3pt]}
+    \renewcommand{\arraystretch}{1.0}
     \begin{tabular}[t]{rcrrl}
       \multicolumn{5}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
       \toprule %% \usepackage{booktabs}
