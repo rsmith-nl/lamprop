@@ -14,7 +14,7 @@ import logging
 import sys
 import shutil
 
-_lic = '''Copyright © 2017 R.F. Smith.
+_lic = """Copyright © 2017 R.F. Smith.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.'''
+SOFTWARE."""
 
 
 class LicenseAction(argparse.Action):
@@ -48,8 +48,7 @@ def readlines(path):
 
 
 def oldstyle_fibers(lines):
-    flines = ((num, ln) for num, ln in enumerate(lines) if
-              ln.strip().startswith('f:'))
+    flines = ((num, ln) for num, ln in enumerate(lines) if ln.strip().startswith("f:"))
     oldstyle = []
     for num, ln in flines:
         items = ln.split()
@@ -64,47 +63,54 @@ def oldstyle_fibers(lines):
 
 def changeline(ln):
     f, E1, _, v12, _, alpha1, _, rho, name = ln.split(maxsplit=8)
-    return ' '.join([f, E1, v12, alpha1, rho, name])
+    return " ".join([f, E1, v12, alpha1, rho, name])
 
 
 def main(argv):
     # Process the command-line arguments
-    opts = argparse.ArgumentParser(prog='convert-lamprop', description=__doc__)
-    opts.add_argument('-L', '--license', action=LicenseAction, nargs=0,
-                      help="print the license")
-    opts.add_argument('--log', default='warning',
-                      choices=['debug', 'info', 'warning', 'error'],
-                      help="logging level (defaults to 'warning')")
-    opts.add_argument("files", metavar='file', nargs='*',
-                      help="one or more files to process")
+    opts = argparse.ArgumentParser(prog="convert-lamprop", description=__doc__)
+    opts.add_argument(
+        "-L", "--license", action=LicenseAction, nargs=0, help="print the license"
+    )
+    opts.add_argument(
+        "--log",
+        default="warning",
+        choices=["debug", "info", "warning", "error"],
+        help="logging level (defaults to 'warning')",
+    )
+    opts.add_argument(
+        "files", metavar="file", nargs="*", help="one or more files to process"
+    )
     args = opts.parse_args(argv)
-    logging.basicConfig(level=getattr(logging, args.log.upper(), None),
-                        format='%(levelname)s: %(message)s')
+    logging.basicConfig(
+        level=getattr(logging, args.log.upper(), None),
+        format="%(levelname)s: %(message)s",
+    )
     for path in args.files:
-        if path[-4:] != '.lam':
-            logging.error('{} is not a lamprop file; skipping'.format(path))
+        if path[-4:] != ".lam":
+            logging.error("{} is not a lamprop file; skipping".format(path))
             continue
         try:
             lines = readlines(path)
             if not lines:
-                raise IOError('empty file')
+                raise IOError("empty file")
         except (FileNotFoundError, IOError) as e:
-            logging.error('could not read {}: {}'.format(path, e))
+            logging.error("could not read {}: {}".format(path, e))
             continue
         oldidx = oldstyle_fibers(lines)
         if oldidx:
-            logging.info('found {} old style lines in {}'.format(len(oldidx), path))
+            logging.info("found {} old style lines in {}".format(len(oldidx), path))
             # Back up the file
-            shutil.copyfile(path, path+'.orig')
+            shutil.copyfile(path, path + ".orig")
             # Change the f-lines
             for n in oldidx:
                 lines[n] = changeline(lines[n])
             # Write the file.
-            with open(path, 'w') as f:
+            with open(path, "w") as f:
                 f.writelines(lines)
         else:
-            logging.info('skipping {}; no old style lines'.format(path))
+            logging.info("skipping {}; no old style lines".format(path))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1:])

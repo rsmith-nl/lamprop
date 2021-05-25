@@ -7,13 +7,13 @@
 
 import lp as la
 
-t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, 'T300-2')
-epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote 04908')
+t300 = la.Fiber(230000, 0.3, -0.41e-6, 1.76, "T300-2")
+epr04908 = la.Resin(2900, 0.36, 41.4e-6, 1.15, "Epikote 04908")
 
 layers = [la.Lamina(t300, epr04908, 100, a, 0.50) for a in range(-90, 95, 15)]
 layers += layers[::-1]
 
-qi = la.Laminate('quasi-isotropic', layers)
+qi = la.Laminate("quasi-isotropic", layers)
 
 print(la.latex.out(qi, eng=True, mat=False))
 print(la.latex.out(qi, eng=False, mat=True))

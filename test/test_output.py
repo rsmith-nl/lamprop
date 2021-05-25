@@ -12,7 +12,7 @@ import lp.text as text
 import lp.latex as latex
 import lp.html as html
 
-laminates = parse('test/hyer.lam')
+laminates = parse("test/hyer.lam")
 
 
 def test_text_output():
@@ -20,12 +20,12 @@ def test_text_output():
     with zipfile.ZipFile("test/reference/reference.zip") as refz:
         with refz.open("hyer-2021.05.25.txt") as orig:
             origlines = orig.read().decode().splitlines()
-    origlines = [ln for ln in origlines if 'Generated' not in ln]
+    origlines = [ln for ln in origlines if "Generated" not in ln]
     # Produce text output
     outlist = []
     for curlam in laminates:
         outlist += text.out(curlam, True, True, True)
-    outlist = [ln for ln in outlist if 'Generated' not in ln]
+    outlist = [ln for ln in outlist if "Generated" not in ln]
     assert outlist == origlines
 
 
@@ -34,12 +34,12 @@ def test_LaTeX_output():
     with zipfile.ZipFile("test/reference/reference.zip") as refz:
         with refz.open("hyer-2021.05.25.tex") as orig:
             origlines = orig.read().decode().splitlines()
-    origlines = [ln for ln in origlines if 'calculated' not in ln]
+    origlines = [ln for ln in origlines if "calculated" not in ln]
     # Produce LaTeX output
     outlist = []
     for curlam in laminates:
         outlist += latex.out(curlam, True, True, True)
-    outlist = [ln for ln in outlist if 'calculated' not in ln]
+    outlist = [ln for ln in outlist if "calculated" not in ln]
     assert outlist == origlines
 
 
@@ -48,10 +48,10 @@ def test_html_output():
     with zipfile.ZipFile("test/reference/reference.zip") as refz:
         with refz.open("hyer-2021.05.25.html") as orig:
             origlines = orig.read().decode().splitlines()
-    origlines = [ln for ln in origlines if 'created by' not in ln]
+    origlines = [ln for ln in origlines if "created by" not in ln]
     # Produce LaTeX output
     outlist = []
     for curlam in laminates:
         outlist += html.out(curlam, True, True, True)
-    outlist = [ln for ln in outlist if 'created by' not in ln]
+    outlist = [ln for ln in outlist if "created by" not in ln]
     assert outlist == origlines

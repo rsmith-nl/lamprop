@@ -160,9 +160,9 @@ def _extended(original):
     extension = []
     for s, e in pairs:
         if layers[s] == "__":
-            extension += layers[s+1:e][::-1]
+            extension += layers[s + 1 : e][::-1]
         else:
-            extension += [layers[s]]+layers[s+1:e][::-1]
+            extension += [layers[s]] + layers[s + 1 : e][::-1]
     return extension
 
 

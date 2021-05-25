@@ -8,9 +8,10 @@
 
 import sys
 import math
+
 # Inserting the path is needed to make sure that the module here is loaded,
 # not an installed version!
-sys.path.insert(1, '.')
+sys.path.insert(1, ".")
 
 from lp.core import fiber, resin, lamina, laminate  # noqa
 
@@ -24,22 +25,22 @@ def areclose(a, b):
 
 
 def test_lamina():  # {{{1
-    f = fiber(230000, 0.30, -0.41e-6, 1.76, 'T300')
-    r = resin(2900, 0.36, 41.4e-6, 1.15, 'Epikote04908')
+    f = fiber(230000, 0.30, -0.41e-6, 1.76, "T300")
+    r = resin(2900, 0.36, 41.4e-6, 1.15, "Epikote04908")
     la = lamina(f, r, 100, 0, 0.5)
     areclose(
         (la.E1, la.E2, la.G12, la.ν12, la.αx, la.αy, la.ρ),
-        (116450.0, 10980.86, 3198.53, 0.33, 1.106e-07, 4.14e-05, 1.455)
+        (116450.0, 10980.86, 3198.53, 0.33, 1.106e-07, 4.14e-05, 1.455),
     )
     areclose(
         (la.Q̅11, la.Q̅12, la.Q̅16, la.Q̅22, la.Q̅26, la.Q̅66),
-        (117658.22, 3661.28, 0.0, 11094.79, 0.0, 3198.53)
+        (117658.22, 3661.28, 0.0, 11094.79, 0.0, 3198.53),
     )
 
 
 def test_ud():  # {{{1
     la = lamina(hf, hr, 100, 0, 0.5)
-    ud = laminate('ud', [la, la, la, la])
+    ud = laminate("ud", [la, la, la, la])
     assert math.isclose(ud.thickness, 0.4545, rel_tol=0.01)
     assert math.isclose(ud.ρ, 1.43, rel_tol=0.01)
     assert ud.vf == 0.5
@@ -52,7 +53,7 @@ def test_ud():  # {{{1
     assert math.isclose(ud.Gyz, 4969.80, rel_tol=0.01)
     assert math.isclose(ud.νxy, 0.28, rel_tol=0.01)
     assert math.isclose(ud.νyx, 0.04, rel_tol=0.01)
-    assert math.isclose(ud.αx,  2.75e-07, rel_tol=0.01)
+    assert math.isclose(ud.αx, 2.75e-07, rel_tol=0.01)
     assert math.isclose(ud.αy, 4.14e-5, rel_tol=0.01)
     assert math.isclose(ud.tEx, 118810.0, rel_tol=0.01)
     assert math.isclose(ud.tEy, 16979.80, rel_tol=0.01)
@@ -68,7 +69,7 @@ def test_ud():  # {{{1
 def test_plain_weave():  # {{{1
     A = lamina(hf, hr, 100, 0, 0.5)
     B = lamina(hf, hr, 100, 90, 0.5)
-    pw = laminate('pw', [A, B, B, A])
+    pw = laminate("pw", [A, B, B, A])
     assert math.isclose(pw.thickness, 0.4545, rel_tol=0.01)
     assert math.isclose(pw.ρ, 1.43, rel_tol=0.01)
     assert pw.vf == 0.5
@@ -97,7 +98,7 @@ def test_plain_weave():  # {{{1
 def test_pm45():  # {{{1
     A = lamina(hf, hr, 100, 45, 0.5)
     B = lamina(hf, hr, 100, -45, 0.5)
-    pm45 = laminate('pm45', [A, B, B, A])
+    pm45 = laminate("pm45", [A, B, B, A])
     assert math.isclose(pm45.thickness, 0.4545, rel_tol=0.01)
     assert math.isclose(pm45.ρ, 1.43, rel_tol=0.01)
     assert pm45.vf == 0.5
@@ -128,7 +129,7 @@ def test_qi():  # {{{1
     B = lamina(hf, hr, 100, 90, 0.5)
     C = lamina(hf, hr, 100, 45, 0.5)
     D = lamina(hf, hr, 100, -45, 0.5)
-    qi = laminate('qi', [A, B, C, D, D, C, B, A])
+    qi = laminate("qi", [A, B, C, D, D, C, B, A])
     assert math.isclose(qi.thickness, 0.9090, rel_tol=0.01)
     assert math.isclose(qi.ρ, 1.43, rel_tol=0.01)
     assert qi.vf == 0.5
