@@ -3,7 +3,7 @@
 # Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2021-05-25T12:02:10+0200
+# Last modified: 2021-05-25T16:21:14+0200
 """Parser for lamprop files."""
 
 import copy
@@ -160,9 +160,9 @@ def _extended(original):
     extension = []
     for s, e in pairs:
         if layers[s] == "__":
-            extension += layers[s + 1 : e][::-1]
+            extension += layers[s + 1 : e][::-1]  # noqa
         else:
-            extension += [layers[s]] + layers[s + 1 : e][::-1]
+            extension += [layers[s]] + layers[s + 1 : e][::-1]  # noqa
     return extension
 
 
