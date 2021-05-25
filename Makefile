@@ -8,7 +8,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2021-05-25T15:58:00+0200
+# Last modified: 2021-05-25T16:12:33+0200
 
 all::
 	@echo 'you can use the following commands:'
@@ -38,4 +38,4 @@ test::
 	py.test -v
 
 doc::
-	cd $(SUBDIR); make
+	cd doc/; make

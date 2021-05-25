@@ -39,5 +39,5 @@ l: 150  -60 e-glas
 c: UNIE640
 l: 600  0 0.50 e-glas
 l:  40 90 0.50 e-glas
-c: symmetric
+c: -- symmetric --
 s:

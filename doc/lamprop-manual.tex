@@ -3,7 +3,7 @@
 %
 % Copyright © 2018,2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 % Created: 2018-05-13 23:48:04 +0200
-% Last modified: 2020-12-28T21:11:13+0100
+% Last modified: 2021-05-25T16:14:33+0200
 
 \newcommand{\twodigits}[1]{\ifnum#1<10 0\number#1\else\number#1\fi}
 \newcommand{\TheDate}{\number\year-\twodigits\month-\twodigits\day}
@@ -329,14 +329,16 @@ There are basically two ways to use lamprop.
     \item Use the \textsc{gui}-program \texttt{lamprop-gui}.
 \end{enumerate}
 
-They depend on files written in a domain-specific language.
+They depend on files written in a domain-specific language, which is
+documented in the next section.
 
 \section{The lamprop file format} % {{{2
 
 The file format is very simple. Functional lines have either \texttt{f},
-\texttt{r}, \texttt{t}, \texttt{m}, \texttt{l} or \texttt{s} as the first
-non whitespace character. This character must immediately be followed by
-a colon \texttt{:}. All other lines are seen as comments and disregarded.
+\texttt{r}, \texttt{t}, \texttt{m}, \texttt{l}, \texttt{c} or \texttt{s} as
+the first non whitespace character. This character must immediately be
+followed by a colon \texttt{:}. All other lines are seen as comments and
+disregarded.
 
 This program assumes specific metric units. The units used below are important
 because the program internally calculates the thickness of layers (in mm)
@@ -444,6 +446,93 @@ There is no artificial limit to the amount of layers that you can use other
 than Python running out of memory. The author has used laminates with up to
 250 layers. Calculating the properties of that laminate took approximately
 \SI{0.5}{s} on a machine with an Intel Core2 Q9300 running FreeBSD.
+
+Interspersed between the \texttt{l:} lines (and before the \texttt{s:} line)
+there can be \texttt{c:} lines.
+These are comments about the lay-up, that will be inserted into the output.
+Their use is to signify that the \texttt{l:} lines following a comment are
+part of a subassembly such as a woven fabric or a non-crimp fabric.
+
+For example:
+\begin{lstlisting}[style=plain]
+    E1      ν12     α1      ρ       name
+f:  70000   0.33    5e-6        2.54    e-glas
+
+    Em      ν       α       ρ       name
+r:  3600    0.36    60e-6   1.145   atlac-430
+
+t: atlac430-combi
+m: 0.22 atlac-430
+c: CSM 450
+l: 150  0 e-glas
+l: 150  60 e-glas
+l: 150  -60 e-glas
+c: UNIE640
+l: 600  0 0.50 e-glas
+l:  40 90 0.50 e-glas
+c: -- symmetric --
+s:
+\end{lstlisting}
+
+This will yield the following output:
+
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{\label{tab:atlac430-combi}properties of atlac430-combi}
+  \centering\footnotesize{\rule{0pt}{10pt}
+  \tiny calculated by lamprop 2021.05.25\\[3pt]}
+    \begin{tabular}[t]{rcrrl}
+      \multicolumn{5}{c}{\small\textbf{Laminate stacking}}\\[0.1em]
+      \toprule %% \usepackage{booktabs}
+      Layer & Weight & Angle & vf & Fiber type\\
+            & [g/m$^2$] & [$\circ$] & [\%]\\
+      \midrule
+\multicolumn{5}{l}{CSM 450}\\
+      1 &  150 &     0 & 22 & e-glas\\
+      2 &  150 &    60 & 22 & e-glas\\
+      3 &  150 &   -60 & 22 & e-glas\\
+\multicolumn{5}{l}{UNIE640}\\
+      4 &  600 &     0 & 50 & e-glas\\
+      5 &   40 &    90 & 50 & e-glas\\
+\multicolumn{5}{l}{-- symmetric --}\\
+\multicolumn{5}{l}{UNIE640}\\
+      6 &   40 &    90 & 50 & e-glas\\
+      7 &  600 &     0 & 50 & e-glas\\
+\multicolumn{5}{l}{CSM 450}\\
+      8 &  150 &   -60 & 22 & e-glas\\
+      9 &  150 &    60 & 22 & e-glas\\
+      10 &  150 &     0 & 22 & e-glas\\
+      \bottomrule
+    \end{tabular}\hspace{0.02\textwidth}
+    \begin{tabular}[t]{rrlrrl}
+      \multicolumn{3}{c}{\small\textbf{Physical properties}}\\[0.1em]
+      \toprule
+      Property & Value & Dimension\\
+      \midrule
+      $\mathrm{v_f}$ & 32.8 &\%\\
+      $\mathrm{w_f}$ & 52 &\%\\
+      thickness & 2.62 & mm\\
+      density & 1.6 & g/cm$^3$\\
+      weight & 4195 & g/m$^2$\\
+      resin & 2015 & g/m$^2$\\
+      \midrule
+      \multicolumn{6}{c}{\small\textbf{Engineering properties}}\\[0.1em]
+      \multicolumn{3}{c}{\small\textbf{In-plane}} &
+        \multicolumn{3}{c}{\small\textbf{3D stiffness tensor}}\\[0.1em]
+      $\mathrm{E_x}$ &    19638 & MPa & $\mathrm{E_x}$ &    19642 & MPa\\
+      $\mathrm{E_y}$ &    11413 & MPa & $\mathrm{E_y}$ &    11436 & MPa\\
+      $\mathrm{E_z}$ &     7504 & MPa & $\mathrm{E_z}$ &     8841 & MPa\\
+      $\mathrm{G_{xy}}$ &     3770 & MPa & $\mathrm{G_{xy}}$ &     3770 & MPa\\
+      $\mathrm{G_{xz}}$ &     2592 & MPa & $\mathrm{G_{xz}}$ &     2796 & MPa\\
+      $\mathrm{G_{yz}}$ &     2681 & MPa &  $\mathrm{G_{yz}}$ &     2868 & MPa\\
+      $\mathrm{\nu_{xy}}$ & 0.3270 &- &$\mathrm{\nu_{xy}}$ & 0.3276 &-\\
+      $\mathrm{\nu_{yx}}$ & 0.1900 &- & $\mathrm{\nu_{xz}}$ & 0.3634 &-\\
+      $\mathrm{\alpha_x}$ & 1.466e-05 & K$^{-1}$ &$\mathrm{\nu_{yz}}$ & 0.4103 &-\\
+      $\mathrm{\alpha_y}$ & 3.934e-05 & K$^{-1}$\\
+      \bottomrule
+    \end{tabular}
+\end{table}
+
 
 \section{Material data} % {{{2
 
