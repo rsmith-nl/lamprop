@@ -8,7 +8,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2020-12-30T12:01:20+0100
+# Last modified: 2021-05-25T15:58:00+0200
 
 all::
 	@echo 'you can use the following commands:'
@@ -26,13 +26,13 @@ clean::
 
 # The targets below are mostly for the maintainer.
 check:: .IGNORE
-	pylama lp/*.py test/*.py console.py gui.py build.py tools/*.py
+	pylama lp/*.py test/*.py console.py gui.py tools/*.py
 
 tags::
 	uctags -R --verbose
 
 format::
-	black lp/*.py test/*.py console.py gui.py build.py tools/*.py
+	black lp/*.py test/*.py console.py gui.py tools/*.py
 
 test::
 	py.test -v
