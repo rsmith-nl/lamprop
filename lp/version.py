@@ -1,4 +1,4 @@
-__version__ = "2021.05.25"
+__version__ = "2021.05.29"
 __license__ = f"""lamprop {__version__}
 Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 

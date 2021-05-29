@@ -4,7 +4,7 @@
 # Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2021-05-24T01:52:59+0200
+# Last modified: 2021-05-29T13:48:16+0200
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -16,7 +16,6 @@ def out(lam, eng, mat, fea):  # {{{1
     texlname = lam.name.replace("_", r"\_")
     lines = [
         "\\begin{table}[!htbp]",
-        "  \\renewcommand{\\arraystretch}{1.2}",
         f"  \\caption{{\\label{{tab:{texlname}}}properties of {texlname}}}",
         "  \\centering\\footnotesize{\\rule{0pt}{10pt}",
         f"  \\tiny calculated by lamprop {__version__}\\\\[3pt]}}",
