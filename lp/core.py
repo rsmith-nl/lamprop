@@ -1,10 +1,10 @@
 # file: core.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 #
-# Copyright © 2014-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2021-05-24T01:46:12+0200
+# Last modified: 2021-08-10T14:40:13+0200
 """
 Core functions of lamprop.
 
@@ -99,18 +99,20 @@ def fiber(E1, ν12, α1, ρ, name):
         ρ (float): Fiber density in g/cm³. Must be > 0
         name (str): Name of the fiber. Must not be empty.
     """
-    E1 = float(E1)
-    ν12 = float(ν12)
-    α1 = float(α1)
-    ρ = float(ρ)
+    rv = SimpleNamespace()
+    rv.E1 = float(E1)
+    rv.ν12 = float(ν12)
+    rv.α1 = float(α1)
+    rv.ρ = float(ρ)
+    rv.name = name
     # Validate parameters
-    if E1 <= 0:
+    if rv.E1 <= 0:
         raise ValueError("fiber E1 must be > 0")
-    if ρ <= 0:
+    if rv.ρ <= 0:
         raise ValueError("fiber ρ must be > 0")
-    if not isinstance(name, str) and not len(name) > 0:
+    if not isinstance(rv.name, str) and not len(rv.name) > 0:
         raise ValueError("fiber name must be a non-empty string")
-    return SimpleNamespace(E1=E1, ν12=ν12, α1=α1, ρ=ρ, name=name)
+    return rv
 
 
 def resin(E, ν, α, ρ, name):
@@ -123,19 +125,20 @@ def resin(E, ν, α, ρ, name):
         ρ (float): Specific gravity of the resin in g/cm³. Must be >0.
         name (str): String containing the name of the resin. Must not be empty.
     """
-    # Covert numbers to floats
-    E = float(E)
-    ν = float(ν)
-    α = float(α)
-    ρ = float(ρ)
+    rv = SimpleNamespace()
+    rv.E = float(E)
+    rv.ν = float(ν)
+    rv.α = float(α)
+    rv.ρ = float(ρ)
+    rv.name = name
     # Validate parameters
-    if E <= 0:
+    if rv.E <= 0:
         raise ValueError("E must be > 0")
-    if ρ <= 0:
+    if rv.ρ <= 0:
         raise ValueError("resin ρ must be > 0")
-    if not isinstance(name, str) and not len(name) > 0:
+    if not isinstance(rv.name, str) and not len(rv.name) > 0:
         raise ValueError("resin name must be a non-empty string")
-    return SimpleNamespace(E=E, ν=ν, α=α, ρ=ρ, name=name)
+    return rv
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):

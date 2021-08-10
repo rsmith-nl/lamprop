@@ -1,10 +1,10 @@
 # file: latex.py
 # vim:fileencoding=utf-8:ft=python:fdm=marker
 #
-# Copyright © 2011-2020 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2021-05-29T13:51:07+0200
+# Last modified: 2021-08-10T14:40:41+0200
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
