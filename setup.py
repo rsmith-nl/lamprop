@@ -3,9 +3,10 @@
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 #
 # Copyright © 2020 R.F. Smith <rsmith@xs4all.nl>
+# SPDX-License-Identifier: MIT
 # Created: 2020-10-25T12:18:04+0100
-# Last modified: 2020-12-08T21:57:34+0100
-"""Script to install scripts for the local user."""
+# Last modified: 2022-01-20T17:49:39+0100
+"""Script to install self-contained scripts for the local user."""
 
 import os
 import py_compile
@@ -36,7 +37,7 @@ def main():
     install = "install" in [a.lower() for a in sys.argv]
     if install:
         if not os.path.exists(destdir):
-            os.mkdir(destdir)
+            os.makedirs(destdir)
     else:
         print("(Use the 'install' argument to actually install scripts.)")
     do_install(install, scripts, destdir, destdir2)
@@ -81,7 +82,9 @@ def mkarchive(name, modules, main="__main__.py"):
         main: Name of the main file. Defaults to __main__.py
     """
     std = "__main__.py"
-    shebang = b"#!/usr/bin/env python\n"
+    # extract shebang from current script so we can use SHEBANGFIX on FreeBSD.
+    with open(sys.argv[0], "rb") as f:
+        shebang = f.readline()
     if isinstance(modules, str):
         modules = [modules]
     if main != std:
