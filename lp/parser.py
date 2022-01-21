@@ -3,7 +3,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2021-08-10T14:39:51+0200
+# Last modified: 2022-01-21T17:09:55+0100
 """Parser for lamprop files."""
 
 import copy
@@ -82,12 +82,17 @@ def _get_numbers(directive):
     """
     num, line = directive
     numbers = []
-    for j in line.split()[1:]:
-        if j[0] in "0123456789.+-":
+    items = line.split()[1:]
+    for j in items:
+        try:
             numbers.append(float(j))
-        else:
+        except ValueError:
             break
-    remain = line.split(maxsplit=len(numbers) + 1)[-1]
+    newitems = line.split(maxsplit=len(numbers)+1)[1:]
+    if len(newitems) > len(numbers):
+        remain = newitems[-1]
+    else:
+        remain = ""
     return tuple(numbers), remain
 
 
@@ -109,6 +114,9 @@ def _laminate(ld, resins, fibers):
     sym = False
     if ld[0][1].startswith("t"):
         lname = ld[0][1][2:].strip()
+        if lname == "":
+            msg.warning("no laminate name on line {}".format(ld[0][0]))
+            return None
     else:
         msg.warning("no 't' directive on line {}".format(ld[0][0]))
         return None
@@ -184,12 +192,16 @@ def _get_components(directives, tp):
     w2 = 'duplicate {} "{}" on line {} ignored.'
     w3 = "{} must be >0 on line {}; skipping."
     w4 = "Poisson's ratio on line {} should be  >0 and <0.5; skipping."
+    w5 = 'missing {} name on line {}; skipping.'
     for directive in directives:
         ln = directive[0]
         numbers, name = _get_numbers(directive)
         count = len(numbers)
         if count != 4:
             msg.warning(w1.format(tname, ln, count))
+            continue
+        if len(name) == 0:
+            msg.warning(w5.format(tname, ln))
             continue
         if name in names:
             msg.warning(w2.format(tname, name, ln))

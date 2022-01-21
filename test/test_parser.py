@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2021-05-25T12:18:06+0200
+# Last modified: 2022-01-21T16:59:35+0100
 """Test for lamprop parser."""
 
 import sys
@@ -87,6 +87,7 @@ def test_bad_fibers():  # {{{1
         (1, "f: 233000 0.2 -0.54e-6 geen sg"),
         (2, "f: -230000 0.2 -0.41e-6 -1.76 Efout"),
         (3, "f: 230000 0.2 -0.41e-6 -1.76 sgfout"),
+        (4, "f:  240000  0.25    -0.12e-6    1.78"),  # no name
     ]
     fibers = _get_components(directives, fiber)
     assert len(fibers) == 0
@@ -115,6 +116,7 @@ def test_bad_resins():  # {{{1
         (2, "r: 4620 -2 41.4e-6 1.1 nufout"),
         (3, "r: 4620 0.7 41.4e-6 1.1 nufout"),
         (4, "r: 4620 0.2 41.4e-6 -0.1 sgfout"),
+        (4, "r: 4620 0.2 41.4e-6 1.1"),  # no name
     ]
     resins = _get_components(directives, resin)
     assert len(resins) == 0
