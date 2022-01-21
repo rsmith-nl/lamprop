@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2021-08-10T14:40:13+0200
+# Last modified: 2022-01-21T15:35:24+0100
 """
 Core functions of lamprop.
 
@@ -101,17 +101,15 @@ def fiber(E1, ν12, α1, ρ, name):
     """
     rv = SimpleNamespace()
     rv.E1 = float(E1)
+    assert rv.E1 > 0, "fiber E1 must be > 0"
     rv.ν12 = float(ν12)
     rv.α1 = float(α1)
     rv.ρ = float(ρ)
+    assert rv.ρ > 0, "fiber ρ must be > 0"
     rv.name = name
-    # Validate parameters
-    if rv.E1 <= 0:
-        raise ValueError("fiber E1 must be > 0")
-    if rv.ρ <= 0:
-        raise ValueError("fiber ρ must be > 0")
-    if not isinstance(rv.name, str) and not len(rv.name) > 0:
-        raise ValueError("fiber name must be a non-empty string")
+    assert (
+        isinstance(rv.name, str) and len(rv.name) > 0
+    ), "fiber name must be a non-empty string"
     return rv
 
 
@@ -127,17 +125,15 @@ def resin(E, ν, α, ρ, name):
     """
     rv = SimpleNamespace()
     rv.E = float(E)
+    assert rv.E > 0, "resin E must be > 0"
     rv.ν = float(ν)
     rv.α = float(α)
     rv.ρ = float(ρ)
+    assert rv.ρ > 0, "resin ρ must be > 0"
     rv.name = name
-    # Validate parameters
-    if rv.E <= 0:
-        raise ValueError("E must be > 0")
-    if rv.ρ <= 0:
-        raise ValueError("resin ρ must be > 0")
-    if not isinstance(rv.name, str) and not len(rv.name) > 0:
-        raise ValueError("resin name must be a non-empty string")
+    assert (
+        isinstance(rv.name, str) and len(rv.name) > 0
+    ), "resin name must be a non-empty string"
     return rv
 
 
@@ -174,13 +170,11 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         S: 3D stiffness matrix for the lamina in global coordinates.
     """
     fiber_weight = float(fiber_weight)
-    if fiber_weight <= 0:
-        raise ValueError("fiber weight cannot be <=0!")
+    assert fiber_weight > 0, "fiber weight cannot be <=0!"
     vf = float(vf)
-    if 1.0 < vf <= 100.0:
-        vf = vf / 100.0
-    elif not 0.0 <= vf <= 1.0:
-        raise ValueError("vf must be in the ranges 0.0-1.0 or 1.0-100.0")
+    assert (
+        1.0 < vf <= 100.0 or 0.0 <= vf <= 1.0
+    ), "vf must be in the ranges 0.0-1.0 or 1.0-100.0"
     vm = 1.0 - vf
     fiber_thickness = fiber_weight / (fiber.ρ * 1000)
     thickness = fiber_thickness * (1 + vm / vf)
@@ -316,12 +310,10 @@ def laminate(name, layers):
         wf: Fiber weight fraction.
         C: 3D Stiffness matrix for the laminate in global coordinates.
     """
-    if not layers:
-        raise ValueError("no layers in the laminate")
-    if not isinstance(name, str):
-        raise ValueError("the name of a laminate must be a string")
-    if len(name) == 0:
-        raise ValueError("the length of the name of a laminate must be >0")
+    assert layers, "no layers in the laminate"
+    assert (
+        isinstance(name, str) and len(name) > 0
+    ), "laminate name must be a non-empty string"
     orig_layers = [la for la in layers]
     layers = tuple(la for la in layers if isinstance(la, SimpleNamespace))
     thickness = sum(la.thickness for la in layers)
