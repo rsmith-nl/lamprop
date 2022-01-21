@@ -29,3 +29,21 @@ s:
 
 t: empty
 m: 0.5 Hyer's resin
+
+t: noname1
+m: 0.5
+l: 100  0 foo
+l: 100 90 foo
+
+t: noname2
+m: 0.5 Hyer's resin
+l: 100  0
+l: 100 90 foo
+
+noname3
+t:
+m: 0.5 Hyer's resin
+l: 100  0 foo
+l: 100 90 foo
+
+
