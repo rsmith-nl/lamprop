@@ -5,7 +5,7 @@
 # Copyright © 2020 R.F. Smith <rsmith@xs4all.nl>
 # SPDX-License-Identifier: MIT
 # Created: 2020-10-25T12:18:04+0100
-# Last modified: 2022-01-22T15:45:31+0100
+# Last modified: 2022-01-25T11:47:55+0100
 """Install self-contained scripts for the local user."""
 
 import os
@@ -110,7 +110,7 @@ def mkarchive(name, modules, main="__main__.py"):
         modules = [modules]
     if main != std:
         remove(std)
-        os.link(main, std)
+        shutil.copyfile(main, std)
     # Optimization level for compile.
     lvl = 2
     # Forcibly compile __main__.py lest we use an old version!
