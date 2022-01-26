@@ -4,12 +4,13 @@
 #
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2021-01-02T23:42:39+0100
+# Last modified: 2022-01-26T23:40:56+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
 import argparse
 import logging
+import os
 import sys
 import lp
 
@@ -86,6 +87,10 @@ def main():
         out = lp.latex_output
     elif args.html:
         out = lp.html_output
+    # Force utf-8 encoding for stdout on ms-windows.
+    # Because redirected output uses cp1252 by default.
+    if os.name == "nt":
+        sys.stdout.reconfigure(encoding="utf-8")
     for f in args.files:
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
