@@ -3,14 +3,14 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2022-01-27T21:16:14+0100
+# Last modified: 2022-01-27T21:41:20+0100
 """Parser for lamprop files."""
 
 import copy
-import logging
 from .core import fiber, resin, lamina, laminate
 
-msg = logging.getLogger("parser")
+info = []
+warn = []
 
 
 def parse(filename):
@@ -23,26 +23,28 @@ def parse(filename):
     Returns
         A list of types.laminate.
     """
+    info = []
+    warn = []
     try:
         rd, fd, ld = _directives(filename)
-        msg.info(f'Reading file "{filename}".')
+        info.append(f'Reading file "{filename}".')
     except IOError:
-        msg.warning(f'Cannot read "{filename}".')
+        warn.append(f'Cannot read "{filename}".')
         return []
     fdict = _get_components(fd, fiber)
-    msg.info(f'Found {len(fdict)} fibers in "{filename}".')
+    info.append(f'Found {len(fdict)} fibers in "{filename}".')
     rdict = _get_components(rd, resin)
-    msg.info(f'Found {len(rdict)} resins in "{filename}".')
+    info.append(f'Found {len(rdict)} resins in "{filename}".')
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == "t"] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
-    msg.info(f'Found {len(bpairs)} possible laminates in "{filename}".')
+    info.append(f'Found {len(bpairs)} possible laminates in "{filename}".')
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
         lam = _laminate(current, rdict, fdict)
         if lam:
             laminates.append(lam)
-    msg.info(f'Found {len(laminates)} laminates in "{filename}".')
+    info.append(f'Found {len(laminates)} laminates in "{filename}".')
     return laminates
 
 
@@ -64,7 +66,7 @@ def _directives(filename):
         for num, ln in enumerate(data, start=1)
         if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlscfr"
     ]
-    msg.info(f'Found {len(directives)} directives in "{filename}".')
+    info.append(f'Found {len(directives)} directives in "{filename}".')
     rd = [(num, ln) for num, ln in directives if ln[0] == "r"]
     fd = [(num, ln) for num, ln in directives if ln[0] == "f"]
     ld = [(num, ln) for num, ln in directives if ln[0] in "tmlsc"]
@@ -116,10 +118,10 @@ def _laminate(ld, resins, fibers):
     if ld[0][1].startswith("t"):
         lname = ld[0][1][2:].strip()
         if lname == "":
-            msg.warning(f"No laminate name on line {ld[0][0]}.")
+            warn.append(f"No laminate name on line {ld[0][0]}.")
             return None
     else:
-        msg.warning(f'No "t" directive on line {ld[0][0]}.')
+        warn.append(f'No "t" directive on line {ld[0][0]}.')
         return None
     try:
         if not ld[1][1].startswith("m"):
@@ -127,10 +129,10 @@ def _laminate(ld, resins, fibers):
         common_vf, rname = ld[1][1][2:].split(maxsplit=1)
         common_vf = float(common_vf)
         if rname not in resins:
-            msg.warning(f'Unknown resin "{rname}" on line {ld[1][0]}.')
+            warn.append(f'Unknown resin "{rname}" on line {ld[1][0]}.')
             raise ValueError
     except ValueError:
-        msg.warning(f'No valid "m" directive on line {ld[1][0]}.')
+        warn.append(f'No valid "m" directive on line {ld[1][0]}.')
         return None
     if ld[-1][1].startswith("s"):
         sym = True
@@ -144,10 +146,10 @@ def _laminate(ld, resins, fibers):
         if lamina:
             llist.append(lamina)
     if not llist:
-        msg.warning(f'Empty laminate "{lname}".')
+        warn.append(f'Empty laminate "{lname}".')
         return None
     if sym:
-        msg.info(f'Laminate "{lname}" is symmetric.')
+        info.append(f'Laminate "{lname}" is symmetric.')
         llist = llist + _extended(llist)
     return laminate(lname, llist)
 
@@ -194,25 +196,25 @@ def _get_components(directives, tp):
         numbers, name = _get_numbers(directive)
         count = len(numbers)
         if count != 4:
-            msg.warning(
+            warn.append(
                 f"Expected 4 numbers for a {tname} on line {ln}, found {count}; skipping."
             )
             continue
         if len(name) == 0:
-            msg.warning(f"Missing {tname} name on line {ln}; skipping.")
+            warn.append(f"Missing {tname} name on line {ln}; skipping.")
             continue
         if name in names:
-            msg.warning(f'Duplicate {tname} "{name}" on line {ln} ignored.')
+            warn.append(f'Duplicate {tname} "{name}" on line {ln} ignored.')
             continue
         E, ν, α, ρ = numbers
         if E < 0:
-            msg.warning(f"Young's modulus must be >0 on line {ln}; skipping.")
+            warn.append(f"Young's modulus must be >0 on line {ln}; skipping.")
             continue
         if ρ < 0:
-            msg.warning(f"Density must be >0 on line {ln}; skipping.")
+            warn.append(f"Density must be >0 on line {ln}; skipping.")
             continue
         if ν < 0 or ν >= 0.5:
-            msg.warning(
+            warn.append(
                 f"Poisson's ratio on line {ln} should be  >0 and <0.5; skipping."
             )
             continue
@@ -240,9 +242,9 @@ def _get_lamina(directive, fibers, resin, vf):
     if len(numbers) == 2:
         numbers = numbers + (vf,)
     elif len(numbers) != 3:
-        msg.warning(f'Invalid lamina line {ln}, "{line}".')
+        warn.append(f'Invalid lamina line {ln}, "{line}".')
         return None
     if fname not in fibers:
-        msg.warning(f'Unknown fiber "{fname}" on line {ln}.')
+        warn.append(f'Unknown fiber "{fname}" on line {ln}.')
         return None
     return lamina(fibers[fname], resin, *numbers)
