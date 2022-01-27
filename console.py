@@ -4,7 +4,7 @@
 #
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2022-01-27T21:44:58+0100
+# Last modified: 2022-01-27T22:18:28+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -94,12 +94,15 @@ def main():
     for f in args.files:
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
-        print("Information:")
+        print(f"Parser information for \"{f}\":")
         for ln in lp.info:
             print(ln)
+        print()
         if lp.warn:
+            print(f"Parser warnings for \"{f}\":")
             for ln in lp.warn:
                 print(ln)
+            print()
         for curlam in laminates:
             print(*out(curlam, args.eng, args.mat, args.fea), sep="\n")
 

@@ -3,7 +3,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2022-01-27T21:41:20+0100
+# Last modified: 2022-01-27T22:19:12+0100
 """Parser for lamprop files."""
 
 import copy
@@ -23,11 +23,11 @@ def parse(filename):
     Returns
         A list of types.laminate.
     """
-    info = []
-    warn = []
+    info.clear()
+    warn.clear()
     try:
-        rd, fd, ld = _directives(filename)
         info.append(f'Reading file "{filename}".')
+        rd, fd, ld = _directives(filename)
     except IOError:
         warn.append(f'Cannot read "{filename}".')
         return []
@@ -118,21 +118,22 @@ def _laminate(ld, resins, fibers):
     if ld[0][1].startswith("t"):
         lname = ld[0][1][2:].strip()
         if lname == "":
-            warn.append(f"No laminate name on line {ld[0][0]}.")
+            warn.append(f"No laminate name on line {ld[0][0]}; line ignored.")
             return None
     else:
-        warn.append(f'No "t" directive on line {ld[0][0]}.')
+        warn.append(f'No "t" directive on line {ld[0][0]}; line ignored.')
+        return None
+    if not ld[1][1].startswith("m"):
+        warn.append(f'No valid "m" directive on line {ld[1][0]}; line ignored.')
         return None
     try:
-        if not ld[1][1].startswith("m"):
-            raise ValueError
         common_vf, rname = ld[1][1][2:].split(maxsplit=1)
         common_vf = float(common_vf)
-        if rname not in resins:
-            warn.append(f'Unknown resin "{rname}" on line {ld[1][0]}.')
-            raise ValueError
     except ValueError:
-        warn.append(f'No valid "m" directive on line {ld[1][0]}.')
+        warn.append(f"Missing resin name on line {ld[1][0]}; line ignored.")
+        return None
+    if rname not in resins:
+        warn.append(f'Unknown resin "{rname}" on line {ld[1][0]}; line ignored.')
         return None
     if ld[-1][1].startswith("s"):
         sym = True
@@ -146,7 +147,7 @@ def _laminate(ld, resins, fibers):
         if lamina:
             llist.append(lamina)
     if not llist:
-        warn.append(f'Empty laminate "{lname}".')
+        warn.append(f'Empty laminate "{lname}" ignored.')
         return None
     if sym:
         info.append(f'Laminate "{lname}" is symmetric.')
@@ -197,25 +198,26 @@ def _get_components(directives, tp):
         count = len(numbers)
         if count != 4:
             warn.append(
-                f"Expected 4 numbers for a {tname} on line {ln}, found {count}; skipping."
+                f"Expected 4 numbers for a {tname} on line {ln},"
+                f" found {count}; line ignored."
             )
             continue
         if len(name) == 0:
-            warn.append(f"Missing {tname} name on line {ln}; skipping.")
+            warn.append(f"Missing {tname} name on line {ln}; line ignored.")
             continue
         if name in names:
             warn.append(f'Duplicate {tname} "{name}" on line {ln} ignored.')
             continue
         E, ν, α, ρ = numbers
         if E < 0:
-            warn.append(f"Young's modulus must be >0 on line {ln}; skipping.")
+            warn.append(f"Young's modulus must be >0 on line {ln}; line ignored.")
             continue
         if ρ < 0:
-            warn.append(f"Density must be >0 on line {ln}; skipping.")
+            warn.append(f"Density must be >0 on line {ln}; line ignored.")
             continue
         if ν < 0 or ν >= 0.5:
             warn.append(
-                f"Poisson's ratio on line {ln} should be  >0 and <0.5; skipping."
+                f"Poisson's ratio on line {ln} should be  >0 and <0.5; line ignored."
             )
             continue
         rv.append(tp(*numbers, name))
@@ -243,6 +245,9 @@ def _get_lamina(directive, fibers, resin, vf):
         numbers = numbers + (vf,)
     elif len(numbers) != 3:
         warn.append(f'Invalid lamina line {ln}, "{line}".')
+        return None
+    if not fname:
+        warn.append(f"Missing fiber name on line {ln}.")
         return None
     if fname not in fibers:
         warn.append(f'Unknown fiber "{fname}" on line {ln}.')
