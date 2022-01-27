@@ -4,7 +4,7 @@
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2021-08-10T14:40:30+0200
+# Last modified: 2022-01-27T21:20:39+0100
 """HTML output routines for lamprop."""
 
 from .version import __version__
@@ -228,16 +228,15 @@ def _matrices(l):  # {{{1
         '<colgroup span="1"></colgroup>',
         '<tbody align="center">',
         "<tr>",
-        "<td>{}</td>".format(hfstr[0]),
+        f"<td>{hfstr[0]}</td>"
         '<td rowspan="2">=</td>',
         pr(l.H, 0, r=2),
         '<td rowspan="2">&times;</td>',
-        "<td>{}</td>".format(hdstr[0]),
+        f"<td>{hdstr[0]}</td>"
         "</tr>",
         "<tr>",
-        "<td>{}</td>".format(hfstr[1]),
-        pr(l.H, 1, r=2),
-        "<td>{}</td>".format(hdstr[1]),
+        f"<td>{hfstr[1]}</td>" + pr(l.H, 1, r=2),
+        f"<td>{hdstr[1]}</td>"
         "</tr>",
         "</tbody>",
         "</table>",

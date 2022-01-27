@@ -4,7 +4,7 @@
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-27 23:19:38 +0200
-# Last modified: 2021-08-10T14:40:41+0200
+# Last modified: 2022-01-27T21:23:46+0100
 """LaTeX output routines for lamprop."""
 
 from .version import __version__
@@ -31,9 +31,11 @@ def out(lam, eng, mat, fea):  # {{{1
         if isinstance(la, str):
             lines.append(r"\multicolumn{5}{l}{" + la + r"}\\")
             continue
-        s = "      {} & {:4.0f} & {:5.0f} & {:.3g} & {}\\\\"
         texfname = la.fiber.name.replace("_", r"\_")
-        lines.append(s.format(ln, la.fiber_weight, la.angle, la.vf * 100, texfname))
+        lines.append(
+            f"      {ln} & {la.fiber_weight:4.0f} & {la.angle:5.0f} & "
+            f"{la.vf * 100:.3g} & {texfname}\\\\"
+        )
         ln += 1
     w = lam.fiber_weight + lam.resin_weight
     lines += [
@@ -109,10 +111,10 @@ def _matrices(l):  # {{{1
                 if num == 0.0:
                     nums = "0"
                 else:
-                    nums, exp = "{:> 10.4e}".format(mat[t][m]).split("e")
+                    nums, exp = f"{mat[t][m]:> 10.4e}".split("e")
                     exp = int(exp)
                     if exp != 0:
-                        nums += "\\times 10^{{{}}}".format(exp)
+                        nums += f"\\times 10^{{{exp}}}"
                 numl.append(nums)
             lines.append("          " + " & ".join(numl) + r"\\")
         return lines
