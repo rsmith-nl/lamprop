@@ -4,7 +4,7 @@
 #
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2011-03-26 14:54:24 +0100
-# Last modified: 2022-01-27T22:18:28+0100
+# Last modified: 2022-01-28T09:52:27+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -32,6 +32,12 @@ def main():
     )
     opts = argparse.ArgumentParser(prog="lamprop", description=doc)
     group = opts.add_mutually_exclusive_group()
+    group.add_argument(
+        "-i",
+        "--info",
+        action="store_true",
+        help="show information about source file (the default is not to)",
+    )
     group.add_argument(
         "-l",
         "--latex",
@@ -94,12 +100,13 @@ def main():
     for f in args.files:
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
-        print(f"Parser information for \"{f}\":")
-        for ln in lp.info:
-            print(ln)
-        print()
+        if args.info and lp.info:
+            print(f"Information for \"{f}\":")
+            for ln in lp.info:
+                print(ln)
+            print()
         if lp.warn:
-            print(f"Parser warnings for \"{f}\":")
+            print(f"Warnings for \"{f}\":")
             for ln in lp.warn:
                 print(ln)
             print()
