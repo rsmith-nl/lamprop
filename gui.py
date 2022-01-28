@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2021-01-02T23:41:26+0100
+# Last modified: 2022-01-28T10:41:28+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -23,7 +23,10 @@ class LampropUI(tk.Tk):
     def __init__(self, parent):
         tk.Tk.__init__(self, parent)
         self.parent = parent
-        self.directory = ""
+        if os.name == "posix":
+            self.directory = os.getcwd()
+        else:
+            self.directory = ""
         self.lamfile = tk.StringVar()
         self.lamfile.set("no file selected")
         self.laminates = None
@@ -50,16 +53,28 @@ class LampropUI(tk.Tk):
         file_menu = tk.Menu(menubar)
         file_menu.add_command(label="Open", underline=0, command=self.do_fileopen)
         file_menu.add_command(label="Reload", underline=0, command=self.do_reload)
+        file_menu.add_command(
+            label="Info",
+            underline=0,
+            command=self.show_info,
+            state="disabled",
+        )
+        file_menu.add_command(
+            label="Warnings",
+            underline=0,
+            command=self.show_warnings,
+            state="disabled",
+        )
         file_menu.add_separator()
         file_menu.add_command(
-            label="Export as text",
-            underline=10,
+            label="Text export",
+            underline=0,
             command=self.do_export_txt,
             state="disabled",
         )
         file_menu.add_command(
-            label="Export as HTML",
-            underline=10,
+            label="HTML export",
+            underline=0,
             command=self.do_export_html,
             state="disabled",
         )
@@ -68,8 +83,8 @@ class LampropUI(tk.Tk):
         menubar.add_cascade(label="File", underline=0, menu=file_menu)
         self.file_menu = file_menu
         helpmenu = tk.Menu(menubar)
-        helpmenu.add_command(label="About", underline=0, command=self.do_about)
-        helpmenu.add_command(label="License", underline=0, command=self.do_license)
+        helpmenu.add_command(label="About", underline=0, command=self.show_about)
+        helpmenu.add_command(label="License", underline=0, command=self.show_license)
         menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
         # Create widgets.
         # Row
@@ -112,7 +127,6 @@ class LampropUI(tk.Tk):
     def do_fileopen(self):
         """Open a lamprop file."""
         if not self.directory:
-            self.directory = ""
             available = [
                 os.environ[k] for k in ("HOME", "HOMEDRIVE") if k in os.environ
             ]
@@ -130,8 +144,10 @@ class LampropUI(tk.Tk):
         self.directory = os.path.dirname(fn.name)
         self.lamfile.set(fn.name)
         self.do_reload()
-        self.file_menu.entryconfigure("Export as text", state="normal")
-        self.file_menu.entryconfigure("Export as HTML", state="normal")
+        self.file_menu.entryconfigure("Text export", state="normal")
+        self.file_menu.entryconfigure("HTML export", state="normal")
+        self.file_menu.entryconfigure("Info", state="normal")
+        self.file_menu.entryconfigure("Warnings", state="normal")
 
     def do_reload(self):
         """Reload the laminates."""
@@ -203,7 +219,7 @@ class LampropUI(tk.Tk):
         with open(res.name, "w") as hf:
             hf.write(html)
 
-    def do_about(self):
+    def show_about(self):
         message(
             self,
             "Lamprop is a program to calculate physical and mechanical properties\n"
@@ -215,11 +231,22 @@ class LampropUI(tk.Tk):
             title="About",
         )
 
-    def do_license(self):
+    def show_license(self):
+        """Display license"""
         message(self, lp.__license__, title="License", height=25)
 
+    def show_info(self):
+        """Display parser information"""
+        text = "\n".join(lp.info)
+        message(self, text, f"Information for {self.lamfile.get()}")
 
-def message(parent, message, title="Message", width=80, height=10):
+    def show_warnings(self):
+        """Display parser warnings"""
+        text = "\n".join(lp.warn)
+        message(self, text, f"Warnings for {self.lamfile.get()}")
+
+
+def message(parent, msg, title="Message", width=80, height=10):
     """Create a toplevel window to display a long message."""
     tl = tk.Toplevel(parent)
     tl.title(title)
@@ -227,15 +254,14 @@ def message(parent, message, title="Message", width=80, height=10):
     tl.columnconfigure(0, weight=1)
     txt = tk.Text(tl, width=width, height=height)
     txt["bg"] = "lightgrey"
-    txt.insert("1.0", message)
+    txt.insert("1.0", msg)
     txt["state"] = "disabled"
     txt.grid(row=0, column=0, sticky="nesw")
-    ok = ttk.Button(tl, text="Ok", command=tl.destroy)
+    ok = ttk.Button(tl, text="Close", command=tl.destroy)
     ok.grid(row=1, column=0)
 
 
-def main():
-    """Main entry point for lamprop GUI."""
+if __name__ == "__main__":
     if os.name == "posix":
         if os.fork():
             sys.exit()
@@ -248,7 +274,3 @@ def main():
     root = LampropUI(None)
     root.wm_title("Lamprop GUI v" + lp.__version__)
     root.mainloop()
-
-
-if __name__ == "__main__":
-    main()

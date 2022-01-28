@@ -3,7 +3,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2022-01-28T09:53:47+0100
+# Last modified: 2022-01-28T10:26:53+0100
 """Parser for lamprop files."""
 
 import copy
@@ -32,19 +32,19 @@ def parse(filename):
         warn.append(f'Cannot read "{filename}".')
         return []
     fdict = _get_components(fd, fiber)
-    info.append(f'Found {len(fdict)} fibers in "{filename}".')
+    info.append(f'Found {len(fdict)} fibers')
     rdict = _get_components(rd, resin)
-    info.append(f'Found {len(rdict)} resins in "{filename}".')
+    info.append(f'Found {len(rdict)} resins')
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == "t"] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
-    info.append(f'Found {len(bpairs)} possible laminates in "{filename}".')
+    info.append(f'Found {len(bpairs)} possible laminates')
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
         lam = _laminate(current, rdict, fdict)
         if lam:
             laminates.append(lam)
-    info.append(f'Found {len(laminates)} laminates in "{filename}".')
+    info.append(f'Found {len(laminates)} laminates')
     return laminates
 
 
@@ -66,7 +66,7 @@ def _directives(filename):
         for num, ln in enumerate(data, start=1)
         if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlscfr"
     ]
-    info.append(f'Found {len(directives)} directives in "{filename}".')
+    info.append(f'Found {len(directives)} directives')
     rd = [(num, ln) for num, ln in directives if ln[0] == "r"]
     fd = [(num, ln) for num, ln in directives if ln[0] == "f"]
     ld = [(num, ln) for num, ln in directives if ln[0] in "tmlsc"]
