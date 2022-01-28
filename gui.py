@@ -4,7 +4,7 @@
 #
 # Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2022-01-28T10:41:28+0100
+# Last modified: 2022-01-28T15:12:26+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -35,6 +35,21 @@ class LampropUI(tk.Tk):
         self.result = None
         self.matrices = tk.IntVar()
         self.fea = tk.IntVar()
+        # Don't show hidden files in the file dialog
+        # https://stackoverflow.com/questions/53220711
+        try:
+            # call a dummy dialog with an impossible option to initialize the file
+            # dialog without really getting a dialog window; this will throw a
+            # TclError, so we need a try...except :
+            try:
+                self.tk.call("tk_getOpenFile", "-foobarbaz")
+            except tk.TclError:
+                pass
+            # now set the magic variables accordingly
+            self.tk.call("set", "::tk::dialog::file::showHiddenBtn", "1")
+            self.tk.call("set", "::tk::dialog::file::showHiddenVar", "0")
+        except Exception:
+            pass
         self.initialize()
 
     def initialize(self):
