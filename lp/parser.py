@@ -3,7 +3,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2022-01-27T22:19:12+0100
+# Last modified: 2022-01-28T09:53:47+0100
 """Parser for lamprop files."""
 
 import copy
@@ -244,12 +244,12 @@ def _get_lamina(directive, fibers, resin, vf):
     if len(numbers) == 2:
         numbers = numbers + (vf,)
     elif len(numbers) != 3:
-        warn.append(f'Invalid lamina line {ln}, "{line}".')
+        warn.append(f'Invalid lamina line {ln}, "{line}"; line ignored.')
         return None
     if not fname:
-        warn.append(f"Missing fiber name on line {ln}.")
+        warn.append(f"Missing fiber name on line {ln}; line ignored.")
         return None
     if fname not in fibers:
-        warn.append(f'Unknown fiber "{fname}" on line {ln}.')
+        warn.append(f'Unknown fiber "{fname}" on line {ln}; line ignored.')
         return None
     return lamina(fibers[fname], resin, *numbers)
