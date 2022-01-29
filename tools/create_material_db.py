@@ -13,7 +13,6 @@ if __name__ == "__main__":
     p.add_argument("--output", default="__matdb.json")
     args = p.parse_args()
 
-
     lp_testdir = args.lp_testdir
 
     lm = glob.glob(os.path.join(lp_testdir, "*lam"))

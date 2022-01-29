@@ -101,12 +101,12 @@ def main():
         logging.info("processing file '{}'".format(f))
         laminates = lp.parse(f)
         if args.info and lp.info:
-            print(f"Information for \"{f}\":")
+            print(f'Information for "{f}":')
             for ln in lp.info:
                 print(ln)
             print()
         if lp.warn:
-            print(f"Warnings for \"{f}\":")
+            print(f'Warnings for "{f}":')
             for ln in lp.warn:
                 print(ln)
             print()
