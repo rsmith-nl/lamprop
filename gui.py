@@ -2,9 +2,9 @@
 # vim:fileencoding=utf-8:fdm=marker:ft=python
 # lamprop GUI - main program.
 #
-# Copyright © 2018,2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
+# Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2022-01-28T15:12:26+0100
+# Last modified: 2022-01-29T01:43:13+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -159,20 +159,26 @@ class LampropUI(tk.Tk):
         self.directory = os.path.dirname(fn.name)
         self.lamfile.set(fn.name)
         self.do_reload()
-        self.file_menu.entryconfigure("Text export", state="normal")
-        self.file_menu.entryconfigure("HTML export", state="normal")
-        self.file_menu.entryconfigure("Info", state="normal")
-        self.file_menu.entryconfigure("Warnings", state="normal")
 
     def do_reload(self):
         """Reload the laminates."""
         laminates = lp.parse(self.lamfile.get())
         if not laminates:
             return
+        self.file_menu.entryconfigure("Text export", state="disabled")
+        self.file_menu.entryconfigure("HTML export", state="disabled")
+        self.file_menu.entryconfigure("Info", state="disabled")
+        self.file_menu.entryconfigure("Warnings", state="disabled")
         self.laminates = {lam.name: lam for lam in laminates}
         self.cxlam["values"] = list(self.laminates.keys())
         self.cxlam.current(0)
         self.on_laminate(0)
+        self.file_menu.entryconfigure("Text export", state="normal")
+        self.file_menu.entryconfigure("HTML export", state="normal")
+        self.file_menu.entryconfigure("Info", state="normal")
+        if lp.warn:
+            self.file_menu.entryconfigure("Warnings", state="normal")
+            self.show_warnings()
 
     def gentxt(self):
         """Generate text output."""
