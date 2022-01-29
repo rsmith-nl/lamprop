@@ -4,7 +4,7 @@
 # Copyright © 2011-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2011-03-28 22:38:23 +0200
-# Last modified: 2022-01-27T21:20:39+0100
+# Last modified: 2022-01-29T13:22:49+0100
 """HTML output routines for lamprop."""
 
 from .version import __version__
@@ -173,7 +173,6 @@ def _matrices(l):  # {{{1
         "M<sub>y</sub>",
         "M<sub>xy</sub>",
     ]
-    hfstr = ["V<sub>y</sub>", "V<sub>x</sub>"]
     dstr = [
         "&epsilon;<sub>x</sub>",
         "&epsilon;<sub>y</sub>",
@@ -182,7 +181,6 @@ def _matrices(l):  # {{{1
         "&kappa;<sub>y</sub>",
         "&kappa;<sub>xy</sub>",
     ]
-    hdstr = ["&gamma;<sub>yz</sub>", "&gamma;<sub>xz</sub>"]
     lines = [
         "<tr>",
         "<!-- second row, stiffness or ABD matrix -->",
@@ -228,15 +226,16 @@ def _matrices(l):  # {{{1
         '<colgroup span="1"></colgroup>',
         '<tbody align="center">',
         "<tr>",
-        f"<td>{hfstr[0]}</td>"
+        "<td>V<sub>y</sub></td>",
         '<td rowspan="2">=</td>',
         pr(l.H, 0, r=2),
         '<td rowspan="2">&times;</td>',
-        f"<td>{hdstr[0]}</td>"
+        "<td>&gamma;<sub>yz</sub></td>",
         "</tr>",
         "<tr>",
-        f"<td>{hfstr[1]}</td>" + pr(l.H, 1, r=2),
-        f"<td>{hdstr[1]}</td>"
+        "<td>V<sub>x</sub></td>",
+        pr(l.H, 1, r=2),
+        "<td>&gamma;<sub>xz</sub></td>",
         "</tr>",
         "</tbody>",
         "</table>",
