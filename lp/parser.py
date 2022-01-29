@@ -3,11 +3,12 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 21:35:41 +0100
-# Last modified: 2022-01-28T10:26:53+0100
+# Last modified: 2022-01-29T14:01:33+0100
 """Parser for lamprop files."""
 
 import copy
 from .core import fiber, resin, lamina, laminate
+from .generic import resins as generic_resins, fibers as generic_fibers
 
 info = []
 warn = []
@@ -18,7 +19,7 @@ def parse(filename):
     Parse a lamprop file.
 
     Arguments:
-        filename: The name of the file to parse.
+        filename: The name of the file to parse, or a file-like object.
 
     Returns
         A list of types.laminate.
@@ -28,23 +29,29 @@ def parse(filename):
     try:
         info.append(f'Reading file "{filename}".')
         rd, fd, ld = _directives(filename)
+        rd = generic_resins + rd
+        fd = generic_fibers + fd
     except IOError:
         warn.append(f'Cannot read "{filename}".')
         return []
     fdict = _get_components(fd, fiber)
-    info.append(f'Found {len(fdict)} fibers')
+    info.append(
+        f"Found {len(fdict)} fibers, including {len(generic_fibers)} generic fibers."
+    )
     rdict = _get_components(rd, resin)
-    info.append(f'Found {len(rdict)} resins')
+    info.append(
+        f"Found {len(rdict)} resins, including {len(generic_resins)} generic resins."
+    )
     boundaries = [j for j in range(len(ld)) if ld[j][1][0] == "t"] + [len(ld)]
     bpairs = [(a, b) for a, b in zip(boundaries[:-1], boundaries[1:])]
-    info.append(f'Found {len(bpairs)} possible laminates')
+    info.append(f"Found {len(bpairs)} possible laminates")
     laminates = []
     for a, b in bpairs:
         current = ld[a:b]
         lam = _laminate(current, rdict, fdict)
         if lam:
             laminates.append(lam)
-    info.append(f'Found {len(laminates)} laminates')
+    info.append(f"Found {len(laminates)} laminates")
     return laminates
 
 
@@ -53,20 +60,24 @@ def _directives(filename):
     Read the directives from a lamprop file.
 
     Arguments:
-        filename: The name of the file to parse.
+        filename: The name of the file to parse, or a file-like object.
 
     Returns:
         A 3-tuple (resin directives, fiber directives, laminate directives)
     """
-    with open(filename, encoding="utf-8") as df:
-        data = [ln.strip() for ln in df]
+    if isinstance(filename, str):
+        df = open(filename, encoding="utf-8")
+    else:
+        df = filename
+    data = [ln.strip() for ln in df]
+    df.close()
     # Filter out lines with directives.
     directives = [
         (num, ln)
         for num, ln in enumerate(data, start=1)
         if len(ln) > 1 and ln[1] == ":" and ln[0] in "tmlscfr"
     ]
-    info.append(f'Found {len(directives)} directives')
+    info.append(f"Found {len(directives)} directives")
     rd = [(num, ln) for num, ln in directives if ln[0] == "r"]
     fd = [(num, ln) for num, ln in directives if ln[0] == "f"]
     ld = [(num, ln) for num, ln in directives if ln[0] in "tmlsc"]

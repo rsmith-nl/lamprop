@@ -3,9 +3,10 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2022-01-21T16:59:35+0100
+# Last modified: 2022-01-29T13:47:01+0100
 """Test for lamprop parser."""
 
+import io
 import sys
 
 sys.path.insert(1, ".")
@@ -14,10 +15,12 @@ from lp.parser import (
     _get_numbers,
     _get_components,
     _directives,
+    _laminate,
     _get_lamina,
     _extended,
 )  # noqa
 from lp.core import fiber, resin, lamina  # noqa
+from lp.generic import resins as generic_resins, fibers as generic_fibers  # noqa
 
 
 def test_directives():  # {{{1
@@ -189,3 +192,25 @@ def test_extended3():  # {{{1
     assert len(extended) == 5
     assert isinstance(extended[0], str) and extended[0] == "pw 200 45"
     assert isinstance(extended[3], str) and extended[3] == "unknown"
+
+
+def test_generic():  # {{{1
+    buf = """t: generic plain carbon/epoxy
+m: 0.5 generic-epoxy
+l: 100 0  generic-carbon
+l: 100 90 generic-carbon
+l: 100 90 generic-carbon
+l: 100 0  generic-carbon
+"""
+    dummy = io.StringIO(buf)
+    _, _, ld = _directives(dummy)
+    r = _get_components(generic_resins, resin)
+    f = _get_components(generic_fibers, fiber)
+    assert len(ld) == 6
+    la = _laminate(ld, r, f)
+    assert la.name == "generic plain carbon/epoxy"
+    assert len(la.layers) == 4
+    assert 0.44 < la.thickness < 0.45
+    assert 63995 < la.Ex < 63996
+    assert 63995 < la.Ey < 63996
+    assert 1.47 < la.ρ < 1.48

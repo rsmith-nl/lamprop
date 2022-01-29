@@ -63,13 +63,28 @@ The installed scripts are an archive of compiled Python bytecode.
 This means that you have to re-install lamprop after updating Python to a new
 version.
 
+As of version 2022.01.29, ``lamprop`` contains the following generic resins;
+
+* ``generic-epoxy``
+* ``generic-polyester``
+* ``generic-vinylester``
+
+And the following generic fibers;
+
+* ``generic-e-glas``
+* ``generic-carbon``
+* ``generic-aramid49``
+
+You can use them in your lamprop files without having to define them.
+Redefinitions of these names in your lamprop file will be ignored.
+
 
 Requirements
 ------------
 
 This program requires at least Python 3.6. It is *not* compatible with Python 2!
 It has no library requirments outside of the Python standard library.
-This version was developed and tested using Python 3.7 and 3.9.
+Development and testing is currently done using Python 3.9.
 
 
 Developers
