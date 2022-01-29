@@ -2,6 +2,9 @@
 Calculating elastic properties of composite laminates
 =====================================================
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 The purpose of this program is to calculate some properties of
 fiber-reinforced composite laminates. It calculates
 - engineering properties like Ex, Ey, Gxy
