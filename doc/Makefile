@@ -3,7 +3,7 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-05-15T01:05:44+0200
-# Last modified: 2018-12-02T09:39:33+0100
+# Last modified: 2022-01-30T12:34:22+0100
 .SUFFIXES:
 .PHONY: clean
 
@@ -17,4 +17,4 @@ ${DOCPDF}: ${DOCSRC} lman.bib
 	-latexmk ${LMKARGS} ${DOCSRC} 2>&1
 
 clean::
-	latexmk -c
+	latexmk -c >/dev/null 2>&1
