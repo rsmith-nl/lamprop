@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2022-01-21T15:35:24+0100
+# Last modified: 2022-06-22T11:22:11+0200
 """
 Core functions of lamprop.
 
@@ -225,7 +225,9 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     n2 = n * n
     n3, n4 = n2 * n, n2 * n2
     α1 = (fiber.α1 * fiber.E1 * vf + resin.α * resin.E * vm) / E1
-    α2 = resin.α  # This is not 100% accurate, but simple.
+    # Since α2 properties of fibers are hard to come by, we have to estimate.
+    # This is based on our own measurements.
+    α2 = vf*resin.α  # This is not 100% accurate, but simple.
     αx = α1 * m2 + α2 * n2
     αy = α1 * n2 + α2 * m2
     αxy = 2 * (α1 - α2) * m * n
