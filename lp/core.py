@@ -227,7 +227,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     α1 = (fiber.α1 * fiber.E1 * vf + resin.α * resin.E * vm) / E1
     # Since α2 properties of fibers are hard to come by, we have to estimate.
     # This is based on our own measurements.
-    α2 = vf*resin.α  # This is not 100% accurate, but simple.
+    α2 = vf * resin.α  # This is not 100% accurate, but simple.
     αx = α1 * m2 + α2 * n2
     αy = α1 * n2 + α2 * m2
     αxy = 2 * (α1 - α2) * m * n
