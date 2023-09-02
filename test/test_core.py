@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-05 23:36:32 +0200
-# Last modified: 2020-12-27T13:35:31+0100
+# Last modified: 2023-09-02T17:19:05+0200
 """Test for lamprop types"""
 
 import sys
@@ -30,7 +30,7 @@ def test_lamina():  # {{{1
     la = lamina(f, r, 100, 0, 0.5)
     areclose(
         (la.E1, la.E2, la.G12, la.ν12, la.αx, la.αy, la.ρ),
-        (116450.0, 10980.86, 3198.53, 0.33, 1.106e-07, 4.14e-05, 1.455),
+        (116450.0, 10980.86, 3198.53, 0.33, 1.106e-07, 2.07e-05, 1.455),
     )
     areclose(
         (la.Q̅11, la.Q̅12, la.Q̅16, la.Q̅22, la.Q̅26, la.Q̅66),
@@ -54,7 +54,7 @@ def test_ud():  # {{{1
     assert math.isclose(ud.νxy, 0.28, rel_tol=0.01)
     assert math.isclose(ud.νyx, 0.04, rel_tol=0.01)
     assert math.isclose(ud.αx, 2.75e-07, rel_tol=0.01)
-    assert math.isclose(ud.αy, 4.14e-5, rel_tol=0.01)
+    assert math.isclose(ud.αy, 2.07e-05, rel_tol=0.01)
     assert math.isclose(ud.tEx, 118810.0, rel_tol=0.01)
     assert math.isclose(ud.tEy, 16979.80, rel_tol=0.01)
     assert math.isclose(ud.tEz, 16979.80, rel_tol=0.01)
@@ -82,8 +82,8 @@ def test_plain_weave():  # {{{1
     assert math.isclose(pw.Gyz, 4472.41, rel_tol=0.01)
     assert math.isclose(pw.νxy, 0.07, rel_tol=0.01)
     assert math.isclose(pw.νyx, 0.07, rel_tol=0.01)
-    assert math.isclose(pw.αx, 6.427e-06, rel_tol=0.01)
-    assert math.isclose(pw.αy, 6.427e-06, rel_tol=0.01)
+    assert math.isclose(pw.αx, 3.331e-06, rel_tol=0.01)
+    assert math.isclose(pw.αy, 3.331e-06, rel_tol=0.01)
     assert math.isclose(pw.tEx, 68335.7, rel_tol=0.01)
     assert math.isclose(pw.tEy, 68335.7, rel_tol=0.01)
     assert math.isclose(pw.tEz, 19301.8, rel_tol=0.01)
@@ -111,8 +111,8 @@ def test_pm45():  # {{{1
     assert math.isclose(pm45.Gyz, 4608.06, rel_tol=0.01)
     assert math.isclose(pm45.νxy, 0.756, rel_tol=0.01)
     assert math.isclose(pm45.νyx, 0.756, rel_tol=0.01)
-    assert math.isclose(pm45.αx, 6.4269e-06, rel_tol=0.01)
-    assert math.isclose(pm45.αy, 6.4269e-06, rel_tol=0.01)
+    assert math.isclose(pm45.αx, 3.331e-06, rel_tol=0.01)
+    assert math.isclose(pm45.αy, 3.331e-06, rel_tol=0.01)
     assert math.isclose(pm45.tEx, 17899.5, rel_tol=0.01)
     assert math.isclose(pm45.tEy, 17899.5, rel_tol=0.01)
     assert math.isclose(pm45.tEz, 19301.8, rel_tol=0.01)
@@ -142,8 +142,8 @@ def test_qi():  # {{{1
     assert math.isclose(qi.Gyz, 4557.19, rel_tol=0.01)
     assert math.isclose(qi.νxy, 0.3298, rel_tol=0.01)
     assert math.isclose(qi.νyx, 0.3298, rel_tol=0.01)
-    assert math.isclose(qi.αx, 6.42695e-06, rel_tol=0.01)
-    assert math.isclose(qi.αy, 6.42695e-06, rel_tol=0.01)
+    assert math.isclose(qi.αx, 3.331e-06, rel_tol=0.01)
+    assert math.isclose(qi.αy, 3.331e-06, rel_tol=0.01)
     assert math.isclose(qi.tEx, 49242.7, rel_tol=0.01)
     assert math.isclose(qi.tEy, 49242.7, rel_tol=0.01)
     assert math.isclose(qi.tEz, 19301.8, rel_tol=0.01)
