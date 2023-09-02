@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2022-06-22T11:22:11+0200
+# Last modified: 2023-06-21T22:09:48+0200
 """
 Core functions of lamprop.
 
@@ -284,6 +284,48 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
         ρ=ρ,
         C=C,
     )
+
+
+def isotropic_lamina(resin, resin_weight):
+    """Create a lamina of unidirectional fibers in resin.
+    This can be considered as a transversely isotropic material.
+
+    Arguments:
+        resin: The Resin binding the lamina
+        resin_weight: The amount of Resin in g/m². Must be >0.
+
+    Additional generated properties:
+        thickness: Thickness of the lamina in mm.
+        E1: Young's modulus of the lamina in the 0° direction in MPa.
+        E2: Young's modulus of the lamina perpendicular to the 0° direction
+            in MPa.
+        G12: In-plane shear modulus in MPa.
+        ν12: in-plane Poisson's constant.
+        αx: CTE in x direction in K⁻¹.
+        αy: CTE in y direction in K⁻¹.
+        αxy: CTE in shear.
+        Q̅11: Transformed lamina stiffness matrix component.
+        Q̅12: Transformed lamina stiffness matrix component.
+        Q̅16: Transformed lamina stiffness matrix component.
+        Q̅22: Transformed lamina stiffness matrix component.
+        Q̅26: Transformed lamina stiffness matrix component.
+        Q̅66: Transformed lamina stiffness matrix component.
+        ρ: Specific gravity of the lamina in g/cm³.
+        S: 3D stiffness matrix for the lamina in global coordinates.
+    """
+    rv = SimpleNamespace()
+    rv.fiber = None
+    rv.fiber_weight = 0.0
+    rv.angle = 0.0
+    rv.vf = 0.0
+    rv.resin = resin
+    rv.resin_weight = resin_weight
+    rv.E1 = rv.E2 = rv.E3 = resin.E
+    rv.G12 = rv.G13 = rv.G23 = resin.E / (2 * (1 + resin.ν))
+    rv.ν12 = rv.ν13 = rv.ν23 = resin.ν
+    rv.αx = rv.αy = resin.α
+
+    return rv
 
 
 def laminate(name, layers):
