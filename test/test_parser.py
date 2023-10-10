@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2016-06-08 22:10:46 +0200
-# Last modified: 2022-01-29T13:47:01+0100
+# Last modified: 2023-10-11T22:41:45+0200
 """Test for lamprop parser."""
 
 import io
@@ -211,6 +211,6 @@ l: 100 0  generic-carbon
     assert la.name == "generic plain carbon/epoxy"
     assert len(la.layers) == 4
     assert 0.44 < la.thickness < 0.45
-    assert 63995 < la.Ex < 63996
-    assert 63995 < la.Ey < 63996
+    assert 63338 < la.Ex < 63339
+    assert 63338 < la.Ey < 63339
     assert 1.47 < la.ρ < 1.48

@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2023-06-21T22:09:48+0200
+# Last modified: 2023-10-11T23:04:07+0200
 """
 Core functions of lamprop.
 
@@ -181,9 +181,9 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     resin_weight = thickness * vm * resin.ρ * 1000  # Resin [g/m²]
     E1 = vf * fiber.E1 + resin.E * vm  # Hyer:1998, p. 115, (3.32)
     # As of version 2020-12-22, use the Halpin-Tsai formula for E2.
-    ζ = 2  # Assume fibers with a round cross-section.
-    η = (fiber.E1 / resin.E - 1) / (fiber.E1 / resin.E + ζ)
-    E2 = resin.E * ((1 + ζ * η * vf) / (1 - η * vf))  # Barbero:2018, p. 117
+    ξ = 1.5  # Giner, 2014
+    η = (fiber.E1 / resin.E - 1) / (fiber.E1 / resin.E + ξ)
+    E2 = resin.E * ((1 + ξ * η * vf) / (1 - η * vf))  # Barbero:2018, p. 117
     E3 = E2  # Assumed for UD layers.
     ν12 = fiber.ν12 * vf + resin.ν * vm  # Barbero:2018, p. 118
     ν13 = ν12
