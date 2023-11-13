@@ -8,7 +8,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2023-11-13T10:27:11+0100
+# Last modified: 2023-11-13T10:33:43+0100
 .POSIX:
 .PHONY: clean check format test doc zip
 .SUFFIXES:
@@ -19,7 +19,7 @@ TAGCOMMIT!=git rev-list --tags --max-count=1
 TAG!=git describe --tags ${TAGCOMMIT}
 
 # For a Python program, help is the default target.
-all::
+help::
 	@echo "Command  Meaning"
 	@echo "-------  -------"
 	@sed -n -e '/##/s/:.*\#\#/\t/p' -e '/@sed/d' Makefile
