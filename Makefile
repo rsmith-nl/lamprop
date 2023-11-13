@@ -8,50 +8,50 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2022-01-30T13:43:59+0100
+# Last modified: 2023-11-13T10:15:26+0100
+.POSIX:
 .PHONY: clean check format test doc zip
+.SUFFIXES:
+
+PROJECT:=lamprop
 
 .if make(zip)
 TAGCOMMIT!=git rev-list --tags --max-count=1
 TAG!=git describe --tags ${TAGCOMMIT}
 .endif
 
+# For a Python program, help is the default target.
 all::
-	@echo 'you can use the following commands:'
-	@echo '* clean: remove all generated files.'
-	@echo '* check: check all python files. (requires pylama)'
-	@echo '* tags: regenerate tags file. (requires uctags)'
-	@echo '* format: format the source. (requires black)'
-	@echo '* test: run the built-in tests. (requires py.test)'
-	@echo '* doc: build the documentation using LaTeX.'
-	@echo '* zip: create a zipfile of the latest tagged version.'
+	@echo "Command  Meaning"
+	@echo "-------  -------"
+	@sed -n -e '/##/s/:.*\#\#/\t/p' -e '/@sed/d' Makefile
 
-clean::
-	rm -f lamprop lamprop-gui backup-*.tar* lamprop-*.zip
+clean:: ## remove all generated files.
+	rm -f lamprop lamprop-gui
+	rm -f backup-*.tar* ${PROJECT}-*.zip
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name __pycache__ -delete
 	cd doc && make clean
 
-# The targets below are mostly for the maintainer.
-check:: .IGNORE
+check:: .IGNORE ## check all python files. (requires pylama)
 	pylama lp/*.py test/*.py console.py gui.py tools/*.py
 
-tags::
+tags:: ## regenerate tags file. (requires uctags)
 	uctags -R --languages=Python
 
-format::
+format:: ## format the source. (requires black)
 	black lp/*.py test/*.py console.py gui.py tools/*.py
 
-test::
+test:: ## run the built-in tests. (requires py.test)
 	py.test -v
 
-doc::
+doc:: ## build the documentation using LaTeX.
 	cd doc/; make
 
-zip:: clean
+zip:: clean ## create a zip-file from the most recent tagged state of the repository.
 	cd doc && make clean
 	git checkout ${TAG}
-	cd .. && zip -r lamprop-${TAG}.zip lamprop \
-		-x 'lamprop/.git/*' '*/.pytest_cache/*' '*/__pycache__/*' '*/.cache/*'
+	cd .. && zip -r ${PROJECT}-${TAG}.zip ${PROJECT} \
+		-x '*/.git/*' '*/.pytest_cache/*' '*/__pycache__/*' '*/.cache/*'
 	git checkout main
-	mv ../lamprop-${TAG}.zip .
+	mv ../${PROJECT}-${TAG}.zip .
