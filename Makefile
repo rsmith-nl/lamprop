@@ -8,17 +8,15 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2023-11-13T10:15:26+0100
+# Last modified: 2023-11-13T10:27:11+0100
 .POSIX:
 .PHONY: clean check format test doc zip
 .SUFFIXES:
 
 PROJECT:=lamprop
 
-.if make(zip)
 TAGCOMMIT!=git rev-list --tags --max-count=1
 TAG!=git describe --tags ${TAGCOMMIT}
-.endif
 
 # For a Python program, help is the default target.
 all::
