@@ -4,7 +4,7 @@
 # Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 # SPDX-License-Identifier: MIT
 # Created: 2023-12-03T00:12:51+0100
-# Last modified: 2023-12-03T00:34:27+0100
+# Last modified: 2023-12-03T00:45:40+0100
 
 from collections import namedtuple
 
@@ -18,6 +18,6 @@ Lamina = namedtuple(
 )
 Laminate = namedtuple(
     "Laminate",
-    "name layers thickness fiber_weight ρ vf resin_weight ABD abd H h Ex Ey Ez"
+    "name layers thickness fiber_weight ρ vf resin_weight ABD abd H h Ex Ey Ez "
     "Gxy Gyz Gxz νxy νyx αx αy wf C S tEx tEy tEz tGxy tGyz tGxz tνxy tνxz tνyz"
 )
