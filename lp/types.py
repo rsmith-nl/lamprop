@@ -4,12 +4,12 @@
 # Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 # SPDX-License-Identifier: MIT
 # Created: 2023-12-03T00:12:51+0100
-# Last modified: 2023-12-03T00:22:44+0100
+# Last modified: 2023-12-03T00:34:27+0100
 
 from collections import namedtuple
 
-Fiber = namedtuple("Fiber", "E1 ν12 α1 ρ")
-Resin = namedtuple("Resin", "E ν α ρ")
+Fiber = namedtuple("Fiber", "E1 ν12 α1 ρ name")
+Resin = namedtuple("Resin", "E ν α ρ name")
 Lamina = namedtuple(
     "Lamina",
     "fiber resin fiber_weight angle vf thickness resin_weight E1 E2 E3 "

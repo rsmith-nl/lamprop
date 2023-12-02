@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2023-10-11T23:04:07+0200
+# Last modified: 2023-12-03T00:34:39+0100
 """
 Core functions of lamprop.
 
@@ -83,12 +83,13 @@ The following references were used in coding this module:
 }
 """
 from types import SimpleNamespace
+from lp.types import Fiber, Resin, Lamina, Laminate
 import math
 import lp.matrix as lpm
 
 
 def fiber(E1, ν12, α1, ρ, name):
-    """Create a fiber as a SimpleNamespace.
+    """Create a Fiber.
 
     The arguments with subscript "1" are in the length direction of the fiber.
 
@@ -99,18 +100,17 @@ def fiber(E1, ν12, α1, ρ, name):
         ρ (float): Fiber density in g/cm³. Must be > 0
         name (str): Name of the fiber. Must not be empty.
     """
-    rv = SimpleNamespace()
-    rv.E1 = float(E1)
-    assert rv.E1 > 0, "fiber E1 must be > 0"
-    rv.ν12 = float(ν12)
-    rv.α1 = float(α1)
-    rv.ρ = float(ρ)
-    assert rv.ρ > 0, "fiber ρ must be > 0"
-    rv.name = name
+    E1 = float(E1)
+    assert E1 > 0, "fiber E1 must be > 0"
+    ν12 = float(ν12)
+    α1 = float(α1)
+    ρ = float(ρ)
+    assert ρ > 0, "fiber ρ must be > 0"
+    name = name
     assert (
-        isinstance(rv.name, str) and len(rv.name) > 0
+        isinstance(name, str) and len(name) > 0
     ), "fiber name must be a non-empty string"
-    return rv
+    return Fiber(E1, ν12, α1, ρ, name)
 
 
 def resin(E, ν, α, ρ, name):
@@ -123,18 +123,17 @@ def resin(E, ν, α, ρ, name):
         ρ (float): Specific gravity of the resin in g/cm³. Must be >0.
         name (str): String containing the name of the resin. Must not be empty.
     """
-    rv = SimpleNamespace()
-    rv.E = float(E)
-    assert rv.E > 0, "resin E must be > 0"
-    rv.ν = float(ν)
-    rv.α = float(α)
-    rv.ρ = float(ρ)
-    assert rv.ρ > 0, "resin ρ must be > 0"
-    rv.name = name
+    E = float(E)
+    assert E > 0, "resin E must be > 0"
+    ν = float(ν)
+    α = float(α)
+    ρ = float(ρ)
+    assert ρ > 0, "resin ρ must be > 0"
+    name = name
     assert (
-        isinstance(rv.name, str) and len(rv.name) > 0
+        isinstance(name, str) and len(name) > 0
     ), "resin name must be a non-empty string"
-    return rv
+    return Resin(E, ν, α, ρ, name)
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):
@@ -252,80 +251,38 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
     Q̅s45 = (Q̅s55 - Q̅s44) * n * m
     # Calculate density
     ρ = fiber.ρ * vf + resin.ρ * vm
-    return SimpleNamespace(
-        fiber=fiber,
-        resin=resin,
-        fiber_weight=fiber_weight,
-        angle=angle,
-        vf=vf,
-        thickness=thickness,
-        resin_weight=resin_weight,
-        E1=E1,
-        E2=E2,
-        E3=E3,
-        G12=G12,
-        G13=G12,
-        G23=G23,
-        ν12=ν12,
-        ν13=ν13,
-        ν23=ν23,
-        αx=αx,
-        αy=αy,
-        αxy=αxy,
-        Q̅11=Q̅11,
-        Q̅12=Q̅12,
-        Q̅16=Q̅16,
-        Q̅22=Q̅22,
-        Q̅26=Q̅26,
-        Q̅66=Q̅66,
-        Q̅s44=Q̅s44,
-        Q̅s55=Q̅s55,
-        Q̅s45=Q̅s45,
-        ρ=ρ,
-        C=C,
+    return Lamina(
+        fiber,
+        resin,
+        fiber_weight,
+        angle,
+        vf,
+        thickness,
+        resin_weight,
+        E1,
+        E2,
+        E3,
+        G12,
+        G13,
+        G23,
+        ν12,
+        ν13,
+        ν23,
+        αx,
+        αy,
+        αxy,
+        Q̅11,
+        Q̅12,
+        Q̅16,
+        Q̅22,
+        Q̅26,
+        Q̅66,
+        Q̅s44,
+        Q̅s55,
+        Q̅s45,
+        ρ,
+        C,
     )
-
-
-def isotropic_lamina(resin, resin_weight):
-    """Create a lamina of unidirectional fibers in resin.
-    This can be considered as a transversely isotropic material.
-
-    Arguments:
-        resin: The Resin binding the lamina
-        resin_weight: The amount of Resin in g/m². Must be >0.
-
-    Additional generated properties:
-        thickness: Thickness of the lamina in mm.
-        E1: Young's modulus of the lamina in the 0° direction in MPa.
-        E2: Young's modulus of the lamina perpendicular to the 0° direction
-            in MPa.
-        G12: In-plane shear modulus in MPa.
-        ν12: in-plane Poisson's constant.
-        αx: CTE in x direction in K⁻¹.
-        αy: CTE in y direction in K⁻¹.
-        αxy: CTE in shear.
-        Q̅11: Transformed lamina stiffness matrix component.
-        Q̅12: Transformed lamina stiffness matrix component.
-        Q̅16: Transformed lamina stiffness matrix component.
-        Q̅22: Transformed lamina stiffness matrix component.
-        Q̅26: Transformed lamina stiffness matrix component.
-        Q̅66: Transformed lamina stiffness matrix component.
-        ρ: Specific gravity of the lamina in g/cm³.
-        S: 3D stiffness matrix for the lamina in global coordinates.
-    """
-    rv = SimpleNamespace()
-    rv.fiber = None
-    rv.fiber_weight = 0.0
-    rv.angle = 0.0
-    rv.vf = 0.0
-    rv.resin = resin
-    rv.resin_weight = resin_weight
-    rv.E1 = rv.E2 = rv.E3 = resin.E
-    rv.G12 = rv.G13 = rv.G23 = resin.E / (2 * (1 + resin.ν))
-    rv.ν12 = rv.ν13 = rv.ν23 = resin.ν
-    rv.αx = rv.αy = resin.α
-
-    return rv
 
 
 def laminate(name, layers):
@@ -358,7 +315,6 @@ def laminate(name, layers):
     assert (
         isinstance(name, str) and len(name) > 0
     ), "laminate name must be a non-empty string"
-    orig_layers = [la for la in layers]
     layers = tuple(la for la in layers if isinstance(la, SimpleNamespace))
     thickness = sum(la.thickness for la in layers)
     fiber_weight = sum(la.fiber_weight for la in layers)
@@ -431,7 +387,7 @@ def laminate(name, layers):
         Nty += (la.Q̅12 * la.αx + la.Q̅22 * la.αy + la.Q̅26 * la.αxy) * la.thickness
         Ntxy += (la.Q̅16 * la.αx + la.Q̅26 * la.αy + la.Q̅66 * la.αxy) * la.thickness
         # Calculate H matrix (derived from Barbero:2018, p. 181)
-        sb = 5 / 4 * (la.thickness - 4 * z3 / thickness ** 2)
+        sb = 5 / 4 * (la.thickness - 4 * z3 / thickness**2)
         H[0][0] += la.Q̅s44 * sb
         H[0][1] += la.Q̅s45 * sb
         H[1][0] += la.Q̅s45 * sb
@@ -470,40 +426,40 @@ def laminate(name, layers):
     tEx, tEy, tEz = 1 / S[0][0], 1 / S[1][1], 1 / S[2][2]
     tGxy, tGxz, tGyz = 1 / S[5][5], 1 / S[4][4], 1 / S[3][3]
     tνxy, tνxz, tνyz = -S[1][0] / S[0][0], -S[2][0] / S[0][0], -S[2][1] / S[1][1]
-    return SimpleNamespace(
-        name=name,
-        layers=orig_layers,
-        thickness=thickness,
-        fiber_weight=fiber_weight,
-        ρ=ρ,
-        vf=vf,
-        resin_weight=resin_weight,
-        ABD=ABD,
-        abd=abd,
-        H=H,
-        h=h,
-        Ex=Ex,
-        Ey=Ey,
-        Ez=Ez,
-        Gxy=Gxy,
-        Gyz=Gyz,
-        Gxz=Gxz,
-        νxy=νxy,
-        νyx=νyx,
-        αx=αx,
-        αy=αy,
-        wf=wf,
-        C=C,
-        S=S,
-        tEx=tEx,
-        tEy=tEy,
-        tEz=tEz,
-        tGxy=tGxy,
-        tGyz=tGyz,
-        tGxz=tGxz,
-        tνxy=tνxy,
-        tνxz=tνxz,
-        tνyz=tνyz,
+    return Laminate(
+        name,
+        layers,
+        thickness,
+        fiber_weight,
+        ρ,
+        vf,
+        resin_weight,
+        ABD,
+        abd,
+        H,
+        h,
+        Ex,
+        Ey,
+        Ez,
+        Gxy,
+        Gyz,
+        Gxz,
+        νxy,
+        νyx,
+        αx,
+        αy,
+        wf,
+        C,
+        S,
+        tEx,
+        tEy,
+        tEz,
+        tGxy,
+        tGyz,
+        tGxz,
+        tνxy,
+        tνxz,
+        tνyz,
     )
 
 
