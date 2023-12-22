@@ -7,7 +7,5 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2015-04-14 14:15:00 +0200
-# $Date$
-# $Revision$
 
-find src -type f -name '*.py' -exec egrep -H -B 1 '\.(error|warning|debug|info)' {} \;
+find . -type f -name '*.py' -exec egrep -H -B 1 '\.(error|warning|debug|info)' {} \;
