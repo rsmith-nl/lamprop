@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2023-12-03T00:37:51+0100
+# Last modified: 2024-01-21T11:18:35+0100
 """
 Core functions of lamprop.
 
@@ -113,7 +113,7 @@ def fiber(E1, ν12, α1, ρ, name):
 
 
 def resin(E, ν, α, ρ, name):
-    """Create a resin as a SimpleNamespace.
+    """Create a Resin.
 
     Arguments/properties of a Resin:
         E (float): Young's modulus in MPa. Must be >0.
@@ -136,7 +136,7 @@ def resin(E, ν, α, ρ, name):
 
 
 def lamina(fiber, resin, fiber_weight, angle, vf):
-    """Create a lamina of unidirectional fibers in resin.
+    """Create a Lamina of unidirectional fibers in resin.
     This can be considered as a transversely isotropic material.
 
     Arguments:
@@ -285,7 +285,7 @@ def lamina(fiber, resin, fiber_weight, angle, vf):
 
 
 def laminate(name, layers):
-    """Create a laminate.
+    """Create a Laminate.
 
     Arguments/properties of a laminate:
         name: A non-empty string containing the name of the laminate
