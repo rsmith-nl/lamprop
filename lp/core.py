@@ -4,7 +4,7 @@
 # Copyright © 2014-2021 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 # Created: 2014-02-21 22:20:39 +0100
-# Last modified: 2024-01-21T11:18:35+0100
+# Last modified: 2024-03-25T22:30:09+0100
 """
 Core functions of lamprop.
 
@@ -314,6 +314,7 @@ def laminate(name, layers):
     assert (
         isinstance(name, str) and len(name) > 0
     ), "laminate name must be a non-empty string"
+    orig_layers = layers
     layers = tuple(la for la in layers if isinstance(la, Lamina))
     thickness = sum(la.thickness for la in layers)
     fiber_weight = sum(la.fiber_weight for la in layers)
@@ -427,7 +428,7 @@ def laminate(name, layers):
     tνxy, tνxz, tνyz = -S[1][0] / S[0][0], -S[2][0] / S[0][0], -S[2][1] / S[1][1]
     return Laminate(
         name,
-        layers,
+        orig_layers,
         thickness,
         fiber_weight,
         ρ,
