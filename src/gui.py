@@ -4,7 +4,7 @@
 #
 # Copyright © 2018 R.F. Smith <rsmith@xs4all.nl>. All rights reserved.
 # Created: 2018-01-21 17:55:29 +0100
-# Last modified: 2022-01-29T01:43:13+0100
+# Last modified: 2024-12-25T11:12:58+0100
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -282,7 +282,7 @@ def message(parent, msg, title="Message", width=80, height=10):
     ok.grid(row=1, column=0)
 
 
-if __name__ == "__main__":
+def main():
     if os.name == "posix":
         if os.fork():
             sys.exit()
@@ -295,3 +295,7 @@ if __name__ == "__main__":
     root = LampropUI(None)
     root.wm_title("Lamprop GUI v" + lp.__version__)
     root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
