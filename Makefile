@@ -8,7 +8,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created: 2018-01-21 22:44:51 +0100
-# Last modified: 2023-11-13T10:33:43+0100
+# Last modified: 2024-12-25T11:07:50+0100
 .POSIX:
 .PHONY: clean check format test doc zip
 .SUFFIXES:
@@ -31,14 +31,18 @@ clean:: ## remove all generated files.
 	find . -type d -name __pycache__ -delete
 	cd doc && make clean
 
+build:: ## create zipped applications.
+	python -m zipapp src -p '/usr/bin/env python' -o lamprop -c -m console:main
+	python -m zipapp src -p '/usr/bin/env python' -o lamprop-gui -c -m gui:main
+
 check:: .IGNORE ## check all python files. (requires pylama)
-	pylama lp/*.py test/*.py console.py gui.py tools/*.py
+	pylama src/*.py src/lp/*.py test/*.py tools/*.py
 
 tags:: ## regenerate tags file. (requires uctags)
 	uctags -R --languages=Python
 
 format:: ## format the source. (requires black)
-	black lp/*.py test/*.py console.py gui.py tools/*.py
+	black src/*.py src/lp/*.py test/*.py tools/*.py
 
 test:: ## run the built-in tests. (requires py.test)
 	py.test -v
