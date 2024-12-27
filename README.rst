@@ -25,12 +25,10 @@ As of version 2020-12-22. the internals have been updated to use
 
 This helps yield better data for FEA.
 
-
-This program can _not_ calculate the strength of composite laminates;
-because there are many different failure modes, strengths of composite
-laminates cannot readily be calculated from the strengths of the separate
-materials that form the laminate. These strengths have to be determined
-from tests.
+This program can _not_ calculate the strength of composite laminates; because
+there are many different failure modes, strengths of composite laminates
+cannot readily be calculated from the strengths of the separate materials that
+form the laminate. These strengths have to be determined from tests.
 
 The program has options for producing LaTeX and HTML output in addition to
 plain text output.
@@ -43,10 +41,9 @@ meant for POSIX operating systems and a GUI version primarily meant for
 ms-windows.
 
 You can try both versions without installing them first, with the following
-invocations in a shell from the root directory of the repository.
-
-Use ``python console -h`` for the console version, and ``python gui`` for the
-GUI version.
+invocations in a shell from the root directory of the repository.  Use
+``python src/console.py -h`` for the console version, and ``python
+src/gui.py`` for the GUI version.
 
 
 Of note
@@ -87,7 +84,7 @@ Requirements
 
 This program requires at least Python 3.6. It is *not* compatible with Python 2!
 It has no library requirments outside of the Python standard library.
-Development and testing is currently done using Python 3.9.
+Development and testing is currently done using Python 3.11.
 
 
 Developers
@@ -105,19 +102,14 @@ Installation
 
 To install it for the local user, run::
 
-    python setup.py install
+    python build.py
+    python install.py
 
 This will install it in the user path for Python scripts.
 For POSIX operating systems this is ususally ``~/.local/bin``.
 For ms-windows this is the ``Scripts`` directory of your Python installation
 or another local directory.
 Make sure that this directory is in your ``$PATH`` environment variable.
-
-On a UNIX-like operating system, you can run ``make install`` as root instead
-for a system-wide install. This will additionally install the manual.
-By default, this install is done in the ``/usr/local/`` tree.
-Change the PREFIX variable in the Makefile in case you want to install
-somewhere else.
 
 
 Vim
