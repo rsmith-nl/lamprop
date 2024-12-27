@@ -14,10 +14,10 @@ Lamina = namedtuple(
     "Lamina",
     "fiber resin fiber_weight angle vf thickness resin_weight E1 E2 E3 "
     "G12 G13 G23 ν12 ν13 ν23 αx αy αxy Q̅11 Q̅12 Q̅16 Q̅22 Q̅26 Q̅66 Q̅s44 Q̅s55 "
-    "Q̅s45 ρ C"
+    "Q̅s45 ρ C",
 )
 Laminate = namedtuple(
     "Laminate",
     "name layers thickness fiber_weight ρ vf resin_weight ABD abd H h Ex Ey Ez "
-    "Gxy Gyz Gxz νxy νyx αx αy wf C S tEx tEy tEz tGxy tGyz tGxz tνxy tνxz tνyz"
+    "Gxy Gyz Gxz νxy νyx αx αy wf C S tEx tEy tEz tGxy tGyz tGxz tνxy tνxz tνyz",
 )
