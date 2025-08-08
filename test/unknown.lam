@@ -7,6 +7,8 @@ You can process this file with '../lamprop.py hyer.lam >hyer.txt'
 Fiber definition
    E1     v12  alpha1   rho  naam
 f: 233000 0.2  -0.54e-6 1.76 foo
+# doublure
+f: 233000 0.2  -0.54e-6 1.76 foo
 f: 233000 0.2  -0.54e-6 incomplete
 
 
