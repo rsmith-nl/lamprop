@@ -96,6 +96,12 @@ pylama_. Both should be invoked from the root directory of the repository.
 .. _py.test: https://docs.pytest.org/
 .. _pylama: http://pylama.readthedocs.io/en/latest/
 
+Note that these are not needed for just running ``lamprop``.
+
+The fact that lamprop has no library requirments outside of the Python
+standard library is a feature, not a bug. Any patches that add dependencies
+outside the standard library will likely be rejected.
+
 
 Installation
 ------------
