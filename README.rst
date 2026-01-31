@@ -12,11 +12,6 @@ fiber-reinforced composite laminates. It calculates
 - physical properties like density and laminate thickness
 - stiffness and compliance matrices (ABD and abd)
 
-Although these properties are not very difficult to calculate, (the relevant
-equations and formulas can be readily found in the available composite
-literature) the calculation is time-consuming and error-prone when done by
-hand.
-
 As of version 2020-12-22. the internals have been updated to use
 
 * Halpin-Tsai approximation for E2 and to help calculate Ez,
@@ -44,6 +39,9 @@ You can try both versions without installing them first, with the following
 invocations in a shell from the root directory of the repository.  Use
 ``python src/console.py -h`` for the console version, and ``python
 src/gui.py`` for the GUI version.
+
+Writing a program such as this requires domain expertise and judgement.
+Therefore “AI”/LLM-generated contributions and rewrites are not welcome.
 
 
 Of note
